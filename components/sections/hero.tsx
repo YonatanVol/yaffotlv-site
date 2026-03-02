@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef } from "react";
+import Image from "next/image";
 import {
   motion,
   useScroll,
@@ -38,20 +39,28 @@ export function Hero() {
       ref={containerRef}
       className="grain relative h-screen w-full overflow-hidden"
     >
-      {/* Background: warm gradient placeholder (replace with image/video later) */}
+      {/* Background image with parallax */}
       <motion.div
         className="absolute inset-0"
         style={reduceMotion ? undefined : { y: bgY }}
       >
+        <Image
+          src="/images/hero.jpg"
+          alt="Historic Jaffa architecture overlooking the Mediterranean"
+          fill
+          priority
+          className="object-cover"
+          sizes="100vw"
+        />
+        {/* Warm overlay for text legibility + brand tone */}
+        <div className="absolute inset-0 bg-ink/40" />
         <div
-          className="absolute inset-0"
+          className="absolute inset-0 mix-blend-multiply"
           style={{
             background:
-              "linear-gradient(165deg, #F3F0EB 0%, #E8E3DC 35%, #D4BC96 70%, #B8976A 100%)",
+              "linear-gradient(to bottom, rgba(26,24,22,0.1) 0%, rgba(26,24,22,0.5) 100%)",
           }}
         />
-        {/* Dark overlay for text legibility */}
-        <div className="absolute inset-0 bg-ink/30" />
       </motion.div>
 
       {/* Content */}

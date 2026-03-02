@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef } from "react";
+import Image from "next/image";
 import {
   motion,
   useScroll,
@@ -10,15 +11,32 @@ import {
 import { Reveal, RevealItem } from "@/components/ui/reveal";
 
 interface GalleryImage {
+  src: string;
   alt: string;
   aspect: "portrait" | "landscape" | "square";
 }
 
 const images: GalleryImage[] = [
-  { alt: "Limestone courtyard at sunset", aspect: "portrait" },
-  { alt: "Mediterranean terrace view", aspect: "landscape" },
-  { alt: "Interior living space", aspect: "square" },
-  { alt: "Jaffa port at golden hour", aspect: "portrait" },
+  {
+    src: "/images/gallery-1.jpg",
+    alt: "Luxury residence exterior",
+    aspect: "portrait",
+  },
+  {
+    src: "/images/gallery-2.jpg",
+    alt: "Light-filled interior space",
+    aspect: "landscape",
+  },
+  {
+    src: "/images/gallery-3.jpg",
+    alt: "Designed living area",
+    aspect: "square",
+  },
+  {
+    src: "/images/gallery-4.jpg",
+    alt: "Contemporary architecture",
+    aspect: "portrait",
+  },
 ];
 
 const aspectClasses: Record<GalleryImage["aspect"], string> = {
@@ -27,7 +45,13 @@ const aspectClasses: Record<GalleryImage["aspect"], string> = {
   square: "aspect-square",
 };
 
-function GalleryItem({ image, index }: { image: GalleryImage; index: number }) {
+function GalleryItem({
+  image,
+  index,
+}: {
+  image: GalleryImage;
+  index: number;
+}) {
   const ref = useRef<HTMLDivElement>(null);
   const reduceMotion = useReducedMotion();
 
@@ -45,20 +69,24 @@ function GalleryItem({ image, index }: { image: GalleryImage; index: number }) {
   return (
     <motion.div
       ref={ref}
-      className={`relative overflow-hidden ${aspectClasses[image.aspect]}`}
+      className={`group relative cursor-pointer overflow-hidden ${aspectClasses[image.aspect]}`}
       style={reduceMotion ? undefined : { y }}
     >
-      {/* Gradient placeholder — replace with next/image when photos are ready */}
-      <div
-        className="absolute inset-0"
-        style={{
-          background: `linear-gradient(${135 + index * 30}deg, var(--sand), var(--ivory))`,
-        }}
+      {/* Image with zoom-on-hover */}
+      <Image
+        src={image.src}
+        alt={image.alt}
+        fill
+        className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+        sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw"
       />
-      <div className="absolute inset-0 flex items-center justify-center px-4">
-        <span className="text-center text-sm uppercase tracking-[0.2em] text-stone">
+
+      {/* Hover overlay with caption */}
+      <div className="absolute inset-0 bg-ink/0 transition-colors duration-500 group-hover:bg-ink/20" />
+      <div className="absolute inset-x-0 bottom-0 translate-y-full p-4 transition-transform duration-500 ease-out group-hover:translate-y-0">
+        <p className="text-xs font-medium uppercase tracking-[0.2em] text-white">
           {image.alt}
-        </span>
+        </p>
       </div>
     </motion.div>
   );
