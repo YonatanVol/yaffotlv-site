@@ -46,7 +46,7 @@ export function Hero() {
       >
         <Image
           src="/images/hero.jpg"
-          alt="Historic Jaffa architecture overlooking the Mediterranean"
+          alt="Bright living room with panoramic Jaffa view"
           fill
           priority
           className="object-cover"

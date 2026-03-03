@@ -19,23 +19,23 @@ interface GalleryImage {
 const images: GalleryImage[] = [
   {
     src: "/images/gallery-1.jpg",
-    alt: "Luxury residence exterior",
-    aspect: "portrait",
+    alt: "Master bedroom",
+    aspect: "landscape",
   },
   {
     src: "/images/gallery-2.jpg",
-    alt: "Light-filled interior space",
+    alt: "Kitchen & dining",
     aspect: "landscape",
   },
   {
     src: "/images/gallery-3.jpg",
-    alt: "Designed living area",
-    aspect: "square",
+    alt: "Entryway",
+    aspect: "landscape",
   },
   {
     src: "/images/gallery-4.jpg",
-    alt: "Contemporary architecture",
-    aspect: "portrait",
+    alt: "Second bedroom",
+    aspect: "landscape",
   },
 ];
 
