@@ -1,0 +1,164 @@
+"use client";
+
+import { useState, useCallback } from "react";
+import Image from "next/image";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import { Reveal } from "@/components/ui/reveal";
+
+interface Slide {
+  src: string;
+  label: string;
+  alt: string;
+}
+
+const slides: Slide[] = [
+  { src: "/images/livingroom1.jpg", label: "Living Room", alt: "Bright living room with panoramic Jaffa view" },
+  { src: "/images/gallery-2.jpg", label: "Kitchen", alt: "Modern kitchen and dining area" },
+  { src: "/images/gallery-1.jpg", label: "Bedroom 1", alt: "Master bedroom with luxury finishes" },
+  { src: "/images/gallery-4.jpg", label: "Bedroom 2", alt: "Second bedroom with warm tones" },
+  { src: "/images/gallery-3.jpg", label: "Entryway", alt: "Elegant apartment entryway" },
+];
+
+const slideVariants = {
+  enter: (direction: number) => ({
+    x: direction > 0 ? "100%" : "-100%",
+    opacity: 0,
+  }),
+  center: {
+    x: 0,
+    opacity: 1,
+  },
+  exit: (direction: number) => ({
+    x: direction > 0 ? "-100%" : "100%",
+    opacity: 0,
+  }),
+};
+
+export function PhotoSlider() {
+  const [[current, direction], setCurrent] = useState([0, 0]);
+  const reduceMotion = useReducedMotion();
+
+  const paginate = useCallback(
+    (newDirection: number) => {
+      setCurrent(([prev]) => {
+        const next = (prev + newDirection + slides.length) % slides.length;
+        return [next, newDirection];
+      });
+    },
+    []
+  );
+
+  const goTo = useCallback((index: number) => {
+    setCurrent(([prev]) => [index, index > prev ? 1 : -1]);
+  }, []);
+
+  return (
+    <section id="gallery" className="bg-cream py-32">
+      <Reveal className="mb-16 text-center px-6">
+        <p className="text-xs font-medium uppercase tracking-[0.3em] text-accent">
+          The Collection
+        </p>
+        <h2 className="mt-4 font-serif text-5xl font-light tracking-tight text-charcoal md:text-6xl">
+          Spaces that speak softly
+        </h2>
+      </Reveal>
+
+      <div className="mx-auto max-w-5xl px-6">
+        {/* Slider container */}
+        <div className="relative aspect-[16/10] w-full overflow-hidden bg-sand/30">
+          <AnimatePresence initial={false} custom={direction} mode="popLayout">
+            <motion.div
+              key={current}
+              custom={direction}
+              variants={reduceMotion ? undefined : slideVariants}
+              initial={reduceMotion ? { opacity: 1 } : "enter"}
+              animate="center"
+              exit={reduceMotion ? { opacity: 0 } : "exit"}
+              transition={{
+                x: { type: "tween", duration: 0.5, ease: [0.25, 1, 0.5, 1] },
+                opacity: { duration: 0.3 },
+              }}
+              className="absolute inset-0"
+            >
+              <Image
+                src={slides[current].src}
+                alt={slides[current].alt}
+                fill
+                className="object-cover"
+                sizes="(max-width: 1024px) 100vw, 1024px"
+                priority={current === 0}
+              />
+            </motion.div>
+          </AnimatePresence>
+
+          {/* Left / Right arrows */}
+          <button
+            onClick={() => paginate(-1)}
+            className="absolute left-4 top-1/2 z-10 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-ink/30 text-white backdrop-blur-sm transition-colors hover:bg-ink/60"
+            aria-label="Previous photo"
+          >
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <path d="M12.5 15L7.5 10L12.5 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </button>
+          <button
+            onClick={() => paginate(1)}
+            className="absolute right-4 top-1/2 z-10 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-ink/30 text-white backdrop-blur-sm transition-colors hover:bg-ink/60"
+            aria-label="Next photo"
+          >
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <path d="M7.5 15L12.5 10L7.5 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </button>
+
+          {/* Current room label overlay */}
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={current}
+              initial={reduceMotion ? {} : { opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={reduceMotion ? {} : { opacity: 0, y: -10 }}
+              transition={{ duration: 0.3 }}
+              className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-ink/60 to-transparent px-8 pb-8 pt-20"
+            >
+              <p className="font-serif text-3xl font-light text-white md:text-4xl">
+                {slides[current].label}
+              </p>
+            </motion.div>
+          </AnimatePresence>
+        </div>
+
+        {/* Room label tabs */}
+        <div className="mt-8 flex flex-wrap justify-center gap-2 md:gap-4">
+          {slides.map((slide, i) => (
+            <button
+              key={slide.label}
+              onClick={() => goTo(i)}
+              className={`px-4 py-2 text-xs font-medium uppercase tracking-[0.15em] transition-all duration-300 ${
+                i === current
+                  ? "border-b-2 border-accent text-charcoal"
+                  : "text-stone hover:text-charcoal"
+              }`}
+            >
+              {slide.label}
+            </button>
+          ))}
+        </div>
+
+        {/* Dot indicators */}
+        <div className="mt-6 flex justify-center gap-2">
+          {slides.map((_, i) => (
+            <button
+              key={i}
+              onClick={() => goTo(i)}
+              className={`h-1.5 rounded-full transition-all duration-300 ${
+                i === current ? "w-8 bg-accent" : "w-1.5 bg-sand hover:bg-stone"
+              }`}
+              aria-label={`Go to slide ${i + 1}`}
+            />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}

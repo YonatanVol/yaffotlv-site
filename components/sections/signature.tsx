@@ -35,6 +35,7 @@ export function Signature() {
   return (
     <section
       ref={containerRef}
+      id="signature"
       className="relative flex min-h-screen items-center justify-center bg-ivory px-6 py-32"
     >
       <div className="text-center">
