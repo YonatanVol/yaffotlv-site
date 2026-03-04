@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { reservations, blockedDates } from "@/lib/db/schema";
-import { stripe } from "@/lib/stripe";
+import { getStripe } from "@/lib/stripe";
 import { eq } from "drizzle-orm";
 import { sendCancellationConfirmation } from "@/lib/email";
 
@@ -40,7 +40,7 @@ export async function POST(
 
     // Issue Stripe refund
     if (reservation.stripePaymentIntentId) {
-      await stripe.refunds.create({
+      await getStripe().refunds.create({
         payment_intent: reservation.stripePaymentIntentId,
       });
     }
