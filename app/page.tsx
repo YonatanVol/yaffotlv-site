@@ -7,6 +7,7 @@ import { Signature } from "@/components/sections/signature";
 import { PhotoSlider } from "@/components/sections/photo-slider";
 import { Navbar } from "@/components/sections/navbar";
 import { ContactModal } from "@/components/sections/contact-modal";
+import { Amenities } from "@/components/sections/amenities";
 import { Reveal } from "@/components/ui/reveal";
 import { useI18n } from "@/lib/i18n/context";
 
@@ -45,6 +46,8 @@ export default function Home() {
       </section>
 
       <PhotoSlider />
+
+      <Amenities />
 
       {/* Closing CTA */}
       <section id="contact" className="bg-ivory py-32">
