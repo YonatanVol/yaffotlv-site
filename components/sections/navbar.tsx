@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 
 interface NavbarProps {
   onContactClick: () => void;
@@ -11,7 +11,6 @@ interface NavbarProps {
 export function Navbar({ onContactClick }: NavbarProps) {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const reduceMotion = useReducedMotion();
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
@@ -33,13 +32,10 @@ export function Navbar({ onContactClick }: NavbarProps) {
 
   return (
     <>
-      <motion.nav
-        className={`fixed top-0 left-0 right-0 z-50 transition-colors duration-500 ${
+      <nav
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 animate-[fadeInDown_0.8s_ease-out_1.5s_both] ${
           scrolled ? "bg-ink/90 backdrop-blur-md" : "bg-transparent"
         }`}
-        initial={reduceMotion ? { opacity: 1 } : { opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, delay: 1.5, ease: [0.16, 1, 0.3, 1] }}
       >
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5 md:px-12">
           {/* Logo */}
@@ -92,7 +88,7 @@ export function Navbar({ onContactClick }: NavbarProps) {
             />
           </button>
         </div>
-      </motion.nav>
+      </nav>
 
       {/* Mobile menu overlay */}
       <AnimatePresence>
@@ -109,7 +105,7 @@ export function Navbar({ onContactClick }: NavbarProps) {
                 key={link.label}
                 onClick={link.action}
                 className="py-4 font-serif text-3xl font-light text-white transition-colors hover:text-accent-light"
-                initial={reduceMotion ? {} : { opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 + i * 0.08, duration: 0.4 }}
               >
@@ -117,7 +113,7 @@ export function Navbar({ onContactClick }: NavbarProps) {
               </motion.button>
             ))}
             <motion.div
-              initial={reduceMotion ? {} : { opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 + links.length * 0.08, duration: 0.4 }}
             >
