@@ -8,6 +8,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { formatDateDisplay } from "@/lib/dates";
 import { formatILS } from "@/lib/pricing";
 import type { PriceQuote } from "@/lib/pricing";
+import { useI18n } from "@/lib/i18n/context";
 
 type BookingStep = "dates" | "details" | "processing";
 
@@ -19,6 +20,7 @@ export function BookingWidget() {
   const [quoteLoading, setQuoteLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [bookingLoading, setBookingLoading] = useState(false);
+  const { t } = useI18n();
 
   // Fetch availability on mount
   useEffect(() => {
@@ -134,10 +136,10 @@ export function BookingWidget() {
             transition={{ duration: 0.3 }}
           >
             <p className="mb-2 text-xs font-medium uppercase tracking-[0.3em] text-accent">
-              Step 1 of 2
+              {t.book.step1}
             </p>
             <h2 className="mb-8 font-serif text-3xl font-light text-charcoal">
-              Select Your Dates
+              {t.book.step1Title}
             </h2>
 
             <BookingDatePicker
@@ -152,7 +154,7 @@ export function BookingWidget() {
                 onClick={() => setStep("details")}
                 className="mt-8 w-full border border-accent px-10 py-4 text-xs font-medium uppercase tracking-[0.2em] text-accent transition-colors duration-300 hover:bg-accent hover:text-white"
               >
-                Continue
+                {t.book.continue}
               </button>
             )}
           </motion.div>
@@ -167,10 +169,10 @@ export function BookingWidget() {
             transition={{ duration: 0.3 }}
           >
             <p className="mb-2 text-xs font-medium uppercase tracking-[0.3em] text-accent">
-              Step 2 of 2
+              {t.book.step2}
             </p>
             <h2 className="mb-8 font-serif text-3xl font-light text-charcoal">
-              Guest Details
+              {t.book.step2Title}
             </h2>
 
             {/* Selected dates summary */}
@@ -182,7 +184,7 @@ export function BookingWidget() {
                       {formatDateDisplay(selectedRange.checkIn)} &rarr; {formatDateDisplay(selectedRange.checkOut)}
                     </p>
                     <p className="mt-1 text-xs text-stone">
-                      {quote.nights} night{quote.nights > 1 ? "s" : ""}
+                      {quote.nights} {t.book.nights}
                     </p>
                   </div>
                   <p className="font-serif text-xl font-light text-charcoal">
@@ -198,7 +200,7 @@ export function BookingWidget() {
               onClick={() => setStep("dates")}
               className="mt-4 w-full py-3 text-xs font-medium uppercase tracking-[0.15em] text-stone transition-colors hover:text-charcoal"
             >
-              &larr; Back to dates
+              &larr; {t.book.back}
             </button>
           </motion.div>
         )}

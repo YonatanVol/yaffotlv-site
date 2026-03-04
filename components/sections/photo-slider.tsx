@@ -4,19 +4,21 @@ import { useState, useCallback } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { Reveal } from "@/components/ui/reveal";
+import { useI18n } from "@/lib/i18n/context";
+import type { Translations } from "@/lib/i18n/translations";
 
 interface Slide {
   src: string;
-  label: string;
+  labelKey: keyof Translations["slider"]["rooms"];
   alt: string;
 }
 
 const slides: Slide[] = [
-  { src: "/images/livingroom1.jpg", label: "Living Room", alt: "Bright living room with panoramic Jaffa view" },
-  { src: "/images/gallery-2.jpg", label: "Kitchen", alt: "Modern kitchen and dining area" },
-  { src: "/images/gallery-1.jpg", label: "Bedroom 1", alt: "Master bedroom with luxury finishes" },
-  { src: "/images/gallery-4.jpg", label: "Bedroom 2", alt: "Second bedroom with warm tones" },
-  { src: "/images/gallery-3.jpg", label: "Entryway", alt: "Elegant apartment entryway" },
+  { src: "/images/livingroom1.jpg", labelKey: "livingRoom", alt: "Bright living room with panoramic Jaffa view" },
+  { src: "/images/gallery-2.jpg", labelKey: "kitchen", alt: "Modern kitchen and dining area" },
+  { src: "/images/gallery-1.jpg", labelKey: "bedroom1", alt: "Master bedroom with luxury finishes" },
+  { src: "/images/gallery-4.jpg", labelKey: "bedroom2", alt: "Second bedroom with warm tones" },
+  { src: "/images/gallery-3.jpg", labelKey: "entryway", alt: "Elegant apartment entryway" },
 ];
 
 const slideVariants = {
@@ -37,6 +39,7 @@ const slideVariants = {
 export function PhotoSlider() {
   const [[current, direction], setCurrent] = useState([0, 0]);
   const reduceMotion = useReducedMotion();
+  const { t } = useI18n();
 
   const paginate = useCallback(
     (newDirection: number) => {
@@ -56,10 +59,10 @@ export function PhotoSlider() {
     <section id="gallery" className="bg-cream py-32">
       <Reveal className="mb-16 text-center px-6">
         <p className="text-xs font-medium uppercase tracking-[0.3em] text-accent">
-          The Collection
+          {t.slider.title}
         </p>
         <h2 className="mt-4 font-serif text-5xl font-light tracking-tight text-charcoal md:text-6xl">
-          Spaces that speak softly
+          {t.slider.subtitle}
         </h2>
       </Reveal>
 
@@ -95,7 +98,7 @@ export function PhotoSlider() {
           <button
             onClick={() => paginate(-1)}
             className="absolute left-4 top-1/2 z-10 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-ink/30 text-white backdrop-blur-sm transition-colors hover:bg-ink/60"
-            aria-label="Previous photo"
+            aria-label={t.slider.prev}
           >
             <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
               <path d="M12.5 15L7.5 10L12.5 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
@@ -104,7 +107,7 @@ export function PhotoSlider() {
           <button
             onClick={() => paginate(1)}
             className="absolute right-4 top-1/2 z-10 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-ink/30 text-white backdrop-blur-sm transition-colors hover:bg-ink/60"
-            aria-label="Next photo"
+            aria-label={t.slider.next}
           >
             <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
               <path d="M7.5 15L12.5 10L7.5 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
@@ -122,7 +125,7 @@ export function PhotoSlider() {
               className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-ink/60 to-transparent px-8 pb-8 pt-20"
             >
               <p className="font-serif text-3xl font-light text-white md:text-4xl">
-                {slides[current].label}
+                {t.slider.rooms[slides[current].labelKey]}
               </p>
             </motion.div>
           </AnimatePresence>
@@ -132,7 +135,7 @@ export function PhotoSlider() {
         <div className="mt-8 flex flex-wrap justify-center gap-2 md:gap-4">
           {slides.map((slide, i) => (
             <button
-              key={slide.label}
+              key={slide.labelKey}
               onClick={() => goTo(i)}
               className={`px-4 py-2 text-xs font-medium uppercase tracking-[0.15em] transition-all duration-300 ${
                 i === current
@@ -140,7 +143,7 @@ export function PhotoSlider() {
                   : "text-stone hover:text-charcoal"
               }`}
             >
-              {slide.label}
+              {t.slider.rooms[slide.labelKey]}
             </button>
           ))}
         </div>

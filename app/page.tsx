@@ -8,9 +8,11 @@ import { PhotoSlider } from "@/components/sections/photo-slider";
 import { Navbar } from "@/components/sections/navbar";
 import { ContactModal } from "@/components/sections/contact-modal";
 import { Reveal } from "@/components/ui/reveal";
+import { useI18n } from "@/lib/i18n/context";
 
 export default function Home() {
   const [contactOpen, setContactOpen] = useState(false);
+  const { t } = useI18n();
 
   return (
     <>
@@ -18,15 +20,26 @@ export default function Home() {
 
       <Hero />
 
+      {/* Details bar — micro credibility */}
+      <section className="border-b border-sand bg-ivory py-6">
+        <div className="mx-auto flex max-w-4xl flex-wrap items-center justify-center gap-x-8 gap-y-2 px-6 text-xs font-medium uppercase tracking-[0.25em] text-stone">
+          <span>{t.details.bedrooms}</span>
+          <span className="text-sand">•</span>
+          <span>{t.details.location}</span>
+          <span className="text-sand">•</span>
+          <span>{t.details.sea}</span>
+          <span className="text-sand">•</span>
+          <span>{t.details.vibe}</span>
+        </div>
+      </section>
+
       <Signature />
 
       {/* Breathing space — editorial quote */}
       <section className="bg-cream py-32">
         <Reveal className="mx-auto max-w-3xl px-6 text-center">
           <p className="font-serif text-3xl font-light leading-relaxed text-charcoal md:text-4xl">
-            In the oldest port city on the Mediterranean, where every stone
-            holds a story, we created something new that belongs completely to
-            this place.
+            {t.quote}
           </p>
         </Reveal>
       </section>
@@ -37,26 +50,26 @@ export default function Home() {
       <section id="contact" className="bg-ivory py-32">
         <Reveal className="mx-auto max-w-xl px-6 text-center">
           <p className="text-xs font-medium uppercase tracking-[0.3em] text-accent">
-            Begin your story
+            {t.cta.overline}
           </p>
           <h2 className="mt-4 font-serif text-4xl font-light text-charcoal md:text-5xl">
-            Book Your Stay
+            {t.cta.headline}
           </h2>
           <p className="mt-6 text-lg leading-relaxed text-stone">
-            Reserve directly for the best rate. Flexible cancellation included.
+            {t.cta.description}
           </p>
           <div className="mt-10 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
             <Link
               href="/book"
               className="inline-block bg-accent px-10 py-4 text-xs font-medium uppercase tracking-[0.2em] text-white transition-colors duration-300 hover:bg-accent-dark"
             >
-              Book Now
+              {t.cta.bookNow}
             </Link>
             <button
               onClick={() => setContactOpen(true)}
               className="inline-block border border-accent px-10 py-4 text-xs font-medium uppercase tracking-[0.2em] text-accent transition-colors duration-300 hover:bg-accent hover:text-white"
             >
-              Contact Us
+              {t.cta.contactUs}
             </button>
           </div>
         </Reveal>

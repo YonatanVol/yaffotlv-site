@@ -3,6 +3,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { formatILS } from "@/lib/pricing";
 import type { PriceQuote } from "@/lib/pricing";
+import { useI18n } from "@/lib/i18n/context";
 
 interface PriceBreakdownProps {
   quote: PriceQuote | null;
@@ -10,6 +11,8 @@ interface PriceBreakdownProps {
 }
 
 export function PriceBreakdown({ quote, loading }: PriceBreakdownProps) {
+  const { t } = useI18n();
+
   if (loading) {
     return (
       <div className="mt-8 animate-pulse space-y-3">
@@ -32,7 +35,7 @@ export function PriceBreakdown({ quote, loading }: PriceBreakdownProps) {
           className="mt-8 border border-sand bg-ivory p-6"
         >
           <p className="text-xs font-medium uppercase tracking-[0.2em] text-accent">
-            Price Breakdown
+            {t.book.total}
           </p>
 
           <div className="mt-4 space-y-2">
@@ -54,12 +57,12 @@ export function PriceBreakdown({ quote, loading }: PriceBreakdownProps) {
           <div className="mt-4 border-t border-sand pt-4 space-y-2">
             <div className="flex justify-between text-sm">
               <span className="text-graphite">
-                Subtotal ({quote.nights} night{quote.nights > 1 ? "s" : ""})
+                {quote.nights} {t.book.nights}
               </span>
               <span className="text-charcoal">{formatILS(quote.baseTotal)} ILS</span>
             </div>
             <div className="flex justify-between text-sm">
-              <span className="text-graphite">Cleaning fee</span>
+              <span className="text-graphite">{t.book.cleaning}</span>
               <span className="text-charcoal">{formatILS(quote.cleaningFee)} ILS</span>
             </div>
           </div>
@@ -67,7 +70,7 @@ export function PriceBreakdown({ quote, loading }: PriceBreakdownProps) {
           <div className="mt-4 border-t border-sand pt-4">
             <div className="flex items-baseline justify-between">
               <span className="text-sm font-medium uppercase tracking-[0.1em] text-graphite">
-                Total
+                {t.book.total}
               </span>
               <span className="font-serif text-2xl font-light text-charcoal">
                 {formatILS(quote.totalAmount)} ILS
@@ -76,7 +79,7 @@ export function PriceBreakdown({ quote, loading }: PriceBreakdownProps) {
           </div>
 
           <p className="mt-4 text-xs text-stone">
-            Flexible cancellation: full refund up to 24 hours before check-in.
+            {t.book.cancellation}
           </p>
         </motion.div>
       )}
