@@ -2,7 +2,9 @@ import { Resend } from "resend";
 import { formatDateDisplay } from "./dates";
 import { formatPrice } from "./pricing";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+function getResend() {
+  return new Resend(process.env.RESEND_API_KEY);
+}
 const HOST_EMAIL = "yonatanes1@gmail.com";
 const FROM_EMAIL = "YaffoTLV <bookings@yaffotlv.com>";
 
@@ -18,7 +20,7 @@ export async function sendBookingConfirmation(params: {
   const { guestEmail, guestName, checkIn, checkOut, nights, totalAmount, reservationId } = params;
 
   // Email to guest
-  await resend.emails.send({
+  await getResend().emails.send({
     from: FROM_EMAIL,
     to: guestEmail,
     subject: `Booking Confirmed - YaffoTLV`,
@@ -41,7 +43,7 @@ export async function sendBookingConfirmation(params: {
   });
 
   // Notification to host
-  await resend.emails.send({
+  await getResend().emails.send({
     from: FROM_EMAIL,
     to: HOST_EMAIL,
     subject: `New Booking: ${guestName} (${formatDateDisplay(checkIn)} - ${formatDateDisplay(checkOut)})`,
@@ -63,7 +65,7 @@ export async function sendCancellationConfirmation(params: {
 }) {
   const { guestEmail, guestName, checkIn, checkOut } = params;
 
-  await resend.emails.send({
+  await getResend().emails.send({
     from: FROM_EMAIL,
     to: guestEmail,
     subject: `Booking Cancelled - YaffoTLV`,
@@ -78,7 +80,7 @@ export async function sendCancellationConfirmation(params: {
   });
 
   // Notify host
-  await resend.emails.send({
+  await getResend().emails.send({
     from: FROM_EMAIL,
     to: HOST_EMAIL,
     subject: `Cancellation: ${guestName} (${formatDateDisplay(checkIn)} - ${formatDateDisplay(checkOut)})`,
