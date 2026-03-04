@@ -10,10 +10,3 @@ export function getStripe(): Stripe {
   }
   return _stripe;
 }
-
-// Convenience alias
-export const stripe = new Proxy({} as Stripe, {
-  get(_, prop) {
-    return (getStripe() as Record<string | symbol, unknown>)[prop];
-  },
-});
