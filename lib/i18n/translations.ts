@@ -12,34 +12,56 @@ export const LOCALE_FLAGS: Record<Locale, { flag: string; label: string }> = {
 };
 
 export interface Translations {
-  // Nav
   nav: {
     gallery: string;
     residence: string;
     contact: string;
     bookNow: string;
   };
-  // Hero
   hero: {
     overline: string;
     title: string;
     tagline: string;
   };
-  // Signature
   signature: {
     headline: string;
     subtitle: string;
   };
-  // Quote
   quote: string;
-  // Details bar
   details: {
     bedrooms: string;
     location: string;
     sea: string;
     vibe: string;
   };
-  // CTA
+  // Amenities / property highlights section
+  amenities: {
+    title: string;
+    subtitle: string;
+    size: string;
+    beds: string;
+    bathrooms: string;
+    guests: string;
+    renovated: string;
+    checkin: string;
+    checkout: string;
+    wifi: string;
+    ac: string;
+    tv: string;
+    kitchen: string;
+    nespresso: string;
+    washer: string;
+    parking: string;
+    workspace: string;
+    elevator: string;
+    pets: string;
+    iron: string;
+    hairdryer: string;
+    crib: string;
+    selfCheckin: string;
+    garden: string;
+    beach: string;
+  };
   cta: {
     overline: string;
     headline: string;
@@ -47,7 +69,6 @@ export interface Translations {
     bookNow: string;
     contactUs: string;
   };
-  // Photo slider
   slider: {
     title: string;
     subtitle: string;
@@ -61,7 +82,6 @@ export interface Translations {
     prev: string;
     next: string;
   };
-  // Contact modal
   contactModal: {
     title: string;
     subtitle: string;
@@ -73,7 +93,6 @@ export interface Translations {
     thanksMessage: string;
     close: string;
   };
-  // Book page
   book: {
     overline: string;
     title: string;
@@ -103,7 +122,7 @@ export interface Translations {
 const en: Translations = {
   nav: {
     gallery: "Gallery",
-    residence: "The Residence",
+    residence: "The Apartment",
     contact: "Contact",
     bookNow: "Book Now",
   },
@@ -113,26 +132,53 @@ const en: Translations = {
     tagline: "Where heritage meets horizon",
   },
   signature: {
-    headline: "A private residence in the heart of Jaffa",
-    subtitle: "Every detail considered. Every surface intentional. A home that belongs completely to this place.",
+    headline: "80 sqm of light, comfort and everything you need",
+    subtitle: "Newly renovated 3-room apartment in a quiet Jaffa neighborhood. Two bedrooms, a fully equipped kitchen, AC in every room, and a 10-minute walk to the beach. Designed for guests who want to feel at home.",
   },
-  quote: "In the oldest port city on the Mediterranean, where every stone holds a story — a private stay, available by request.",
+  quote: "In the oldest port city on the Mediterranean, where every stone holds a story — a private stay, designed for you.",
   details: {
-    bedrooms: "2 Bedrooms",
-    location: "Jaffa",
-    sea: "8 min to the sea",
+    bedrooms: "3 Rooms · 80 sqm",
+    location: "Jaffa, Tel Aviv",
+    sea: "10 min to the beach",
     vibe: "Quiet & Bright",
+  },
+  amenities: {
+    title: "What's included",
+    subtitle: "Everything you need for a comfortable stay",
+    size: "80 sqm",
+    beds: "3 rooms · 5 beds",
+    bathrooms: "1.5 bathrooms",
+    guests: "Up to 6 guests",
+    renovated: "Renovated 2024",
+    checkin: "Self check-in",
+    checkout: "Check-out 11:00",
+    wifi: "Fast WiFi",
+    ac: "AC in every room",
+    tv: "Smart TV · Netflix",
+    kitchen: "Full kitchen",
+    nespresso: "Nespresso machine",
+    washer: "Washer & dryer",
+    parking: "Free parking nearby",
+    workspace: "Dedicated workspace",
+    elevator: "Elevator",
+    pets: "Pet friendly",
+    iron: "Iron",
+    hairdryer: "Hair dryer",
+    crib: "Crib available",
+    selfCheckin: "Lockbox entry",
+    garden: "Garden view",
+    beach: "Near the beach",
   },
   cta: {
     overline: "Reserve your stay",
     headline: "Book Your Stay",
-    description: "Availability shared upon inquiry. Flexible cancellation included.",
+    description: "Check availability and book directly. Flexible cancellation included.",
     bookNow: "Book Now",
     contactUs: "Contact Us",
   },
   slider: {
-    title: "The Collection",
-    subtitle: "Spaces that speak softly",
+    title: "The Apartment",
+    subtitle: "Take a look inside",
     rooms: {
       livingRoom: "Living Room",
       kitchen: "Kitchen",
@@ -145,7 +191,7 @@ const en: Translations = {
   },
   contactModal: {
     title: "Get in Touch",
-    subtitle: "We'll get back to you shortly.",
+    subtitle: "Questions about the apartment? We typically respond within an hour.",
     name: "Name",
     email: "Email",
     message: "Message",
@@ -180,39 +226,67 @@ const en: Translations = {
   },
 };
 
+// ── Hebrew — fresh, direct, no clichés ────────────────────────────
 const he: Translations = {
   nav: {
-    gallery: "גלריה",
-    residence: "הדירה",
-    contact: "צור קשר",
-    bookNow: "הזמן עכשיו",
+    gallery: "תמונות",
+    residence: "על הדירה",
+    contact: "יצירת קשר",
+    bookNow: "להזמנה",
   },
   hero: {
     overline: "יפו, תל אביב",
     title: "YaffoTLV",
-    tagline: "היכן שמורשת פוגשת אופק",
+    tagline: "הבית שלכם ביפו",
   },
   signature: {
-    headline: "דירת נופש פרטית בלב יפו",
-    subtitle: "כל פרט נבחר בקפידה. כל משטח מכוון. בית ששייך לחלוטין למקום הזה.",
+    headline: "80 מ״ר של אור, נוחות וכל מה שצריך",
+    subtitle: "דירת 3 חדרים משופצת בשכונה שקטה ביפו. שני חדרי שינה, מטבח מאובזר, מיזוג בכל חדר, ו-10 דקות הליכה מהחוף. תוכננה לאורחים שרוצים להרגיש בבית.",
   },
-  quote: "בעיר הנמל העתיקה בים התיכון, שם כל אבן מספרת סיפור — שהייה פרטית, בהזמנה מראש.",
+  quote: "בעיר הנמל הכי עתיקה בים התיכון, שם כל אבן מספרת משהו — דירה פרטית, מוכנה בשבילכם.",
   details: {
-    bedrooms: "2 חדרי שינה",
-    location: "יפו",
-    sea: "8 דק' מהים",
+    bedrooms: "3 חדרים · 80 מ״ר",
+    location: "יפו, תל אביב",
+    sea: "10 דק׳ מהחוף",
     vibe: "שקט ומואר",
   },
+  amenities: {
+    title: "מה כלול",
+    subtitle: "כל מה שצריך לשהייה נוחה",
+    size: "80 מ״ר",
+    beds: "3 חדרים · 5 מיטות",
+    bathrooms: "חדר רחצה וחצי",
+    guests: "עד 6 אורחים",
+    renovated: "שופצה ב-2024",
+    checkin: "צ׳ק-אין עצמאי",
+    checkout: "צ׳ק-אאוט 11:00",
+    wifi: "WiFi מהיר",
+    ac: "מיזוג בכל חדר",
+    tv: "טלוויזיה · נטפליקס",
+    kitchen: "מטבח מלא",
+    nespresso: "מכונת נספרסו",
+    washer: "מכונת כביסה ומייבש",
+    parking: "חניה חינם בסביבה",
+    workspace: "פינת עבודה",
+    elevator: "מעלית",
+    pets: "מותר עם חיות מחמד",
+    iron: "מגהץ",
+    hairdryer: "מייבש שיער",
+    crib: "עריסה לתינוק",
+    selfCheckin: "כניסה עם קודן",
+    garden: "נוף לגינה",
+    beach: "קרוב לחוף",
+  },
   cta: {
-    overline: "הזמינו את השהייה שלכם",
-    headline: "הזמינו שהייה",
-    description: "זמינות לפי בקשה. ביטול גמיש כלול.",
-    bookNow: "הזמן עכשיו",
-    contactUs: "צור קשר",
+    overline: "הזמינו מקום",
+    headline: "להזמנה",
+    description: "בדקו זמינות והזמינו ישירות. ביטול גמיש כלול.",
+    bookNow: "להזמנה",
+    contactUs: "שאלות? דברו איתנו",
   },
   slider: {
-    title: "הקולקציה",
-    subtitle: "חללים שמדברים בשקט",
+    title: "הדירה",
+    subtitle: "הציצו פנימה",
     rooms: {
       livingRoom: "סלון",
       kitchen: "מטבח",
@@ -224,36 +298,36 @@ const he: Translations = {
     next: "תמונה הבאה",
   },
   contactModal: {
-    title: "צרו קשר",
-    subtitle: "נחזור אליכם בהקדם.",
+    title: "דברו איתנו",
+    subtitle: "שאלות על הדירה? בדרך כלל חוזרים תוך שעה.",
     name: "שם",
     email: "אימייל",
     message: "הודעה",
-    send: "שלח הודעה",
+    send: "שליחה",
     thanks: "תודה",
-    thanksMessage: "ניצור קשר בקרוב.",
-    close: "סגור",
+    thanksMessage: "נחזור אליכם בהקדם.",
+    close: "סגירה",
   },
   book: {
-    overline: "הזמינו את השהייה שלכם",
+    overline: "הזמינו מקום",
     title: "הזמנה",
-    subtitle: "בחרו תאריכים והשלימו את ההזמנה.",
+    subtitle: "בחרו תאריכים וסגרו הזמנה.",
     step1: "שלב 1 מתוך 2",
     step1Title: "בחרו תאריכים",
     step2: "שלב 2 מתוך 2",
     step2Title: "פרטי האורח",
-    cancellation: "ביטול גמיש: החזר מלא עד 24 שעות לפני הצ'ק-אין.",
-    checkIn: "צ'ק-אין",
-    checkOut: "צ'ק-אאוט",
+    cancellation: "ביטול גמיש: החזר מלא עד 24 שעות לפני הגעה.",
+    checkIn: "הגעה",
+    checkOut: "עזיבה",
     nights: "לילות",
     guests: "אורחים",
     guestName: "שם מלא",
     guestEmail: "אימייל",
-    guestPhone: "טלפון (אופציונלי)",
+    guestPhone: "טלפון (לא חובה)",
     guestCount: "מספר אורחים",
     continue: "המשך",
-    back: "חזור",
-    payNow: "שלם עכשיו",
+    back: "חזרה",
+    payNow: "לתשלום",
     perNight: "/ לילה",
     cleaning: "דמי ניקיון",
     total: "סה״כ",
@@ -262,37 +336,64 @@ const he: Translations = {
 
 const ru: Translations = {
   nav: {
-    gallery: "Галерея",
-    residence: "Резиденция",
+    gallery: "Фото",
+    residence: "Квартира",
     contact: "Контакт",
     bookNow: "Бронировать",
   },
   hero: {
     overline: "Яффа, Тель-Авив",
     title: "YaffoTLV",
-    tagline: "Где наследие встречает горизонт",
+    tagline: "Ваш дом в Яффе",
   },
   signature: {
-    headline: "Частная резиденция в сердце Яффы",
-    subtitle: "Каждая деталь продумана. Каждая поверхность выверена. Дом, который полностью принадлежит этому месту.",
+    headline: "80 кв.м света, комфорта и всего необходимого",
+    subtitle: "Отремонтированная 3-комнатная квартира в тихом районе Яффы. Две спальни, полностью оборудованная кухня, кондиционер в каждой комнате и 10 минут пешком до пляжа.",
   },
-  quote: "В древнейшем портовом городе Средиземноморья, где каждый камень хранит историю — частное пребывание по запросу.",
+  quote: "В древнейшем портовом городе Средиземноморья, где каждый камень хранит историю — частная квартира, подготовленная для вас.",
   details: {
-    bedrooms: "2 спальни",
-    location: "Яффа",
-    sea: "8 мин до моря",
+    bedrooms: "3 комнаты · 80 м²",
+    location: "Яффа, Тель-Авив",
+    sea: "10 мин до пляжа",
     vibe: "Тихо и светло",
   },
+  amenities: {
+    title: "Что включено",
+    subtitle: "Всё для комфортного проживания",
+    size: "80 м²",
+    beds: "3 комнаты · 5 кроватей",
+    bathrooms: "1.5 ванных",
+    guests: "До 6 гостей",
+    renovated: "Ремонт 2024",
+    checkin: "Самостоятельный заезд",
+    checkout: "Выезд 11:00",
+    wifi: "Быстрый WiFi",
+    ac: "Кондиционер везде",
+    tv: "Smart TV · Netflix",
+    kitchen: "Полная кухня",
+    nespresso: "Кофемашина Nespresso",
+    washer: "Стиральная и сушильная машины",
+    parking: "Бесплатная парковка рядом",
+    workspace: "Рабочее место",
+    elevator: "Лифт",
+    pets: "Можно с питомцами",
+    iron: "Утюг",
+    hairdryer: "Фен",
+    crib: "Детская кроватка",
+    selfCheckin: "Вход по коду",
+    garden: "Вид на сад",
+    beach: "Рядом с пляжем",
+  },
   cta: {
-    overline: "Забронируйте проживание",
+    overline: "Забронируйте",
     headline: "Бронирование",
-    description: "Наличие по запросу. Гибкая отмена включена.",
+    description: "Проверьте наличие и забронируйте напрямую. Гибкая отмена включена.",
     bookNow: "Бронировать",
     contactUs: "Связаться",
   },
   slider: {
-    title: "Коллекция",
-    subtitle: "Пространства, которые говорят тихо",
+    title: "Квартира",
+    subtitle: "Загляните внутрь",
     rooms: {
       livingRoom: "Гостиная",
       kitchen: "Кухня",
@@ -305,7 +406,7 @@ const ru: Translations = {
   },
   contactModal: {
     title: "Свяжитесь с нами",
-    subtitle: "Мы ответим вам в ближайшее время.",
+    subtitle: "Вопросы о квартире? Обычно отвечаем в течение часа.",
     name: "Имя",
     email: "Эл. почта",
     message: "Сообщение",
@@ -315,7 +416,7 @@ const ru: Translations = {
     close: "Закрыть",
   },
   book: {
-    overline: "Забронируйте проживание",
+    overline: "Забронируйте",
     title: "Бронирование",
     subtitle: "Выберите даты и завершите бронирование.",
     step1: "Шаг 1 из 2",
@@ -342,37 +443,64 @@ const ru: Translations = {
 
 const fr: Translations = {
   nav: {
-    gallery: "Galerie",
-    residence: "La Résidence",
+    gallery: "Photos",
+    residence: "L'Appartement",
     contact: "Contact",
     bookNow: "Réserver",
   },
   hero: {
     overline: "Jaffa, Tel-Aviv",
     title: "YaffoTLV",
-    tagline: "Là où patrimoine rencontre horizon",
+    tagline: "Votre chez-vous à Jaffa",
   },
   signature: {
-    headline: "Une résidence privée au cœur de Jaffa",
-    subtitle: "Chaque détail réfléchi. Chaque surface intentionnelle. Un lieu qui appartient entièrement à cet endroit.",
+    headline: "80 m² de lumière, de confort et de tout le nécessaire",
+    subtitle: "Appartement de 3 pièces rénové dans un quartier calme de Jaffa. Deux chambres, cuisine entièrement équipée, climatisation dans chaque pièce et 10 minutes à pied de la plage.",
   },
-  quote: "Dans le plus ancien port de la Méditerranée, où chaque pierre raconte une histoire — un séjour privé, sur demande.",
+  quote: "Dans le plus ancien port de la Méditerranée, où chaque pierre raconte une histoire — un appartement privé, préparé pour vous.",
   details: {
-    bedrooms: "2 Chambres",
-    location: "Jaffa",
-    sea: "8 min de la mer",
+    bedrooms: "3 pièces · 80 m²",
+    location: "Jaffa, Tel-Aviv",
+    sea: "10 min de la plage",
     vibe: "Calme & Lumineux",
+  },
+  amenities: {
+    title: "Ce qui est inclus",
+    subtitle: "Tout pour un séjour confortable",
+    size: "80 m²",
+    beds: "3 pièces · 5 lits",
+    bathrooms: "1.5 salles de bain",
+    guests: "Jusqu'à 6 personnes",
+    renovated: "Rénové en 2024",
+    checkin: "Arrivée autonome",
+    checkout: "Départ 11h00",
+    wifi: "WiFi rapide",
+    ac: "Clim dans chaque pièce",
+    tv: "Smart TV · Netflix",
+    kitchen: "Cuisine complète",
+    nespresso: "Machine Nespresso",
+    washer: "Lave-linge & sèche-linge",
+    parking: "Parking gratuit à proximité",
+    workspace: "Espace de travail",
+    elevator: "Ascenseur",
+    pets: "Animaux acceptés",
+    iron: "Fer à repasser",
+    hairdryer: "Sèche-cheveux",
+    crib: "Lit bébé disponible",
+    selfCheckin: "Entrée par boîte à clé",
+    garden: "Vue sur jardin",
+    beach: "Proche de la plage",
   },
   cta: {
     overline: "Réservez votre séjour",
     headline: "Réservation",
-    description: "Disponibilité sur demande. Annulation flexible incluse.",
+    description: "Vérifiez la disponibilité et réservez directement. Annulation flexible incluse.",
     bookNow: "Réserver",
     contactUs: "Nous contacter",
   },
   slider: {
-    title: "La Collection",
-    subtitle: "Des espaces qui parlent doucement",
+    title: "L'Appartement",
+    subtitle: "Jetez un œil à l'intérieur",
     rooms: {
       livingRoom: "Salon",
       kitchen: "Cuisine",
@@ -385,7 +513,7 @@ const fr: Translations = {
   },
   contactModal: {
     title: "Contactez-nous",
-    subtitle: "Nous vous répondrons rapidement.",
+    subtitle: "Des questions sur l'appartement ? Nous répondons généralement en une heure.",
     name: "Nom",
     email: "E-mail",
     message: "Message",
@@ -422,37 +550,64 @@ const fr: Translations = {
 
 const es: Translations = {
   nav: {
-    gallery: "Galería",
-    residence: "La Residencia",
+    gallery: "Fotos",
+    residence: "El Apartamento",
     contact: "Contacto",
     bookNow: "Reservar",
   },
   hero: {
     overline: "Jaffa, Tel Aviv",
     title: "YaffoTLV",
-    tagline: "Donde el patrimonio encuentra el horizonte",
+    tagline: "Tu hogar en Jaffa",
   },
   signature: {
-    headline: "Una residencia privada en el corazón de Jaffa",
-    subtitle: "Cada detalle considerado. Cada superficie intencional. Un hogar que pertenece completamente a este lugar.",
+    headline: "80 m² de luz, confort y todo lo que necesitas",
+    subtitle: "Apartamento de 3 habitaciones renovado en un barrio tranquilo de Jaffa. Dos dormitorios, cocina totalmente equipada, aire acondicionado en cada habitación y 10 minutos a pie de la playa.",
   },
-  quote: "En la ciudad portuaria más antigua del Mediterráneo, donde cada piedra guarda una historia — una estancia privada, disponible bajo petición.",
+  quote: "En la ciudad portuaria más antigua del Mediterráneo, donde cada piedra guarda una historia — un apartamento privado, preparado para ti.",
   details: {
-    bedrooms: "2 Habitaciones",
-    location: "Jaffa",
-    sea: "8 min al mar",
+    bedrooms: "3 hab. · 80 m²",
+    location: "Jaffa, Tel Aviv",
+    sea: "10 min a la playa",
     vibe: "Tranquilo y Luminoso",
+  },
+  amenities: {
+    title: "Qué incluye",
+    subtitle: "Todo para una estancia cómoda",
+    size: "80 m²",
+    beds: "3 habitaciones · 5 camas",
+    bathrooms: "1.5 baños",
+    guests: "Hasta 6 huéspedes",
+    renovated: "Renovado 2024",
+    checkin: "Auto check-in",
+    checkout: "Check-out 11:00",
+    wifi: "WiFi rápido",
+    ac: "Aire acondicionado en todo",
+    tv: "Smart TV · Netflix",
+    kitchen: "Cocina completa",
+    nespresso: "Cafetera Nespresso",
+    washer: "Lavadora y secadora",
+    parking: "Aparcamiento gratis cerca",
+    workspace: "Espacio de trabajo",
+    elevator: "Ascensor",
+    pets: "Se admiten mascotas",
+    iron: "Plancha",
+    hairdryer: "Secador de pelo",
+    crib: "Cuna disponible",
+    selfCheckin: "Entrada con caja de llaves",
+    garden: "Vista al jardín",
+    beach: "Cerca de la playa",
   },
   cta: {
     overline: "Reserva tu estancia",
-    headline: "Reserva tu Estancia",
-    description: "Disponibilidad bajo consulta. Cancelación flexible incluida.",
+    headline: "Reserva",
+    description: "Consulta disponibilidad y reserva directamente. Cancelación flexible incluida.",
     bookNow: "Reservar",
     contactUs: "Contáctanos",
   },
   slider: {
-    title: "La Colección",
-    subtitle: "Espacios que hablan suavemente",
+    title: "El Apartamento",
+    subtitle: "Echa un vistazo",
     rooms: {
       livingRoom: "Salón",
       kitchen: "Cocina",
@@ -465,7 +620,7 @@ const es: Translations = {
   },
   contactModal: {
     title: "Contacto",
-    subtitle: "Le responderemos pronto.",
+    subtitle: "¿Preguntas sobre el apartamento? Normalmente respondemos en una hora.",
     name: "Nombre",
     email: "Correo",
     message: "Mensaje",
@@ -502,37 +657,64 @@ const es: Translations = {
 
 const ar: Translations = {
   nav: {
-    gallery: "معرض",
-    residence: "الإقامة",
+    gallery: "صور",
+    residence: "الشقة",
     contact: "اتصل بنا",
     bookNow: "احجز الآن",
   },
   hero: {
     overline: "يافا، تل أبيب",
     title: "YaffoTLV",
-    tagline: "حيث يلتقي التراث بالأفق",
+    tagline: "بيتكم في يافا",
   },
   signature: {
-    headline: "إقامة خاصة في قلب يافا",
-    subtitle: "كل تفصيل مدروس. كل سطح مقصود. منزل ينتمي بالكامل لهذا المكان.",
+    headline: "80 متر مربع من الضوء والراحة وكل ما تحتاجون",
+    subtitle: "شقة من 3 غرف مجددة في حي هادئ في يافا. غرفتا نوم، مطبخ مجهز بالكامل، تكييف في كل غرفة، و10 دقائق سيراً من الشاطئ.",
   },
-  quote: "في أقدم مدينة ميناء على البحر الأبيض المتوسط، حيث كل حجر يحكي قصة — إقامة خاصة، متاحة عند الطلب.",
+  quote: "في أقدم مدينة ميناء على البحر المتوسط، حيث كل حجر يحكي قصة — شقة خاصة، جاهزة من أجلكم.",
   details: {
-    bedrooms: "غرفتا نوم",
-    location: "يافا",
-    sea: "8 دقائق من البحر",
+    bedrooms: "3 غرف · 80 م²",
+    location: "يافا، تل أبيب",
+    sea: "10 دقائق من الشاطئ",
     vibe: "هادئ ومشرق",
+  },
+  amenities: {
+    title: "ماذا يشمل",
+    subtitle: "كل ما تحتاجه لإقامة مريحة",
+    size: "80 م²",
+    beds: "3 غرف · 5 أسرّة",
+    bathrooms: "حمام ونصف",
+    guests: "حتى 6 ضيوف",
+    renovated: "تم التجديد 2024",
+    checkin: "تسجيل وصول ذاتي",
+    checkout: "المغادرة 11:00",
+    wifi: "واي فاي سريع",
+    ac: "تكييف في كل غرفة",
+    tv: "تلفزيون ذكي · نتفليكس",
+    kitchen: "مطبخ كامل",
+    nespresso: "ماكينة نسبريسو",
+    washer: "غسالة ومجفف",
+    parking: "موقف مجاني قريب",
+    workspace: "مساحة عمل",
+    elevator: "مصعد",
+    pets: "يُسمح بالحيوانات الأليفة",
+    iron: "مكواة",
+    hairdryer: "مجفف شعر",
+    crib: "سرير أطفال متوفر",
+    selfCheckin: "دخول بصندوق مفاتيح",
+    garden: "إطلالة على الحديقة",
+    beach: "قريب من الشاطئ",
   },
   cta: {
     overline: "احجز إقامتك",
-    headline: "احجز إقامتك",
-    description: "التوفر عند الاستفسار. إلغاء مرن مشمول.",
+    headline: "احجز الآن",
+    description: "تحقق من التوفر واحجز مباشرة. إلغاء مرن مشمول.",
     bookNow: "احجز الآن",
     contactUs: "اتصل بنا",
   },
   slider: {
-    title: "المجموعة",
-    subtitle: "مساحات تتحدث بهدوء",
+    title: "الشقة",
+    subtitle: "ألقِ نظرة من الداخل",
     rooms: {
       livingRoom: "غرفة المعيشة",
       kitchen: "المطبخ",
@@ -545,7 +727,7 @@ const ar: Translations = {
   },
   contactModal: {
     title: "تواصل معنا",
-    subtitle: "سنعود إليك قريباً.",
+    subtitle: "أسئلة عن الشقة؟ عادةً نرد خلال ساعة.",
     name: "الاسم",
     email: "البريد الإلكتروني",
     message: "الرسالة",
@@ -562,9 +744,9 @@ const ar: Translations = {
     step1Title: "اختر التواريخ",
     step2: "الخطوة 2 من 2",
     step2Title: "بيانات الضيف",
-    cancellation: "إلغاء مرن: استرداد كامل حتى 24 ساعة قبل تسجيل الوصول.",
-    checkIn: "تسجيل الوصول",
-    checkOut: "تسجيل المغادرة",
+    cancellation: "إلغاء مرن: استرداد كامل حتى 24 ساعة قبل الوصول.",
+    checkIn: "الوصول",
+    checkOut: "المغادرة",
     nights: "ليالٍ",
     guests: "الضيوف",
     guestName: "الاسم الكامل",
