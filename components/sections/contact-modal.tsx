@@ -2,6 +2,7 @@
 
 import { useRef, useEffect } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import { useI18n } from "@/lib/i18n/context";
 
 interface ContactModalProps {
   isOpen: boolean;
@@ -11,6 +12,7 @@ interface ContactModalProps {
 export function ContactModal({ isOpen, onClose }: ContactModalProps) {
   const reduceMotion = useReducedMotion();
   const overlayRef = useRef<HTMLDivElement>(null);
+  const { t } = useI18n();
 
   useEffect(() => {
     if (isOpen) {
@@ -56,7 +58,7 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
             <button
               onClick={onClose}
               className="absolute right-4 top-4 flex h-10 w-10 items-center justify-center text-stone transition-colors hover:text-charcoal"
-              aria-label="Close"
+              aria-label={t.contactModal.close}
             >
               <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                 <path d="M15 5L5 15M5 5L15 15" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
@@ -64,14 +66,13 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
             </button>
 
             <p className="text-xs font-medium uppercase tracking-[0.3em] text-accent">
-              Get in Touch
+              {t.contactModal.title}
             </p>
             <h3 className="mt-3 font-serif text-4xl font-light text-charcoal">
-              Contact Us
+              {t.nav.contact}
             </h3>
             <p className="mt-4 text-sm leading-relaxed text-stone">
-              We&apos;d love to hear from you. Reach out for private viewings,
-              availability, or any questions about YaffoTLV.
+              {t.contactModal.subtitle}
             </p>
 
             <form
@@ -89,7 +90,7 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
             >
               <div>
                 <label htmlFor="contact-name" className="block text-xs font-medium uppercase tracking-[0.15em] text-graphite">
-                  Name
+                  {t.contactModal.name}
                 </label>
                 <input
                   id="contact-name"
@@ -97,12 +98,11 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
                   type="text"
                   required
                   className="mt-2 w-full border-b border-sand bg-transparent pb-2 text-sm text-charcoal outline-none transition-colors focus:border-accent"
-                  placeholder="Your name"
                 />
               </div>
               <div>
                 <label htmlFor="contact-email" className="block text-xs font-medium uppercase tracking-[0.15em] text-graphite">
-                  Email
+                  {t.contactModal.email}
                 </label>
                 <input
                   id="contact-email"
@@ -110,12 +110,11 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
                   type="email"
                   required
                   className="mt-2 w-full border-b border-sand bg-transparent pb-2 text-sm text-charcoal outline-none transition-colors focus:border-accent"
-                  placeholder="your@email.com"
                 />
               </div>
               <div>
                 <label htmlFor="contact-message" className="block text-xs font-medium uppercase tracking-[0.15em] text-graphite">
-                  Message
+                  {t.contactModal.message}
                 </label>
                 <textarea
                   id="contact-message"
@@ -123,19 +122,18 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
                   rows={4}
                   required
                   className="mt-2 w-full resize-none border-b border-sand bg-transparent pb-2 text-sm text-charcoal outline-none transition-colors focus:border-accent"
-                  placeholder="Tell us about your interest..."
                 />
               </div>
               <button
                 type="submit"
                 className="mt-4 w-full border border-accent bg-transparent px-8 py-4 text-xs font-medium uppercase tracking-[0.2em] text-accent transition-colors duration-300 hover:bg-accent hover:text-white"
               >
-                Send Inquiry
+                {t.contactModal.send}
               </button>
             </form>
 
             <div className="mt-8 border-t border-sand pt-6">
-              <p className="text-xs text-stone">We&apos;ll get back to you shortly.</p>
+              <p className="text-xs text-stone">{t.contactModal.thanksMessage}</p>
             </div>
           </motion.div>
         </motion.div>

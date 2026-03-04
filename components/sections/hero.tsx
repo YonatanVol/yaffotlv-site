@@ -8,19 +8,20 @@ import {
   useTransform,
   useReducedMotion,
 } from "framer-motion";
+import { useI18n } from "@/lib/i18n/context";
 
 const EASE_OUT_EXPO: [number, number, number, number] = [0.16, 1, 0.3, 1];
 
 export function Hero() {
   const containerRef = useRef<HTMLDivElement>(null);
   const reduceMotion = useReducedMotion();
+  const { t } = useI18n();
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end start"],
   });
 
-  // Parallax layers — background moves slowest, text moves fastest
   const bgY = useTransform(scrollYProgress, [0, 1], ["0%", "15%"]);
   const textY = useTransform(scrollYProgress, [0, 1], ["0%", "40%"]);
   const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
@@ -39,7 +40,6 @@ export function Hero() {
       ref={containerRef}
       className="grain relative h-screen w-full overflow-hidden"
     >
-      {/* Background image with parallax */}
       <motion.div
         className="absolute inset-0"
         style={reduceMotion ? undefined : { y: bgY }}
@@ -52,7 +52,6 @@ export function Hero() {
           className="object-cover"
           sizes="100vw"
         />
-        {/* Warm overlay for text legibility + brand tone */}
         <div className="absolute inset-0 bg-ink/40" />
         <div
           className="absolute inset-0 mix-blend-multiply"
@@ -63,36 +62,31 @@ export function Hero() {
         />
       </motion.div>
 
-      {/* Content */}
       <motion.div
         className="relative z-10 flex h-full flex-col items-center justify-center px-6 text-center"
         style={reduceMotion ? undefined : { y: textY, opacity }}
       >
-        {/* Overline */}
         <motion.p
           className="text-xs font-medium uppercase tracking-[0.3em] text-white/70"
           {...motionProps(0.3)}
         >
-          Jaffa, Tel Aviv
+          {t.hero.overline}
         </motion.p>
 
-        {/* Title */}
         <motion.h1
           className="mt-6 font-serif text-7xl font-light tracking-tight text-white md:text-8xl lg:text-9xl"
           {...motionProps(0.6)}
         >
-          YaffoTLV
+          {t.hero.title}
         </motion.h1>
 
-        {/* Tagline */}
         <motion.p
           className="mt-6 max-w-md font-serif text-xl font-light italic text-white/80 md:text-2xl"
           {...motionProps(1.0)}
         >
-          Where heritage meets horizon
+          {t.hero.tagline}
         </motion.p>
 
-        {/* Scroll indicator */}
         <motion.div
           className="absolute bottom-12 left-1/2 -translate-x-1/2"
           initial={reduceMotion ? { opacity: 1 } : { opacity: 0 }}

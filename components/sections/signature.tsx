@@ -7,10 +7,12 @@ import {
   useTransform,
   useReducedMotion,
 } from "framer-motion";
+import { useI18n } from "@/lib/i18n/context";
 
 export function Signature() {
   const containerRef = useRef<HTMLDivElement>(null);
   const reduceMotion = useReducedMotion();
+  const { t } = useI18n();
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -59,7 +61,7 @@ export function Signature() {
                 }
           }
         >
-          A residence, not a rental
+          {t.signature.headline}
         </motion.h2>
 
         {/* Subtitle fades in after headline */}
@@ -71,8 +73,7 @@ export function Signature() {
               : { opacity: subtitleOpacity, y: subtitleY }
           }
         >
-          Every detail considered. Every surface intentional. Architecture that
-          honors four thousand years of history.
+          {t.signature.subtitle}
         </motion.p>
 
         {/* Bottom brass rule */}

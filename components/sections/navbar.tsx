@@ -3,6 +3,8 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
+import { useI18n } from "@/lib/i18n/context";
+import { LanguageToggle } from "@/components/ui/language-toggle";
 
 interface NavbarProps {
   onContactClick: () => void;
@@ -11,6 +13,7 @@ interface NavbarProps {
 export function Navbar({ onContactClick }: NavbarProps) {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const { t } = useI18n();
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
@@ -25,9 +28,9 @@ export function Navbar({ onContactClick }: NavbarProps) {
   };
 
   const links = [
-    { label: "Gallery", action: () => scrollTo("gallery") },
-    { label: "The Residence", action: () => scrollTo("signature") },
-    { label: "Contact", action: () => { setMobileOpen(false); onContactClick(); } },
+    { label: t.nav.gallery, action: () => scrollTo("gallery") },
+    { label: t.nav.residence, action: () => scrollTo("signature") },
+    { label: t.nav.contact, action: () => { setMobileOpen(false); onContactClick(); } },
   ];
 
   return (
@@ -47,7 +50,7 @@ export function Navbar({ onContactClick }: NavbarProps) {
           </button>
 
           {/* Desktop links */}
-          <div className="hidden items-center gap-10 md:flex">
+          <div className="hidden items-center gap-8 md:flex">
             {links.map((link) => (
               <button
                 key={link.label}
@@ -61,32 +64,36 @@ export function Navbar({ onContactClick }: NavbarProps) {
               href="/book"
               className="border border-white/30 px-6 py-2 text-xs font-medium uppercase tracking-[0.2em] text-white transition-colors duration-300 hover:border-white hover:bg-white hover:text-ink"
             >
-              Book Now
+              {t.nav.bookNow}
             </Link>
+            <LanguageToggle />
           </div>
 
           {/* Mobile hamburger */}
-          <button
-            onClick={() => setMobileOpen(!mobileOpen)}
-            className="relative h-6 w-6 md:hidden"
-            aria-label="Toggle menu"
-          >
-            <span
-              className={`absolute left-0 h-px w-6 bg-white transition-all duration-300 ${
-                mobileOpen ? "top-3 rotate-45" : "top-1"
-              }`}
-            />
-            <span
-              className={`absolute left-0 top-3 h-px w-6 bg-white transition-opacity duration-300 ${
-                mobileOpen ? "opacity-0" : "opacity-100"
-              }`}
-            />
-            <span
-              className={`absolute left-0 h-px w-6 bg-white transition-all duration-300 ${
-                mobileOpen ? "top-3 -rotate-45" : "top-5"
-              }`}
-            />
-          </button>
+          <div className="flex items-center gap-3 md:hidden">
+            <LanguageToggle />
+            <button
+              onClick={() => setMobileOpen(!mobileOpen)}
+              className="relative h-6 w-6"
+              aria-label="Toggle menu"
+            >
+              <span
+                className={`absolute left-0 h-px w-6 bg-white transition-all duration-300 ${
+                  mobileOpen ? "top-3 rotate-45" : "top-1"
+                }`}
+              />
+              <span
+                className={`absolute left-0 top-3 h-px w-6 bg-white transition-opacity duration-300 ${
+                  mobileOpen ? "opacity-0" : "opacity-100"
+                }`}
+              />
+              <span
+                className={`absolute left-0 h-px w-6 bg-white transition-all duration-300 ${
+                  mobileOpen ? "top-3 -rotate-45" : "top-5"
+                }`}
+              />
+            </button>
+          </div>
         </div>
       </nav>
 
@@ -122,7 +129,7 @@ export function Navbar({ onContactClick }: NavbarProps) {
                 onClick={() => setMobileOpen(false)}
                 className="mt-4 inline-block border border-white/30 px-8 py-3 font-serif text-2xl font-light text-white transition-colors hover:border-white hover:bg-white hover:text-ink"
               >
-                Book Now
+                {t.nav.bookNow}
               </Link>
             </motion.div>
           </motion.div>

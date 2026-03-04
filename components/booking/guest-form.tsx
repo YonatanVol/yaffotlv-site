@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useI18n } from "@/lib/i18n/context";
 
 interface GuestFormProps {
   onSubmit: (data: {
@@ -17,6 +18,7 @@ export function GuestForm({ onSubmit, loading }: GuestFormProps) {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [guests, setGuests] = useState(1);
+  const { t } = useI18n();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -27,7 +29,7 @@ export function GuestForm({ onSubmit, loading }: GuestFormProps) {
     <form onSubmit={handleSubmit} className="space-y-6">
       <div>
         <label className="block text-xs font-medium uppercase tracking-[0.15em] text-graphite">
-          Full Name
+          {t.book.guestName}
         </label>
         <input
           type="text"
@@ -35,13 +37,12 @@ export function GuestForm({ onSubmit, loading }: GuestFormProps) {
           value={name}
           onChange={(e) => setName(e.target.value)}
           className="mt-2 w-full border-b border-sand bg-transparent pb-2 text-sm text-charcoal outline-none transition-colors focus:border-accent"
-          placeholder="Your full name"
         />
       </div>
 
       <div>
         <label className="block text-xs font-medium uppercase tracking-[0.15em] text-graphite">
-          Email
+          {t.book.guestEmail}
         </label>
         <input
           type="email"
@@ -49,13 +50,12 @@ export function GuestForm({ onSubmit, loading }: GuestFormProps) {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           className="mt-2 w-full border-b border-sand bg-transparent pb-2 text-sm text-charcoal outline-none transition-colors focus:border-accent"
-          placeholder="your@email.com"
         />
       </div>
 
       <div>
         <label className="block text-xs font-medium uppercase tracking-[0.15em] text-graphite">
-          Phone (optional)
+          {t.book.guestPhone}
         </label>
         <input
           type="tel"
@@ -68,7 +68,7 @@ export function GuestForm({ onSubmit, loading }: GuestFormProps) {
 
       <div>
         <label className="block text-xs font-medium uppercase tracking-[0.15em] text-graphite">
-          Number of Guests
+          {t.book.guestCount}
         </label>
         <select
           value={guests}
@@ -77,7 +77,7 @@ export function GuestForm({ onSubmit, loading }: GuestFormProps) {
         >
           {[1, 2, 3, 4, 5, 6].map((n) => (
             <option key={n} value={n}>
-              {n} guest{n > 1 ? "s" : ""}
+              {n} {t.book.guests}
             </option>
           ))}
         </select>
@@ -88,7 +88,7 @@ export function GuestForm({ onSubmit, loading }: GuestFormProps) {
         disabled={loading}
         className="mt-4 w-full border border-accent px-8 py-4 text-xs font-medium uppercase tracking-[0.2em] text-accent transition-colors duration-300 hover:bg-accent hover:text-white disabled:opacity-50"
       >
-        {loading ? "Processing..." : "Proceed to Payment"}
+        {loading ? "..." : t.book.payNow}
       </button>
     </form>
   );
