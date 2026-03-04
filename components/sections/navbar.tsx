@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 
 interface NavbarProps {
@@ -60,6 +61,12 @@ export function Navbar({ onContactClick }: NavbarProps) {
                 {link.label}
               </button>
             ))}
+            <Link
+              href="/book"
+              className="border border-white/30 px-6 py-2 text-xs font-medium uppercase tracking-[0.2em] text-white transition-colors duration-300 hover:border-white hover:bg-white hover:text-ink"
+            >
+              Book Now
+            </Link>
           </div>
 
           {/* Mobile hamburger */}
@@ -109,6 +116,19 @@ export function Navbar({ onContactClick }: NavbarProps) {
                 {link.label}
               </motion.button>
             ))}
+            <motion.div
+              initial={reduceMotion ? {} : { opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 + links.length * 0.08, duration: 0.4 }}
+            >
+              <Link
+                href="/book"
+                onClick={() => setMobileOpen(false)}
+                className="mt-4 inline-block border border-white/30 px-8 py-3 font-serif text-2xl font-light text-white transition-colors hover:border-white hover:bg-white hover:text-ink"
+              >
+                Book Now
+              </Link>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>

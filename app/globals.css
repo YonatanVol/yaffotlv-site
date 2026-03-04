@@ -116,3 +116,45 @@ body {
   background-repeat: repeat;
   background-size: 256px 256px;
 }
+
+/* ── react-day-picker Luxury Theme ───────────────────────────────── */
+
+.rdp-root {
+  --rdp-accent-color: var(--brass);
+  --rdp-accent-background-color: var(--brass);
+  --rdp-range_middle-background-color: var(--brass-light);
+  --rdp-range_middle-color: var(--charcoal);
+  --rdp-selected-font: var(--font-sans);
+  font-family: var(--font-sans), system-ui, sans-serif;
+}
+
+.rdp-day {
+  border-radius: 0;
+}
+
+.rdp-selected .rdp-day_button,
+.rdp-range_start .rdp-day_button,
+.rdp-range_end .rdp-day_button {
+  background-color: var(--brass);
+  color: var(--white);
+}
+
+.rdp-range_middle .rdp-day_button {
+  background-color: color-mix(in srgb, var(--brass-light) 30%, transparent);
+  color: var(--charcoal);
+}
+
+.rdp-today:not(.rdp-selected) .rdp-day_button {
+  font-weight: 700;
+  color: var(--brass-dark);
+}
+
+.rdp-disabled .rdp-day_button {
+  color: var(--sand);
+  text-decoration: line-through;
+  opacity: 0.5;
+}
+
+.rdp-chevron {
+  fill: var(--brass);
+}

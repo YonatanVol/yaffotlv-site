@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { Hero } from "@/components/sections/hero";
 import { Signature } from "@/components/sections/signature";
 import { PhotoSlider } from "@/components/sections/photo-slider";
@@ -39,17 +40,25 @@ export default function Home() {
             Begin your story
           </p>
           <h2 className="mt-4 font-serif text-4xl font-light text-charcoal md:text-5xl">
-            Inquire
+            Book Your Stay
           </h2>
           <p className="mt-6 text-lg leading-relaxed text-stone">
-            Private viewings available by appointment.
+            Reserve directly for the best rate. Flexible cancellation included.
           </p>
-          <button
-            onClick={() => setContactOpen(true)}
-            className="mt-10 inline-block border border-accent px-10 py-4 text-xs font-medium uppercase tracking-[0.2em] text-accent transition-colors duration-300 hover:bg-accent hover:text-white"
-          >
-            Contact Us
-          </button>
+          <div className="mt-10 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
+            <Link
+              href="/book"
+              className="inline-block bg-accent px-10 py-4 text-xs font-medium uppercase tracking-[0.2em] text-white transition-colors duration-300 hover:bg-accent-dark"
+            >
+              Book Now
+            </Link>
+            <button
+              onClick={() => setContactOpen(true)}
+              className="inline-block border border-accent px-10 py-4 text-xs font-medium uppercase tracking-[0.2em] text-accent transition-colors duration-300 hover:bg-accent hover:text-white"
+            >
+              Contact Us
+            </button>
+          </div>
         </Reveal>
       </section>
 
