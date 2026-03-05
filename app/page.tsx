@@ -10,6 +10,9 @@ import { ContactModal } from "@/components/sections/contact-modal";
 import { Amenities } from "@/components/sections/amenities";
 import { Reviews } from "@/components/sections/reviews";
 import { NeighborhoodMap } from "@/components/sections/neighborhood-map";
+import { WhyDirect } from "@/components/sections/why-direct";
+import { Host } from "@/components/sections/host";
+import { PerfectFor } from "@/components/sections/perfect-for";
 import { Reveal } from "@/components/ui/reveal";
 import { useI18n } from "@/lib/i18n/context";
 
@@ -52,6 +55,12 @@ export default function Home() {
       <Reviews />
 
       <Amenities />
+
+      <PerfectFor />
+
+      <WhyDirect />
+
+      <Host />
 
       <NeighborhoodMap />
 

@@ -44,16 +44,18 @@ export function PhotoSlider() {
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState(0);
   const reduceMotion = useReducedMotion();
-  const { t } = useI18n();
+  const { t, isRtl } = useI18n();
 
   const paginate = useCallback(
     (newDirection: number) => {
       setCurrent(([prev]) => {
-        const next = (prev + newDirection + slides.length) % slides.length;
-        return [next, newDirection];
+        // In RTL, swap navigation direction so arrows feel natural
+        const dir = isRtl ? -newDirection : newDirection;
+        const next = (prev + dir + slides.length) % slides.length;
+        return [next, dir];
       });
     },
-    []
+    [isRtl]
   );
 
   const goTo = useCallback((index: number) => {

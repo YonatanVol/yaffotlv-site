@@ -1,6 +1,7 @@
 "use client";
 
 import { useI18n } from "@/lib/i18n/context";
+import { GoldStars } from "@/components/ui/gold-stars";
 import { Reveal, RevealItem } from "@/components/ui/reveal";
 
 const AMENITY_ICONS: Record<string, string> = {
@@ -13,6 +14,7 @@ const AMENITY_ICONS: Record<string, string> = {
   wifi: "📶",
   ac: "❄️",
   tv: "📺",
+  streaming: "🎬",
   kitchen: "🍳",
   nespresso: "☕",
   washer: "👕",
@@ -20,14 +22,14 @@ const AMENITY_ICONS: Record<string, string> = {
   workspace: "💻",
   elevator: "🏢",
   pets: "🐾",
-  garden: "🌿",
+  shelter: "🛡️",
   beach: "🏖️",
 };
 
 const AMENITY_KEYS = [
   "size", "beds", "bathrooms", "guests", "renovated", "checkin",
-  "wifi", "ac", "tv", "kitchen", "nespresso", "washer",
-  "parking", "workspace", "elevator", "pets", "garden", "beach",
+  "wifi", "ac", "tv", "streaming", "kitchen", "nespresso", "washer",
+  "parking", "workspace", "elevator", "pets", "shelter", "beach",
 ] as const;
 
 export function Amenities() {
@@ -66,7 +68,10 @@ export function Amenities() {
         <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-3 border-t border-sand pt-8">
           <Fact label="Check-in" value="15:00" />
           <Fact label="Check-out" value="11:00" />
-          <Fact label="Superhost" value="★ 4.71" />
+          <div className="text-center">
+            <GoldStars size="md" showLabel={false} />
+            <p className="text-[10px] font-medium uppercase tracking-[0.2em] text-stone mt-1">Superhost</p>
+          </div>
           <Fact label="Reviews" value="140+" />
         </div>
       </div>

@@ -2,6 +2,7 @@
 
 import { useRef, useState, useEffect } from "react";
 import { Reveal } from "@/components/ui/reveal";
+import { GoldStars } from "@/components/ui/gold-stars";
 import { useI18n } from "@/lib/i18n/context";
 import { reviews } from "@/lib/reviews-data";
 import type { Locale } from "@/lib/i18n/translations";
@@ -37,9 +38,8 @@ export function Reviews() {
         <h2 className="mt-4 font-serif text-4xl font-light tracking-tight text-charcoal md:text-5xl">
           {t.reviews?.subtitle || "What our guests say"}
         </h2>
-        <div className="mt-4 flex items-center justify-center gap-2">
-          <span className="text-2xl text-accent">★</span>
-          <span className="text-xl font-serif font-light text-charcoal">4.71</span>
+        <div className="mt-4 flex items-center justify-center gap-3">
+          <GoldStars size="lg" showLabel={true} />
           <span className="text-sm text-stone">· 140+ {t.reviews?.reviewCount || "reviews"}</span>
         </div>
       </Reveal>
@@ -69,16 +69,9 @@ export function Reviews() {
               </span>
             </div>
 
-            {/* Stars */}
-            <div className="mt-3 flex gap-0.5">
-              {Array.from({ length: 5 }).map((_, i) => (
-                <span
-                  key={i}
-                  className={i < review.rating ? "text-accent" : "text-sand"}
-                >
-                  ★
-                </span>
-              ))}
+            {/* Gold stars */}
+            <div className="mt-3">
+              <GoldStars size="sm" showLabel={false} />
             </div>
 
             {/* Review text */}
