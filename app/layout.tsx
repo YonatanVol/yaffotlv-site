@@ -1,25 +1,28 @@
 import type { Metadata } from "next";
 import { serif, sans } from "@/lib/fonts";
 import { I18nProvider } from "@/lib/i18n/context";
+import { WhatsAppButton } from "@/components/ui/whatsapp-button";
+import { SocialProofBar } from "@/components/ui/social-proof-bar";
+import { StructuredData } from "@/components/structured-data";
 import "./globals.css";
 
 const siteUrl = "https://yaffotlv.com";
 
 export const metadata: Metadata = {
   title: {
-    default: "YaffoTLV | Luxury Residence in Jaffa, Tel Aviv",
+    default: "YaffoTLV | Luxury Apartment in Jaffa, Tel Aviv",
     template: "%s | YaffoTLV",
   },
   description:
-    "A private residence in historic Jaffa — where Mediterranean heritage meets contemporary luxury. 2 bedrooms, 8 min to the sea.",
+    "Book direct & save 10%. 3-room luxury apartment in Jaffa — 80 sqm, renovated 2024, 10 min to the beach. Superhost with 140+ reviews.",
   metadataBase: new URL(siteUrl),
   icons: {
     icon: "/favicon.ico",
   },
   openGraph: {
-    title: "YaffoTLV | Luxury Residence in Jaffa, Tel Aviv",
+    title: "YaffoTLV | Luxury Apartment in Jaffa, Tel Aviv",
     description:
-      "A private residence in historic Jaffa — where Mediterranean heritage meets contemporary luxury.",
+      "Book direct & save 10%. 3-room luxury apartment in Jaffa — 80 sqm, 10 min to beach. ★ 4.71 Superhost.",
     url: siteUrl,
     siteName: "YaffoTLV",
     images: [{ url: "/og.jpg", width: 1200, height: 630 }],
@@ -28,9 +31,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "YaffoTLV | Luxury Residence in Jaffa",
+    title: "YaffoTLV | Luxury Apartment in Jaffa",
     description:
-      "A private residence in historic Jaffa — where Mediterranean heritage meets contemporary luxury.",
+      "Book direct & save 10%. 3-room apartment in Jaffa — ★ 4.71 Superhost, 140+ reviews.",
     images: ["/og.jpg"],
   },
   robots: {
@@ -46,8 +49,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${serif.variable} ${sans.variable}`} suppressHydrationWarning>
+      <head>
+        <StructuredData />
+      </head>
       <body className="antialiased">
-        <I18nProvider>{children}</I18nProvider>
+        <I18nProvider>
+          {children}
+          <WhatsAppButton />
+          <SocialProofBar />
+        </I18nProvider>
       </body>
     </html>
   );

@@ -8,6 +8,8 @@ import { PhotoSlider } from "@/components/sections/photo-slider";
 import { Navbar } from "@/components/sections/navbar";
 import { ContactModal } from "@/components/sections/contact-modal";
 import { Amenities } from "@/components/sections/amenities";
+import { Reviews } from "@/components/sections/reviews";
+import { NeighborhoodMap } from "@/components/sections/neighborhood-map";
 import { Reveal } from "@/components/ui/reveal";
 import { useI18n } from "@/lib/i18n/context";
 
@@ -47,7 +49,11 @@ export default function Home() {
 
       <PhotoSlider />
 
+      <Reviews />
+
       <Amenities />
+
+      <NeighborhoodMap />
 
       {/* Closing CTA */}
       <section id="contact" className="bg-ivory py-32">
@@ -61,7 +67,14 @@ export default function Home() {
           <p className="mt-6 text-lg leading-relaxed text-stone">
             {t.cta.description}
           </p>
-          <div className="mt-10 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
+
+          {/* "Book Direct & Save" badge */}
+          <div className="mt-6 inline-flex items-center gap-2 rounded-full border border-green-200 bg-green-50 px-4 py-2 text-sm font-medium text-green-700">
+            <span>💰</span>
+            <span>{t.socialProof?.save || "Save 10% when you book direct"}</span>
+          </div>
+
+          <div className="mt-8 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
             <Link
               href="/book"
               className="inline-block bg-accent px-10 py-4 text-xs font-medium uppercase tracking-[0.2em] text-white transition-colors duration-300 hover:bg-accent-dark"
