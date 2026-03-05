@@ -117,6 +117,40 @@ export interface Translations {
     cleaning: string;
     total: string;
   };
+  // WhatsApp
+  whatsapp?: {
+    message: string;
+  };
+  // Reviews
+  reviews?: {
+    title: string;
+    subtitle: string;
+    reviewCount: string;
+    viewAll: string;
+  };
+  // Social proof bar
+  socialProof?: {
+    booked: string;
+    rating: string;
+    save: string;
+    superhost: string;
+  };
+  // Trust badges
+  trustBadges?: {
+    superhost: string;
+    secure: string;
+    save: string;
+  };
+  // Photo gallery
+  gallery?: {
+    viewAll: string;
+    photoOf: string;
+  };
+  // Map
+  map?: {
+    title: string;
+    subtitle: string;
+  };
 }
 
 const en: Translations = {
@@ -223,6 +257,34 @@ const en: Translations = {
     perNight: "/ night",
     cleaning: "Cleaning fee",
     total: "Total",
+  },
+  whatsapp: {
+    message: "Hi, I'm interested in booking YaffoTLV 🏡",
+  },
+  reviews: {
+    title: "Guest Reviews",
+    subtitle: "What our guests say",
+    reviewCount: "reviews",
+    viewAll: "View all reviews on Airbnb",
+  },
+  socialProof: {
+    booked: "🔥 3 guests booked this week",
+    rating: "⭐ Rated 4.71/5 by 140+ guests",
+    save: "💰 Save 10% when you book direct",
+    superhost: "🏆 Superhost · 12 years hosting",
+  },
+  trustBadges: {
+    superhost: "Superhost",
+    secure: "Secure Payment",
+    save: "10% Cheaper",
+  },
+  gallery: {
+    viewAll: "View all photos",
+    photoOf: "Photo",
+  },
+  map: {
+    title: "The Neighborhood",
+    subtitle: "Explore Jaffa",
   },
 };
 
@@ -332,6 +394,34 @@ const he: Translations = {
     cleaning: "דמי ניקיון",
     total: "סה״כ",
   },
+  whatsapp: {
+    message: "היי, אשמח לשמוע על YaffoTLV 🏡",
+  },
+  reviews: {
+    title: "ביקורות אורחים",
+    subtitle: "מה אורחים אומרים",
+    reviewCount: "ביקורות",
+    viewAll: "לכל הביקורות ב-Airbnb",
+  },
+  socialProof: {
+    booked: "🔥 3 אורחים הזמינו השבוע",
+    rating: "⭐ דירוג 4.71/5 מ-140+ ביקורות",
+    save: "💰 חסכו 10% בהזמנה ישירה",
+    superhost: "🏆 סופרהוסט · 12 שנות אירוח",
+  },
+  trustBadges: {
+    superhost: "סופרהוסט",
+    secure: "תשלום מאובטח",
+    save: "10% זול יותר",
+  },
+  gallery: {
+    viewAll: "כל התמונות",
+    photoOf: "תמונה",
+  },
+  map: {
+    title: "השכונה",
+    subtitle: "גלו את יפו",
+  },
 };
 
 const ru: Translations = {
@@ -438,6 +528,34 @@ const ru: Translations = {
     perNight: "/ ночь",
     cleaning: "Уборка",
     total: "Итого",
+  },
+  whatsapp: {
+    message: "Здравствуйте, меня интересует YaffoTLV 🏡",
+  },
+  reviews: {
+    title: "Отзывы гостей",
+    subtitle: "Что говорят наши гости",
+    reviewCount: "отзывов",
+    viewAll: "Все отзывы на Airbnb",
+  },
+  socialProof: {
+    booked: "🔥 3 гостя забронировали на этой неделе",
+    rating: "⭐ Рейтинг 4.71/5 от 140+ гостей",
+    save: "💰 Экономьте 10% при прямом бронировании",
+    superhost: "🏆 Суперхозяин · 12 лет опыта",
+  },
+  trustBadges: {
+    superhost: "Суперхозяин",
+    secure: "Безопасная оплата",
+    save: "На 10% дешевле",
+  },
+  gallery: {
+    viewAll: "Все фото",
+    photoOf: "Фото",
+  },
+  map: {
+    title: "Район",
+    subtitle: "Исследуйте Яффу",
   },
 };
 
@@ -546,6 +664,34 @@ const fr: Translations = {
     cleaning: "Frais de ménage",
     total: "Total",
   },
+  whatsapp: {
+    message: "Bonjour, je suis intéressé(e) par YaffoTLV 🏡",
+  },
+  reviews: {
+    title: "Avis des voyageurs",
+    subtitle: "Ce que disent nos hôtes",
+    reviewCount: "avis",
+    viewAll: "Voir tous les avis sur Airbnb",
+  },
+  socialProof: {
+    booked: "🔥 3 voyageurs ont réservé cette semaine",
+    rating: "⭐ Noté 4.71/5 par 140+ voyageurs",
+    save: "💰 Économisez 10% en réservant directement",
+    superhost: "🏆 Superhôte · 12 ans d'expérience",
+  },
+  trustBadges: {
+    superhost: "Superhôte",
+    secure: "Paiement sécurisé",
+    save: "10% moins cher",
+  },
+  gallery: {
+    viewAll: "Toutes les photos",
+    photoOf: "Photo",
+  },
+  map: {
+    title: "Le Quartier",
+    subtitle: "Explorez Jaffa",
+  },
 };
 
 const es: Translations = {
@@ -653,6 +799,34 @@ const es: Translations = {
     cleaning: "Limpieza",
     total: "Total",
   },
+  whatsapp: {
+    message: "Hola, me interesa YaffoTLV 🏡",
+  },
+  reviews: {
+    title: "Opiniones de huéspedes",
+    subtitle: "Lo que dicen nuestros huéspedes",
+    reviewCount: "opiniones",
+    viewAll: "Ver todas las opiniones en Airbnb",
+  },
+  socialProof: {
+    booked: "🔥 3 huéspedes reservaron esta semana",
+    rating: "⭐ Calificación 4.71/5 de 140+ huéspedes",
+    save: "💰 Ahorra 10% reservando directo",
+    superhost: "🏆 Superhost · 12 años de experiencia",
+  },
+  trustBadges: {
+    superhost: "Superhost",
+    secure: "Pago seguro",
+    save: "10% más barato",
+  },
+  gallery: {
+    viewAll: "Todas las fotos",
+    photoOf: "Foto",
+  },
+  map: {
+    title: "El Barrio",
+    subtitle: "Explora Jaffa",
+  },
 };
 
 const ar: Translations = {
@@ -759,6 +933,34 @@ const ar: Translations = {
     perNight: "/ ليلة",
     cleaning: "رسوم التنظيف",
     total: "المجموع",
+  },
+  whatsapp: {
+    message: "مرحباً، أنا مهتم بـ YaffoTLV 🏡",
+  },
+  reviews: {
+    title: "آراء الضيوف",
+    subtitle: "ماذا يقول ضيوفنا",
+    reviewCount: "تقييم",
+    viewAll: "جميع التقييمات على Airbnb",
+  },
+  socialProof: {
+    booked: "🔥 3 ضيوف حجزوا هذا الأسبوع",
+    rating: "⭐ تقييم 4.71/5 من 140+ ضيف",
+    save: "💰 وفر 10% عند الحجز المباشر",
+    superhost: "🏆 مضيف متميز · 12 سنة خبرة",
+  },
+  trustBadges: {
+    superhost: "مضيف متميز",
+    secure: "دفع آمن",
+    save: "أرخص بـ 10%",
+  },
+  gallery: {
+    viewAll: "جميع الصور",
+    photoOf: "صورة",
+  },
+  map: {
+    title: "الحي",
+    subtitle: "اكتشف يافا",
   },
 };
 

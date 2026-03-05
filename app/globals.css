@@ -212,3 +212,21 @@ body {
 [dir="rtl"] .back-arrow {
   transform: scaleX(-1);
 }
+
+/* WhatsApp button RTL positioning */
+.whatsapp-fab {
+  right: 1.5rem;
+}
+[dir="rtl"] .whatsapp-fab {
+  right: auto;
+  left: 1.5rem;
+}
+
+/* Hide scrollbar for reviews carousel */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
