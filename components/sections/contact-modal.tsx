@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { useI18n } from "@/lib/i18n/context";
 
@@ -13,10 +13,12 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
   const reduceMotion = useReducedMotion();
   const overlayRef = useRef<HTMLDivElement>(null);
   const { t } = useI18n();
+  const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
 
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = "hidden";
+      setStatus("idle");
     } else {
       document.body.style.overflow = "";
     }
@@ -75,66 +77,99 @@ export function ContactModal({ isOpen, onClose }: ContactModalProps) {
               {t.contactModal.subtitle}
             </p>
 
-            <form
-              className="mt-8 space-y-5"
-              onSubmit={(e) => {
-                e.preventDefault();
-                const form = e.target as HTMLFormElement;
-                const data = new FormData(form);
-                const name = data.get("name");
-                const email = data.get("email");
-                const message = data.get("message");
-                window.location.href = `mailto:yonatanes1@gmail.com?subject=Inquiry from ${name}&body=${message}%0A%0AFrom: ${name} (${email})`;
-                onClose();
-              }}
-            >
-              <div>
-                <label htmlFor="contact-name" className="block text-xs font-medium uppercase tracking-[0.15em] text-graphite">
-                  {t.contactModal.name}
-                </label>
-                <input
-                  id="contact-name"
-                  name="name"
-                  type="text"
-                  required
-                  className="mt-2 w-full border-b border-sand bg-transparent pb-2 text-sm text-charcoal outline-none transition-colors focus:border-accent"
-                />
+            {status === "success" ? (
+              <div className="mt-8 text-center">
+                <p className="font-serif text-2xl font-light text-charcoal">{t.contactModal.thanks}</p>
+                <p className="mt-3 text-sm text-stone">{t.contactModal.thanksMessage}</p>
+                <button
+                  onClick={onClose}
+                  className="mt-8 border border-accent bg-transparent px-8 py-4 text-xs font-medium uppercase tracking-[0.2em] text-accent transition-colors duration-300 hover:bg-accent hover:text-white"
+                >
+                  {t.contactModal.close}
+                </button>
               </div>
-              <div>
-                <label htmlFor="contact-email" className="block text-xs font-medium uppercase tracking-[0.15em] text-graphite">
-                  {t.contactModal.email}
-                </label>
-                <input
-                  id="contact-email"
-                  name="email"
-                  type="email"
-                  required
-                  className="mt-2 w-full border-b border-sand bg-transparent pb-2 text-sm text-charcoal outline-none transition-colors focus:border-accent"
-                />
-              </div>
-              <div>
-                <label htmlFor="contact-message" className="block text-xs font-medium uppercase tracking-[0.15em] text-graphite">
-                  {t.contactModal.message}
-                </label>
-                <textarea
-                  id="contact-message"
-                  name="message"
-                  rows={4}
-                  required
-                  className="mt-2 w-full resize-none border-b border-sand bg-transparent pb-2 text-sm text-charcoal outline-none transition-colors focus:border-accent"
-                />
-              </div>
-              <button
-                type="submit"
-                className="mt-4 w-full border border-accent bg-transparent px-8 py-4 text-xs font-medium uppercase tracking-[0.2em] text-accent transition-colors duration-300 hover:bg-accent hover:text-white"
+            ) : (
+              <form
+                className="mt-8 space-y-5"
+                onSubmit={async (e) => {
+                  e.preventDefault();
+                  const form = e.target as HTMLFormElement;
+                  const data = new FormData(form);
+                  setStatus("sending");
+                  try {
+                    const res = await fetch("/api/contact", {
+                      method: "POST",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({
+                        name: data.get("name"),
+                        email: data.get("email"),
+                        message: data.get("message"),
+                      }),
+                    });
+                    if (res.ok) {
+                      setStatus("success");
+                    } else {
+                      setStatus("error");
+                    }
+                  } catch {
+                    setStatus("error");
+                  }
+                }}
               >
-                {t.contactModal.send}
-              </button>
-            </form>
+                <div>
+                  <label htmlFor="contact-name" className="block text-xs font-medium uppercase tracking-[0.15em] text-graphite">
+                    {t.contactModal.name}
+                  </label>
+                  <input
+                    id="contact-name"
+                    name="name"
+                    type="text"
+                    required
+                    className="mt-2 w-full border-b border-sand bg-transparent pb-2 text-sm text-charcoal outline-none transition-colors focus:border-accent"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="contact-email" className="block text-xs font-medium uppercase tracking-[0.15em] text-graphite">
+                    {t.contactModal.email}
+                  </label>
+                  <input
+                    id="contact-email"
+                    name="email"
+                    type="email"
+                    required
+                    className="mt-2 w-full border-b border-sand bg-transparent pb-2 text-sm text-charcoal outline-none transition-colors focus:border-accent"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="contact-message" className="block text-xs font-medium uppercase tracking-[0.15em] text-graphite">
+                    {t.contactModal.message}
+                  </label>
+                  <textarea
+                    id="contact-message"
+                    name="message"
+                    rows={4}
+                    required
+                    className="mt-2 w-full resize-none border-b border-sand bg-transparent pb-2 text-sm text-charcoal outline-none transition-colors focus:border-accent"
+                  />
+                </div>
+                {status === "error" && (
+                  <p className="text-xs text-red-500">Something went wrong. Please try again.</p>
+                )}
+                <button
+                  type="submit"
+                  disabled={status === "sending"}
+                  className="mt-4 w-full border border-accent bg-transparent px-8 py-4 text-xs font-medium uppercase tracking-[0.2em] text-accent transition-colors duration-300 hover:bg-accent hover:text-white disabled:opacity-50"
+                >
+                  {status === "sending" ? "Sending..." : t.contactModal.send}
+                </button>
+              </form>
+            )}
 
-            <div className="mt-8 border-t border-sand pt-6">
-              <p className="text-xs text-stone">{t.contactModal.thanksMessage}</p>
-            </div>
+            {status !== "success" && (
+              <div className="mt-8 border-t border-sand pt-6">
+                <p className="text-xs text-stone">{t.contactModal.thanksMessage}</p>
+              </div>
+            )}
           </motion.div>
         </motion.div>
       )}
