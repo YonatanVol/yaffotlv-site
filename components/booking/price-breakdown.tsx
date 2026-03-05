@@ -61,10 +61,6 @@ export function PriceBreakdown({ quote, loading }: PriceBreakdownProps) {
               </span>
               <span className="text-charcoal">{formatILS(quote.baseTotal)} ILS</span>
             </div>
-            <div className="flex justify-between text-sm">
-              <span className="text-graphite">{t.book.cleaning}</span>
-              <span className="text-charcoal">{formatILS(quote.cleaningFee)} ILS</span>
-            </div>
           </div>
 
           <div className="mt-4 border-t border-sand pt-4">
@@ -76,6 +72,9 @@ export function PriceBreakdown({ quote, loading }: PriceBreakdownProps) {
                 {formatILS(quote.totalAmount)} ILS
               </span>
             </div>
+            <p className="mt-1 text-xs text-stone text-end">
+              {t.book.inclVat || "Price includes VAT"}
+            </p>
           </div>
 
           <p className="mt-4 text-xs text-stone">

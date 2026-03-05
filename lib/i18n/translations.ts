@@ -48,6 +48,7 @@ export interface Translations {
     wifi: string;
     ac: string;
     tv: string;
+    streaming: string;
     kitchen: string;
     nespresso: string;
     washer: string;
@@ -60,6 +61,7 @@ export interface Translations {
     crib: string;
     selfCheckin: string;
     garden: string;
+    shelter: string;
     beach: string;
   };
   cta: {
@@ -116,6 +118,7 @@ export interface Translations {
     perNight: string;
     cleaning: string;
     total: string;
+    inclVat?: string;
   };
   // WhatsApp
   whatsapp?: {
@@ -150,6 +153,41 @@ export interface Translations {
   map?: {
     title: string;
     subtitle: string;
+  };
+  // Why Book Direct
+  whyDirect?: {
+    overline: string;
+    title: string;
+    price: string;
+    priceDesc: string;
+    contact: string;
+    contactDesc: string;
+    flexible: string;
+    flexibleDesc: string;
+    local: string;
+    localDesc: string;
+  };
+  // Host section
+  host?: {
+    overline: string;
+    title: string;
+    superhost: string;
+    bio: string;
+    yearsHosting: string;
+    responseTime: string;
+  };
+  // Perfect For section
+  perfectFor?: {
+    overline: string;
+    title: string;
+    couples: string;
+    couplesDesc: string;
+    families: string;
+    familiesDesc: string;
+    remote: string;
+    remoteDesc: string;
+    travelers: string;
+    travelersDesc: string;
   };
 }
 
@@ -186,14 +224,15 @@ const en: Translations = {
     renovated: "Renovated 2024",
     checkin: "Self check-in",
     checkout: "Check-out 11:00",
-    wifi: "Fast WiFi",
+    wifi: "1 Gbps WiFi",
     ac: "AC in every room",
-    tv: "Smart TV · Netflix",
+    tv: "TV in every room",
+    streaming: "Netflix · Selcom TV",
     kitchen: "Full kitchen",
     nespresso: "Nespresso machine",
     washer: "Washer & dryer",
     parking: "Free parking nearby",
-    workspace: "Dedicated workspace",
+    workspace: "Perfect for WFH",
     elevator: "Elevator",
     pets: "Pet friendly",
     iron: "Iron",
@@ -201,6 +240,7 @@ const en: Translations = {
     crib: "Crib available",
     selfCheckin: "Lockbox entry",
     garden: "Garden view",
+    shelter: "Bomb shelter below",
     beach: "Near the beach",
   },
   cta: {
@@ -242,7 +282,7 @@ const en: Translations = {
     step1Title: "Select Your Dates",
     step2: "Step 2 of 2",
     step2Title: "Guest Details",
-    cancellation: "Flexible cancellation: full refund up to 24 hours before check-in.",
+    cancellation: "Flexible cancellation: full refund up to 3 days before check-in.",
     checkIn: "Check-in",
     checkOut: "Check-out",
     nights: "nights",
@@ -257,6 +297,7 @@ const en: Translations = {
     perNight: "/ night",
     cleaning: "Cleaning fee",
     total: "Total",
+    inclVat: "Price includes VAT",
   },
   whatsapp: {
     message: "Hi, I'm interested in booking YaffoTLV 🏡",
@@ -269,7 +310,7 @@ const en: Translations = {
   },
   socialProof: {
     booked: "🔥 3 guests booked this week",
-    rating: "⭐ Rated 4.71/5 by 140+ guests",
+    rating: "★★★★★ Rated by 140+ guests",
     save: "💰 Save 10% when you book direct",
     superhost: "🏆 Superhost · 12 years hosting",
   },
@@ -286,15 +327,47 @@ const en: Translations = {
     title: "The Neighborhood",
     subtitle: "Explore Jaffa",
   },
+  whyDirect: {
+    overline: "Why Book Direct",
+    title: "Skip the platforms. Book here.",
+    price: "Best Price Guaranteed",
+    priceDesc: "Always 10% cheaper than Airbnb or Booking.com. No middleman, no extra fees.",
+    contact: "Direct Communication",
+    contactDesc: "Chat directly with your host on WhatsApp. Faster answers, personal recommendations.",
+    flexible: "Flexible & Easy",
+    flexibleDesc: "Free cancellation up to 3 days before check-in. No hidden charges, no surprises.",
+    local: "Local Expertise",
+    localDesc: "Get insider tips, restaurant picks, and a digital guide from someone who knows Jaffa best.",
+  },
+  host: {
+    overline: "Your Host",
+    title: "Meet Eitan",
+    superhost: "Superhost",
+    bio: "Born and raised in Jaffa, I've been hosting guests for over 12 years. I renovated this apartment in 2024 with one goal: to make you feel at home, not in a hotel. I'm always a WhatsApp message away if you need anything — restaurant tips, directions, or just a friendly recommendation.",
+    yearsHosting: "12 years hosting",
+    responseTime: "Responds in 1 hour",
+  },
+  perfectFor: {
+    overline: "Perfect For",
+    title: "Who stays here",
+    couples: "Couples",
+    couplesDesc: "Romantic sunsets from Old Jaffa Port, candlelit dinners at The Container, and morning walks on the beach.",
+    families: "Families",
+    familiesDesc: "Spacious 3 rooms, crib available, pet-friendly, elevator, and the Flea Market is a 4-minute walk.",
+    remote: "Remote Workers",
+    remoteDesc: "Fast WiFi, dedicated workspace, Nespresso machine, and quiet neighborhood. Stay productive, live beautifully.",
+    travelers: "Explorers",
+    travelersDesc: "Walk to Old Jaffa, light rail to Tel Aviv center in 15 min, Abu Hasan hummus 3 minutes away.",
+  },
 };
 
-// ── Hebrew — fresh, direct, no clichés ────────────────────────────
+// ── Hebrew — warm, natural Israeli tone ────────────────────────────
 const he: Translations = {
   nav: {
-    gallery: "תמונות",
-    residence: "על הדירה",
-    contact: "יצירת קשר",
-    bookNow: "להזמנה",
+    gallery: "גלריה",
+    residence: "הדירה",
+    contact: "דברו איתנו",
+    bookNow: "הזמינו עכשיו",
   },
   hero: {
     overline: "יפו, תל אביב",
@@ -302,58 +375,60 @@ const he: Translations = {
     tagline: "הבית שלכם ביפו",
   },
   signature: {
-    headline: "80 מ״ר של אור, נוחות וכל מה שצריך",
-    subtitle: "דירת 3 חדרים משופצת בשכונה שקטה ביפו. שני חדרי שינה, מטבח מאובזר, מיזוג בכל חדר, ו-10 דקות הליכה מהחוף. תוכננה לאורחים שרוצים להרגיש בבית.",
+    headline: "80 מ״ר של אור, נוחות, ושקט — ממש ביפו",
+    subtitle: "דירת 3 חדרים שעברה שיפוץ מלא, בשכונה שקטה עם אופי. שני חדרי שינה נוחים, מטבח מאובזר לגמרי, מיזוג בכל חדר, ו-10 דקות ברגל מהים. המקום הזה נבנה בשביל אנשים שרוצים לחוות את יפו — ולהרגיש בבית.",
   },
-  quote: "בעיר הנמל הכי עתיקה בים התיכון, שם כל אבן מספרת משהו — דירה פרטית, מוכנה בשבילכם.",
+  quote: "בעיר הנמל הכי עתיקה בים התיכון, בין סמטאות אבן ושקיעות על המים — דירה פרטית שמחכה רק לכם.",
   details: {
     bedrooms: "3 חדרים · 80 מ״ר",
     location: "יפו, תל אביב",
-    sea: "10 דק׳ מהחוף",
+    sea: "10 דק׳ מהים",
     vibe: "שקט ומואר",
   },
   amenities: {
-    title: "מה כלול",
-    subtitle: "כל מה שצריך לשהייה נוחה",
+    title: "מה יש בדירה",
+    subtitle: "הכל כאן, אפשר פשוט להגיע",
     size: "80 מ״ר",
     beds: "3 חדרים · 5 מיטות",
     bathrooms: "חדר רחצה וחצי",
     guests: "עד 6 אורחים",
-    renovated: "שופצה ב-2024",
-    checkin: "צ׳ק-אין עצמאי",
-    checkout: "צ׳ק-אאוט 11:00",
-    wifi: "WiFi מהיר",
+    renovated: "שיפוץ 2024",
+    checkin: "כניסה עצמאית",
+    checkout: "עזיבה עד 11:00",
+    wifi: "אינטרנט 1 ג׳יגה",
     ac: "מיזוג בכל חדר",
-    tv: "טלוויזיה · נטפליקס",
-    kitchen: "מטבח מלא",
+    tv: "טלוויזיה בכל חדר",
+    streaming: "Netflix · סלקום TV",
+    kitchen: "מטבח מאובזר",
     nespresso: "מכונת נספרסו",
     washer: "מכונת כביסה ומייבש",
-    parking: "חניה חינם בסביבה",
-    workspace: "פינת עבודה",
-    elevator: "מעלית",
-    pets: "מותר עם חיות מחמד",
+    parking: "חניה חינם ברחוב",
+    workspace: "מושלם לעבודה מהבית",
+    elevator: "מעלית בבניין",
+    pets: "אפשר עם חיות מחמד",
     iron: "מגהץ",
     hairdryer: "מייבש שיער",
     crib: "עריסה לתינוק",
     selfCheckin: "כניסה עם קודן",
     garden: "נוף לגינה",
-    beach: "קרוב לחוף",
+    shelter: "מקלט ענק מתחת לבניין",
+    beach: "דקות מהחוף",
   },
   cta: {
-    overline: "הזמינו מקום",
-    headline: "להזמנה",
-    description: "בדקו זמינות והזמינו ישירות. ביטול גמיש כלול.",
+    overline: "מוכנים?",
+    headline: "הזמינו את המקום",
+    description: "תבדקו מתי פנוי ותסגרו ישירות. ביטול גמיש, בלי הפתעות.",
     bookNow: "להזמנה",
-    contactUs: "שאלות? דברו איתנו",
+    contactUs: "יש שאלה? כתבו לנו",
   },
   slider: {
-    title: "הדירה",
-    subtitle: "הציצו פנימה",
+    title: "הדירה מבפנים",
+    subtitle: "בואו תראו",
     rooms: {
       livingRoom: "סלון",
       kitchen: "מטבח",
-      bedroom1: "חדר שינה 1",
-      bedroom2: "חדר שינה 2",
+      bedroom1: "חדר שינה ראשי",
+      bedroom2: "חדר שינה שני",
       entryway: "כניסה",
     },
     prev: "תמונה קודמת",
@@ -361,24 +436,24 @@ const he: Translations = {
   },
   contactModal: {
     title: "דברו איתנו",
-    subtitle: "שאלות על הדירה? בדרך כלל חוזרים תוך שעה.",
+    subtitle: "שאלות? תכתבו, בדרך כלל חוזרים תוך שעה.",
     name: "שם",
     email: "אימייל",
-    message: "הודעה",
-    send: "שליחה",
-    thanks: "תודה",
-    thanksMessage: "נחזור אליכם בהקדם.",
+    message: "מה תרצו לדעת?",
+    send: "שלחו",
+    thanks: "תודה רבה!",
+    thanksMessage: "קיבלנו, נחזור אליכם בהקדם.",
     close: "סגירה",
   },
   book: {
-    overline: "הזמינו מקום",
+    overline: "בואו נסגור",
     title: "הזמנה",
-    subtitle: "בחרו תאריכים וסגרו הזמנה.",
+    subtitle: "בחרו תאריכים וסיימו ברגע.",
     step1: "שלב 1 מתוך 2",
-    step1Title: "בחרו תאריכים",
+    step1Title: "מתי אתם מגיעים?",
     step2: "שלב 2 מתוך 2",
-    step2Title: "פרטי האורח",
-    cancellation: "ביטול גמיש: החזר מלא עד 24 שעות לפני הגעה.",
+    step2Title: "ספרו לנו קצת על עצמכם",
+    cancellation: "ביטול גמיש: עד 3 ימים לפני — החזר מלא!",
     checkIn: "הגעה",
     checkOut: "עזיבה",
     nights: "לילות",
@@ -386,41 +461,74 @@ const he: Translations = {
     guestName: "שם מלא",
     guestEmail: "אימייל",
     guestPhone: "טלפון (לא חובה)",
-    guestCount: "מספר אורחים",
-    continue: "המשך",
+    guestCount: "כמה אתם?",
+    continue: "קדימה",
     back: "חזרה",
     payNow: "לתשלום",
     perNight: "/ לילה",
-    cleaning: "דמי ניקיון",
+    cleaning: "ניקיון",
     total: "סה״כ",
+    inclVat: "המחיר כולל מע״מ",
   },
   whatsapp: {
-    message: "היי, אשמח לשמוע על YaffoTLV 🏡",
+    message: "היי, רציתי לשמוע על הדירה ביפו 🏡",
   },
   reviews: {
-    title: "ביקורות אורחים",
-    subtitle: "מה אורחים אומרים",
+    title: "מה אורחים כותבים",
+    subtitle: "מתוך 140+ ביקורות",
     reviewCount: "ביקורות",
-    viewAll: "לכל הביקורות ב-Airbnb",
+    viewAll: "כל הביקורות ב-Airbnb →",
   },
   socialProof: {
     booked: "🔥 3 אורחים הזמינו השבוע",
-    rating: "⭐ דירוג 4.71/5 מ-140+ ביקורות",
-    save: "💰 חסכו 10% בהזמנה ישירה",
-    superhost: "🏆 סופרהוסט · 12 שנות אירוח",
+    rating: "★★★★★ מדורג ע״י 140+ אורחים",
+    save: "💰 חוסכים 10% בהזמנה ישירה",
+    superhost: "🏆 סופרהוסט · 12 שנים של אירוח",
   },
   trustBadges: {
     superhost: "סופרהוסט",
     secure: "תשלום מאובטח",
-    save: "10% זול יותר",
+    save: "זול ב-10%",
   },
   gallery: {
-    viewAll: "כל התמונות",
+    viewAll: "לכל התמונות",
     photoOf: "תמונה",
   },
   map: {
-    title: "השכונה",
-    subtitle: "גלו את יפו",
+    title: "השכונה שלנו",
+    subtitle: "הכירו את יפו",
+  },
+  whyDirect: {
+    overline: "למה ישירות",
+    title: "בלי פלטפורמות. ישר מאיתנו.",
+    price: "המחיר הכי טוב",
+    priceDesc: "תמיד 10% פחות מ-Airbnb או Booking. בלי עמלות, בלי מתווכים.",
+    contact: "קשר ישיר עם המארח",
+    contactDesc: "כתבו לנו בוואטסאפ. תשובה מהירה, המלצות אישיות, ואיתן תמיד זמין.",
+    flexible: "גמיש ופשוט",
+    flexibleDesc: "ביטול חינם עד 24 שעות לפני. בלי אותיות קטנות, בלי הפתעות.",
+    local: "טיפים של מקומי",
+    localDesc: "מסעדות, חופים, מקומות שרק יפואי אמיתי מכיר — הכל בשבילכם.",
+  },
+  host: {
+    overline: "המארח שלכם",
+    title: "הכירו את איתן",
+    superhost: "סופרהוסט",
+    bio: "נולדתי וגדלתי ביפו, ומארח אורחים כבר יותר מ-12 שנה. שיפצתי את הדירה ב-2024 עם מטרה אחת: שתרגישו בבית, לא במלון. אני תמיד זמין בוואטסאפ — בשביל המלצה על מסעדה, עזרה עם ניווט, או סתם טיפ טוב.",
+    yearsHosting: "12 שנים של אירוח",
+    responseTime: "עונה תוך שעה",
+  },
+  perfectFor: {
+    overline: "למי זה מתאים",
+    title: "הדירה מושלמת בשביל",
+    couples: "זוגות",
+    couplesDesc: "שקיעות מנמל יפו, ארוחת ערב רומנטית ב-The Container, וטיול בוקר על חוף הים.",
+    families: "משפחות",
+    familiesDesc: "דירת 3 חדרים מרווחת, עריסה, מותר עם חיות, מעלית, ושוק הפשפשים 4 דקות ברגל.",
+    remote: "עובדים מרחוק",
+    remoteDesc: "WiFi מהיר, פינת עבודה שקטה, נספרסו, ושכונה רגועה. תעבדו טוב, תחיו יפה.",
+    travelers: "מטיילים",
+    travelersDesc: "יפו העתיקה ברגל, רכבת קלה למרכז ת״א ב-15 דקות, והחומוס של אבו חסן 3 דקות מפה.",
   },
 };
 
@@ -457,14 +565,15 @@ const ru: Translations = {
     renovated: "Ремонт 2024",
     checkin: "Самостоятельный заезд",
     checkout: "Выезд 11:00",
-    wifi: "Быстрый WiFi",
+    wifi: "WiFi 1 Гбит/с",
     ac: "Кондиционер везде",
-    tv: "Smart TV · Netflix",
+    tv: "ТВ в каждой комнате",
+    streaming: "Netflix · Selcom TV",
     kitchen: "Полная кухня",
     nespresso: "Кофемашина Nespresso",
     washer: "Стиральная и сушильная машины",
     parking: "Бесплатная парковка рядом",
-    workspace: "Рабочее место",
+    workspace: "Идеально для удалёнки",
     elevator: "Лифт",
     pets: "Можно с питомцами",
     iron: "Утюг",
@@ -472,6 +581,7 @@ const ru: Translations = {
     crib: "Детская кроватка",
     selfCheckin: "Вход по коду",
     garden: "Вид на сад",
+    shelter: "Бомбоубежище в доме",
     beach: "Рядом с пляжем",
   },
   cta: {
@@ -513,7 +623,7 @@ const ru: Translations = {
     step1Title: "Выберите даты",
     step2: "Шаг 2 из 2",
     step2Title: "Данные гостя",
-    cancellation: "Гибкая отмена: полный возврат до 24 часов до заезда.",
+    cancellation: "Гибкая отмена: полный возврат за 3 дня до заезда.",
     checkIn: "Заезд",
     checkOut: "Выезд",
     nights: "ночей",
@@ -528,6 +638,7 @@ const ru: Translations = {
     perNight: "/ ночь",
     cleaning: "Уборка",
     total: "Итого",
+    inclVat: "Цена включает НДС",
   },
   whatsapp: {
     message: "Здравствуйте, меня интересует YaffoTLV 🏡",
@@ -540,7 +651,7 @@ const ru: Translations = {
   },
   socialProof: {
     booked: "🔥 3 гостя забронировали на этой неделе",
-    rating: "⭐ Рейтинг 4.71/5 от 140+ гостей",
+    rating: "★★★★★ Оценка 140+ гостей",
     save: "💰 Экономьте 10% при прямом бронировании",
     superhost: "🏆 Суперхозяин · 12 лет опыта",
   },
@@ -556,6 +667,38 @@ const ru: Translations = {
   map: {
     title: "Район",
     subtitle: "Исследуйте Яффу",
+  },
+  whyDirect: {
+    overline: "Почему напрямую",
+    title: "Без платформ. Бронируйте здесь.",
+    price: "Лучшая цена гарантирована",
+    priceDesc: "Всегда на 10% дешевле, чем на Airbnb или Booking.com. Без посредников, без комиссий.",
+    contact: "Прямая связь",
+    contactDesc: "Пишите хозяину в WhatsApp. Быстрые ответы, личные рекомендации.",
+    flexible: "Гибко и просто",
+    flexibleDesc: "Бесплатная отмена за 3 дня до заезда. Без скрытых платежей, без сюрпризов.",
+    local: "Местная экспертиза",
+    localDesc: "Советы инсайдера, лучшие рестораны и цифровой гид от того, кто знает Яффу лучше всех.",
+  },
+  host: {
+    overline: "Ваш хозяин",
+    title: "Знакомьтесь — Эйтан",
+    superhost: "Суперхозяин",
+    bio: "Родился и вырос в Яффе, принимаю гостей уже больше 12 лет. Отремонтировал эту квартиру в 2024 году с одной целью: чтобы вы чувствовали себя как дома, а не в отеле. Я всегда на связи в WhatsApp — подскажу ресторан, маршрут или просто дам хороший совет.",
+    yearsHosting: "12 лет опыта",
+    responseTime: "Отвечает за 1 час",
+  },
+  perfectFor: {
+    overline: "Идеально для",
+    title: "Для кого эта квартира",
+    couples: "Пары",
+    couplesDesc: "Романтические закаты в старом порту Яффы, ужин при свечах в The Container и утренние прогулки по пляжу.",
+    families: "Семьи",
+    familiesDesc: "Просторные 3 комнаты, детская кроватка, можно с питомцами, лифт — и блошиный рынок в 4 минутах.",
+    remote: "Удалённые работники",
+    remoteDesc: "Быстрый WiFi, рабочее место, кофемашина Nespresso и тихий район. Работайте продуктивно, живите красиво.",
+    travelers: "Путешественники",
+    travelersDesc: "Старая Яффа пешком, трамвай до центра Тель-Авива за 15 мин, хумус Абу-Хасана в 3 минутах.",
   },
 };
 
@@ -592,14 +735,15 @@ const fr: Translations = {
     renovated: "Rénové en 2024",
     checkin: "Arrivée autonome",
     checkout: "Départ 11h00",
-    wifi: "WiFi rapide",
+    wifi: "WiFi 1 Gbps",
     ac: "Clim dans chaque pièce",
-    tv: "Smart TV · Netflix",
+    tv: "TV dans chaque pièce",
+    streaming: "Netflix · Selcom TV",
     kitchen: "Cuisine complète",
     nespresso: "Machine Nespresso",
     washer: "Lave-linge & sèche-linge",
     parking: "Parking gratuit à proximité",
-    workspace: "Espace de travail",
+    workspace: "Idéal pour le télétravail",
     elevator: "Ascenseur",
     pets: "Animaux acceptés",
     iron: "Fer à repasser",
@@ -607,6 +751,7 @@ const fr: Translations = {
     crib: "Lit bébé disponible",
     selfCheckin: "Entrée par boîte à clé",
     garden: "Vue sur jardin",
+    shelter: "Abri sous l'immeuble",
     beach: "Proche de la plage",
   },
   cta: {
@@ -648,7 +793,7 @@ const fr: Translations = {
     step1Title: "Choisissez vos dates",
     step2: "Étape 2 sur 2",
     step2Title: "Détails de l'invité",
-    cancellation: "Annulation flexible : remboursement intégral jusqu'à 24h avant l'arrivée.",
+    cancellation: "Annulation flexible : remboursement intégral jusqu'à 3 jours avant l'arrivée.",
     checkIn: "Arrivée",
     checkOut: "Départ",
     nights: "nuits",
@@ -663,6 +808,7 @@ const fr: Translations = {
     perNight: "/ nuit",
     cleaning: "Frais de ménage",
     total: "Total",
+    inclVat: "Prix TTC",
   },
   whatsapp: {
     message: "Bonjour, je suis intéressé(e) par YaffoTLV 🏡",
@@ -675,7 +821,7 @@ const fr: Translations = {
   },
   socialProof: {
     booked: "🔥 3 voyageurs ont réservé cette semaine",
-    rating: "⭐ Noté 4.71/5 par 140+ voyageurs",
+    rating: "★★★★★ Noté par 140+ voyageurs",
     save: "💰 Économisez 10% en réservant directement",
     superhost: "🏆 Superhôte · 12 ans d'expérience",
   },
@@ -691,6 +837,38 @@ const fr: Translations = {
   map: {
     title: "Le Quartier",
     subtitle: "Explorez Jaffa",
+  },
+  whyDirect: {
+    overline: "Pourquoi réserver ici",
+    title: "Sans intermédiaire. Réservez ici.",
+    price: "Meilleur prix garanti",
+    priceDesc: "Toujours 10% moins cher qu'Airbnb ou Booking.com. Sans intermédiaire, sans frais cachés.",
+    contact: "Communication directe",
+    contactDesc: "Échangez directement avec votre hôte sur WhatsApp. Réponses rapides, recommandations personnalisées.",
+    flexible: "Flexible et simple",
+    flexibleDesc: "Annulation gratuite jusqu'à 3 jours avant l'arrivée. Sans surprises, sans frais cachés.",
+    local: "Expertise locale",
+    localDesc: "Conseils d'initié, restaurants préférés et guide numérique par quelqu'un qui connaît Jaffa par cœur.",
+  },
+  host: {
+    overline: "Votre hôte",
+    title: "Rencontrez Eitan",
+    superhost: "Superhôte",
+    bio: "Né et élevé à Jaffa, j'accueille des voyageurs depuis plus de 12 ans. J'ai rénové cet appartement en 2024 avec un seul objectif : que vous vous sentiez chez vous, pas à l'hôtel. Je suis toujours disponible sur WhatsApp — pour un conseil restaurant, des directions, ou simplement une bonne recommandation.",
+    yearsHosting: "12 ans d'accueil",
+    responseTime: "Répond en 1 heure",
+  },
+  perfectFor: {
+    overline: "Idéal pour",
+    title: "Pour qui est cet appartement",
+    couples: "Couples",
+    couplesDesc: "Couchers de soleil romantiques depuis le vieux port de Jaffa, dîners aux chandelles au Container, et promenades matinales sur la plage.",
+    families: "Familles",
+    familiesDesc: "3 pièces spacieuses, lit bébé disponible, animaux acceptés, ascenseur, et le marché aux puces à 4 minutes.",
+    remote: "Travailleurs nomades",
+    remoteDesc: "WiFi rapide, espace de travail dédié, machine Nespresso et quartier calme. Productif et inspirant.",
+    travelers: "Explorateurs",
+    travelersDesc: "La vieille Jaffa à pied, tramway vers le centre de Tel-Aviv en 15 min, le houmous d'Abu Hassan à 3 minutes.",
   },
 };
 
@@ -727,14 +905,15 @@ const es: Translations = {
     renovated: "Renovado 2024",
     checkin: "Auto check-in",
     checkout: "Check-out 11:00",
-    wifi: "WiFi rápido",
+    wifi: "WiFi 1 Gbps",
     ac: "Aire acondicionado en todo",
-    tv: "Smart TV · Netflix",
+    tv: "TV en cada habitación",
+    streaming: "Netflix · Selcom TV",
     kitchen: "Cocina completa",
     nespresso: "Cafetera Nespresso",
     washer: "Lavadora y secadora",
     parking: "Aparcamiento gratis cerca",
-    workspace: "Espacio de trabajo",
+    workspace: "Ideal para teletrabajo",
     elevator: "Ascensor",
     pets: "Se admiten mascotas",
     iron: "Plancha",
@@ -742,6 +921,7 @@ const es: Translations = {
     crib: "Cuna disponible",
     selfCheckin: "Entrada con caja de llaves",
     garden: "Vista al jardín",
+    shelter: "Refugio bajo el edificio",
     beach: "Cerca de la playa",
   },
   cta: {
@@ -783,7 +963,7 @@ const es: Translations = {
     step1Title: "Elige tus fechas",
     step2: "Paso 2 de 2",
     step2Title: "Datos del huésped",
-    cancellation: "Cancelación flexible: reembolso completo hasta 24 horas antes del check-in.",
+    cancellation: "Cancelación flexible: reembolso completo hasta 3 días antes del check-in.",
     checkIn: "Llegada",
     checkOut: "Salida",
     nights: "noches",
@@ -798,6 +978,7 @@ const es: Translations = {
     perNight: "/ noche",
     cleaning: "Limpieza",
     total: "Total",
+    inclVat: "Precio incluye IVA",
   },
   whatsapp: {
     message: "Hola, me interesa YaffoTLV 🏡",
@@ -810,7 +991,7 @@ const es: Translations = {
   },
   socialProof: {
     booked: "🔥 3 huéspedes reservaron esta semana",
-    rating: "⭐ Calificación 4.71/5 de 140+ huéspedes",
+    rating: "★★★★★ Valorado por 140+ huéspedes",
     save: "💰 Ahorra 10% reservando directo",
     superhost: "🏆 Superhost · 12 años de experiencia",
   },
@@ -826,6 +1007,38 @@ const es: Translations = {
   map: {
     title: "El Barrio",
     subtitle: "Explora Jaffa",
+  },
+  whyDirect: {
+    overline: "Por qué directo",
+    title: "Sin plataformas. Reserva aquí.",
+    price: "Mejor precio garantizado",
+    priceDesc: "Siempre 10% más barato que Airbnb o Booking.com. Sin intermediarios, sin comisiones.",
+    contact: "Comunicación directa",
+    contactDesc: "Habla directamente con tu anfitrión por WhatsApp. Respuestas rápidas, recomendaciones personales.",
+    flexible: "Flexible y fácil",
+    flexibleDesc: "Cancelación gratuita hasta 3 días antes del check-in. Sin cargos ocultos, sin sorpresas.",
+    local: "Experiencia local",
+    localDesc: "Consejos de experto, mejores restaurantes y una guía digital de alguien que conoce Jaffa de verdad.",
+  },
+  host: {
+    overline: "Tu anfitrión",
+    title: "Conoce a Eitan",
+    superhost: "Superhost",
+    bio: "Nacido y criado en Jaffa, llevo más de 12 años recibiendo huéspedes. Renové este apartamento en 2024 con un objetivo: que te sientas en casa, no en un hotel. Siempre estoy disponible por WhatsApp — para recomendaciones de restaurantes, direcciones, o cualquier consejo.",
+    yearsHosting: "12 años de experiencia",
+    responseTime: "Responde en 1 hora",
+  },
+  perfectFor: {
+    overline: "Perfecto para",
+    title: "Para quién es este apartamento",
+    couples: "Parejas",
+    couplesDesc: "Atardeceres románticos desde el puerto de Jaffa, cenas con velas en The Container y paseos matutinos por la playa.",
+    families: "Familias",
+    familiesDesc: "3 habitaciones amplias, cuna disponible, se admiten mascotas, ascensor, y el mercado de pulgas a 4 minutos.",
+    remote: "Nómadas digitales",
+    remoteDesc: "WiFi rápido, espacio de trabajo, cafetera Nespresso y barrio tranquilo. Productividad con estilo de vida.",
+    travelers: "Exploradores",
+    travelersDesc: "Jaffa antigua a pie, tranvía al centro de Tel Aviv en 15 min, el hummus de Abu Hassan a 3 minutos.",
   },
 };
 
@@ -862,14 +1075,15 @@ const ar: Translations = {
     renovated: "تم التجديد 2024",
     checkin: "تسجيل وصول ذاتي",
     checkout: "المغادرة 11:00",
-    wifi: "واي فاي سريع",
+    wifi: "واي فاي 1 جيجابت",
     ac: "تكييف في كل غرفة",
-    tv: "تلفزيون ذكي · نتفليكس",
+    tv: "تلفزيون في كل غرفة",
+    streaming: "نتفليكس · Selcom TV",
     kitchen: "مطبخ كامل",
     nespresso: "ماكينة نسبريسو",
     washer: "غسالة ومجفف",
     parking: "موقف مجاني قريب",
-    workspace: "مساحة عمل",
+    workspace: "مثالي للعمل عن بُعد",
     elevator: "مصعد",
     pets: "يُسمح بالحيوانات الأليفة",
     iron: "مكواة",
@@ -877,6 +1091,7 @@ const ar: Translations = {
     crib: "سرير أطفال متوفر",
     selfCheckin: "دخول بصندوق مفاتيح",
     garden: "إطلالة على الحديقة",
+    shelter: "ملجأ تحت المبنى",
     beach: "قريب من الشاطئ",
   },
   cta: {
@@ -918,7 +1133,7 @@ const ar: Translations = {
     step1Title: "اختر التواريخ",
     step2: "الخطوة 2 من 2",
     step2Title: "بيانات الضيف",
-    cancellation: "إلغاء مرن: استرداد كامل حتى 24 ساعة قبل الوصول.",
+    cancellation: "إلغاء مرن: استرداد كامل حتى 3 أيام قبل الوصول.",
     checkIn: "الوصول",
     checkOut: "المغادرة",
     nights: "ليالٍ",
@@ -933,6 +1148,7 @@ const ar: Translations = {
     perNight: "/ ليلة",
     cleaning: "رسوم التنظيف",
     total: "المجموع",
+    inclVat: "السعر شامل الضريبة",
   },
   whatsapp: {
     message: "مرحباً، أنا مهتم بـ YaffoTLV 🏡",
@@ -945,7 +1161,7 @@ const ar: Translations = {
   },
   socialProof: {
     booked: "🔥 3 ضيوف حجزوا هذا الأسبوع",
-    rating: "⭐ تقييم 4.71/5 من 140+ ضيف",
+    rating: "★★★★★ تقييم من 140+ ضيف",
     save: "💰 وفر 10% عند الحجز المباشر",
     superhost: "🏆 مضيف متميز · 12 سنة خبرة",
   },
@@ -961,6 +1177,38 @@ const ar: Translations = {
   map: {
     title: "الحي",
     subtitle: "اكتشف يافا",
+  },
+  whyDirect: {
+    overline: "لماذا الحجز المباشر",
+    title: "بدون منصات. احجز هنا.",
+    price: "أفضل سعر مضمون",
+    priceDesc: "دائماً أرخص بـ 10% من Airbnb أو Booking.com. بدون وسيط، بدون رسوم إضافية.",
+    contact: "تواصل مباشر",
+    contactDesc: "تحدث مباشرة مع المضيف عبر واتساب. إجابات سريعة وتوصيات شخصية.",
+    flexible: "مرن وسهل",
+    flexibleDesc: "إلغاء مجاني حتى 3 أيام قبل الوصول. بدون رسوم خفية، بدون مفاجآت.",
+    local: "خبرة محلية",
+    localDesc: "نصائح من الداخل، أفضل المطاعم، ودليل رقمي من شخص يعرف يافا أفضل من الجميع.",
+  },
+  host: {
+    overline: "مضيفكم",
+    title: "تعرفوا على إيتان",
+    superhost: "مضيف متميز",
+    bio: "ولدت وترعرعت في يافا، وأستضيف ضيوفاً منذ أكثر من 12 عاماً. جددت هذه الشقة عام 2024 بهدف واحد: أن تشعروا كأنكم في بيتكم، وليس في فندق. أنا دائماً متاح على واتساب — للتوصية بمطعم، للمساعدة في التنقل، أو لأي نصيحة.",
+    yearsHosting: "12 سنة استضافة",
+    responseTime: "يرد خلال ساعة",
+  },
+  perfectFor: {
+    overline: "مثالي لـ",
+    title: "لمن هذه الشقة",
+    couples: "الأزواج",
+    couplesDesc: "غروب رومانسي من ميناء يافا القديم، عشاء على ضوء الشموع في The Container، ومشي صباحي على الشاطئ.",
+    families: "العائلات",
+    familiesDesc: "3 غرف واسعة، سرير أطفال، يُسمح بالحيوانات الأليفة، مصعد، وسوق البراغيث على بعد 4 دقائق.",
+    remote: "العمل عن بُعد",
+    remoteDesc: "واي فاي سريع، مساحة عمل، ماكينة نسبريسو وحي هادئ. إنتاجية مع أسلوب حياة.",
+    travelers: "المستكشفون",
+    travelersDesc: "يافا القديمة سيراً، قطار خفيف لوسط تل أبيب في 15 دقيقة، حمص أبو حسن على بعد 3 دقائق.",
   },
 };
 

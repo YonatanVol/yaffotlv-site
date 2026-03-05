@@ -15,7 +15,7 @@ export function SocialProofBar() {
 
   const messages = [
     t.socialProof?.booked || "🔥 3 guests booked this week",
-    t.socialProof?.rating || "⭐ Rated 4.71/5 by 140+ guests",
+    t.socialProof?.rating || "★★★★★ Rated by 140+ guests",
     t.socialProof?.save || "💰 Save 10% when you book direct",
     t.socialProof?.superhost || "🏆 Superhost · 12 years hosting",
   ];
