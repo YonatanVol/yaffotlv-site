@@ -91,8 +91,11 @@ export interface Translations {
     email: string;
     message: string;
     send: string;
+    sending: string;
     thanks: string;
     thanksMessage: string;
+    error: string;
+    whatsappCta: string;
     close: string;
   };
   book: {
@@ -117,6 +120,8 @@ export interface Translations {
     payNow: string;
     perNight: string;
     cleaning: string;
+    subtotal: string;
+    vat: string;
     total: string;
     inclVat?: string;
   };
@@ -270,8 +275,11 @@ const en: Translations = {
     email: "Email",
     message: "Message",
     send: "Send Message",
+    sending: "Sending...",
     thanks: "Thank you",
-    thanksMessage: "We'll be in touch soon.",
+    thanksMessage: "We've received your message and will be in touch soon.",
+    error: "Something went wrong. Please try again.",
+    whatsappCta: "Or message us on WhatsApp",
     close: "Close",
   },
   book: {
@@ -296,6 +304,8 @@ const en: Translations = {
     payNow: "Pay Now",
     perNight: "/ night",
     cleaning: "Cleaning fee",
+    subtotal: "Subtotal",
+    vat: "VAT (18%)",
     total: "Total",
     inclVat: "Price includes VAT",
   },
@@ -441,8 +451,11 @@ const he: Translations = {
     email: "אימייל",
     message: "מה תרצו לדעת?",
     send: "שלחו",
+    sending: "שולח...",
     thanks: "תודה רבה!",
-    thanksMessage: "קיבלנו, נחזור אליכם בהקדם.",
+    thanksMessage: "קיבלנו את ההודעה, נחזור אליכם בהקדם.",
+    error: "משהו השתבש. נסו שוב.",
+    whatsappCta: "או שלחו לנו הודעה בוואטסאפ",
     close: "סגירה",
   },
   book: {
@@ -467,6 +480,8 @@ const he: Translations = {
     payNow: "לתשלום",
     perNight: "/ לילה",
     cleaning: "ניקיון",
+    subtotal: "סיכום ביניים",
+    vat: "מע״מ (18%)",
     total: "סה״כ",
     inclVat: "המחיר כולל מע״מ",
   },
@@ -611,8 +626,11 @@ const ru: Translations = {
     email: "Эл. почта",
     message: "Сообщение",
     send: "Отправить",
+    sending: "Отправка...",
     thanks: "Спасибо",
-    thanksMessage: "Мы скоро свяжемся с вами.",
+    thanksMessage: "Мы получили ваше сообщение и скоро свяжемся с вами.",
+    error: "Что-то пошло не так. Попробуйте ещё раз.",
+    whatsappCta: "Или напишите нам в WhatsApp",
     close: "Закрыть",
   },
   book: {
@@ -637,6 +655,8 @@ const ru: Translations = {
     payNow: "Оплатить",
     perNight: "/ ночь",
     cleaning: "Уборка",
+    subtotal: "Промежуточный итог",
+    vat: "НДС (18%)",
     total: "Итого",
     inclVat: "Цена включает НДС",
   },
@@ -781,8 +801,11 @@ const fr: Translations = {
     email: "E-mail",
     message: "Message",
     send: "Envoyer",
+    sending: "Envoi en cours...",
     thanks: "Merci",
-    thanksMessage: "Nous vous contacterons bientôt.",
+    thanksMessage: "Nous avons bien reçu votre message et vous contacterons bientôt.",
+    error: "Une erreur est survenue. Veuillez réessayer.",
+    whatsappCta: "Ou contactez-nous sur WhatsApp",
     close: "Fermer",
   },
   book: {
@@ -807,6 +830,8 @@ const fr: Translations = {
     payNow: "Payer",
     perNight: "/ nuit",
     cleaning: "Frais de ménage",
+    subtotal: "Sous-total",
+    vat: "TVA (18%)",
     total: "Total",
     inclVat: "Prix TTC",
   },
@@ -951,8 +976,11 @@ const es: Translations = {
     email: "Correo",
     message: "Mensaje",
     send: "Enviar",
+    sending: "Enviando...",
     thanks: "Gracias",
-    thanksMessage: "Nos pondremos en contacto pronto.",
+    thanksMessage: "Hemos recibido tu mensaje y te contactaremos pronto.",
+    error: "Algo salió mal. Por favor, inténtalo de nuevo.",
+    whatsappCta: "O escríbenos por WhatsApp",
     close: "Cerrar",
   },
   book: {
@@ -977,6 +1005,8 @@ const es: Translations = {
     payNow: "Pagar",
     perNight: "/ noche",
     cleaning: "Limpieza",
+    subtotal: "Subtotal",
+    vat: "IVA (18%)",
     total: "Total",
     inclVat: "Precio incluye IVA",
   },
@@ -1121,8 +1151,11 @@ const ar: Translations = {
     email: "البريد الإلكتروني",
     message: "الرسالة",
     send: "إرسال",
+    sending: "جارٍ الإرسال...",
     thanks: "شكراً",
-    thanksMessage: "سنتواصل معك قريباً.",
+    thanksMessage: "لقد تلقينا رسالتك وسنتواصل معك قريباً.",
+    error: "حدث خطأ. يرجى المحاولة مرة أخرى.",
+    whatsappCta: "أو راسلنا عبر واتساب",
     close: "إغلاق",
   },
   book: {
@@ -1147,6 +1180,8 @@ const ar: Translations = {
     payNow: "ادفع الآن",
     perNight: "/ ليلة",
     cleaning: "رسوم التنظيف",
+    subtotal: "المجموع الفرعي",
+    vat: "ضريبة القيمة المضافة (18%)",
     total: "المجموع",
     inclVat: "السعر شامل الضريبة",
   },

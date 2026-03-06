@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="96" fill="#2c2926"/>
+  <defs>
+    <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#d4bc96"/>
+      <stop offset="50%" stop-color="#b8976a"/>
+      <stop offset="100%" stop-color="#967748"/>
+    </linearGradient>
+  </defs>
+  <!-- Stylized Y monogram -->
+  <path d="M160 140 L256 280 L352 140" fill="none" stroke="url(#gold)" stroke-width="36" stroke-linecap="round" stroke-linejoin="round"/>
+  <line x1="256" y1="280" x2="256" y2="390" stroke="url(#gold)" stroke-width="36" stroke-linecap="round"/>
+  <!-- Subtle accent line beneath -->
+  <line x1="190" y1="420" x2="322" y2="420" stroke="url(#gold)" stroke-width="6" stroke-linecap="round" opacity="0.5"/>
+</svg>

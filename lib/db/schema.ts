@@ -71,3 +71,14 @@ export const pricingRules = pgTable("pricing_rules", {
   isActive: boolean("is_active").notNull().default(true),
   updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
 });
+
+/** Activity log — anonymous event tracking for analytics */
+export const activityLog = pgTable("activity_log", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  sessionId: text("session_id").notNull(),
+  event: text("event").notNull(), // "page_view" | "book_started" | "book_completed" | "contact_opened" | "whatsapp_clicked" | "gallery_opened" | "language_changed"
+  metadata: text("metadata"), // JSON string with extra data (page, locale, dates, etc.)
+  userAgent: text("user_agent"),
+  ip: text("ip"),
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+});
