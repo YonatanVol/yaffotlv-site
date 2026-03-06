@@ -44,9 +44,14 @@ export function Navbar({ onContactClick }: NavbarProps) {
           {/* Logo */}
           <button
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-            className="font-serif text-xl font-light tracking-wide text-white transition-opacity hover:opacity-70"
+            className="flex items-baseline gap-0.5 transition-opacity hover:opacity-70"
           >
-            YaffoTLV
+            <span className="font-serif text-xl font-light uppercase tracking-[0.2em] text-white">
+              Yaffo
+            </span>
+            <span className="font-serif text-lg font-medium uppercase tracking-[0.15em] text-accent">
+              TLV
+            </span>
           </button>
 
           {/* Desktop links */}

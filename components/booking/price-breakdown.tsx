@@ -18,6 +18,7 @@ export function PriceBreakdown({ quote, loading }: PriceBreakdownProps) {
       <div className="mt-8 animate-pulse space-y-3">
         <div className="h-4 w-32 rounded bg-sand" />
         <div className="h-4 w-48 rounded bg-sand" />
+        <div className="h-4 w-44 rounded bg-sand" />
         <div className="h-6 w-40 rounded bg-sand" />
       </div>
     );
@@ -28,42 +29,71 @@ export function PriceBreakdown({ quote, loading }: PriceBreakdownProps) {
       {quote && (
         <motion.div
           key={`${quote.checkIn}-${quote.checkOut}`}
-          initial={{ opacity: 0, y: 10 }}
+          initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -10 }}
-          transition={{ duration: 0.3 }}
+          exit={{ opacity: 0, y: -12 }}
+          transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
           className="mt-8 border border-sand bg-ivory p-6"
         >
+          {/* Header */}
           <p className="text-xs font-medium uppercase tracking-[0.2em] text-accent">
             {t.book.total}
           </p>
 
+          {/* Nightly breakdown */}
           <div className="mt-4 space-y-2">
-            {quote.nightlyBreakdown.map((night) => (
-              <div
+            {quote.nightlyBreakdown.map((night, index) => (
+              <motion.div
                 key={night.date}
+                initial={{ opacity: 0, x: -8 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.25, delay: index * 0.04 }}
                 className="flex items-center justify-between text-sm"
               >
                 <span className="text-graphite">
                   {night.dayName}, {night.date}
                 </span>
-                <span className="text-charcoal">
+                <span className="font-mono text-sm text-charcoal tabular-nums">
                   {formatILS(night.rate)} ILS
                 </span>
-              </div>
+              </motion.div>
             ))}
           </div>
 
-          <div className="mt-4 border-t border-sand pt-4 space-y-2">
+          {/* Subtotal before VAT */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.3, delay: 0.15 }}
+            className="mt-4 border-t border-sand pt-4 space-y-2"
+          >
             <div className="flex justify-between text-sm">
               <span className="text-graphite">
                 {quote.nights} {t.book.nights}
               </span>
-              <span className="text-charcoal">{formatILS(quote.baseTotal)} ILS</span>
+              <span className="font-mono text-sm text-charcoal tabular-nums">
+                {formatILS(quote.totalBeforeVat)} ILS
+              </span>
             </div>
-          </div>
 
-          <div className="mt-4 border-t border-sand pt-4">
+            {/* VAT line */}
+            <div className="flex justify-between text-sm">
+              <span className="text-stone">
+                {t.book.vat || "VAT (18%)"}
+              </span>
+              <span className="font-mono text-sm text-stone tabular-nums">
+                {formatILS(quote.vatAmount)} ILS
+              </span>
+            </div>
+          </motion.div>
+
+          {/* Total with VAT */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.97 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.4, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+            className="mt-4 border-t border-accent/20 pt-4"
+          >
             <div className="flex items-baseline justify-between">
               <span className="text-sm font-medium uppercase tracking-[0.1em] text-graphite">
                 {t.book.total}
@@ -75,7 +105,7 @@ export function PriceBreakdown({ quote, loading }: PriceBreakdownProps) {
             <p className="mt-1 text-xs text-stone text-end">
               {t.book.inclVat || "Price includes VAT"}
             </p>
-          </div>
+          </motion.div>
 
           <p className="mt-4 text-xs text-stone">
             {t.book.cancellation}
