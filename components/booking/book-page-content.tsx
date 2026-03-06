@@ -1,6 +1,7 @@
 "use client";
 
 import { BookingWidget } from "@/components/booking/booking-widget";
+import { SecurityBadges } from "@/components/ui/security-badges";
 import { useI18n } from "@/lib/i18n/context";
 
 export function BookPageContent() {
@@ -31,6 +32,7 @@ export function BookPageContent() {
           <p className="text-sm text-stone">
             {t.book.cancellation}
           </p>
+          <SecurityBadges className="mt-6" />
         </div>
       </section>
     </>

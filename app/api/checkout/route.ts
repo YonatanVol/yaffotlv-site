@@ -40,20 +40,10 @@ export async function POST(request: NextRequest) {
         {
           price_data: {
             currency: "ils",
-            unit_amount: reservation.baseTotal,
+            unit_amount: reservation.totalAmount,
             product_data: {
               name: `YaffoTLV - ${reservation.nights} night${reservation.nights > 1 ? "s" : ""}`,
-              description: `${reservation.checkIn} to ${reservation.checkOut}`,
-            },
-          },
-          quantity: 1,
-        },
-        {
-          price_data: {
-            currency: "ils",
-            unit_amount: reservation.cleaningFee,
-            product_data: {
-              name: "Cleaning fee",
+              description: `${reservation.checkIn} to ${reservation.checkOut} (incl. VAT)`,
             },
           },
           quantity: 1,
