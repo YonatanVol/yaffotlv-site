@@ -16,6 +16,7 @@ const PROTECTED_PREFIXES = [
   "/builder",
   "/download",
   "/billing",
+  "/import",
 ];
 
 export async function proxy(request: NextRequest) {
@@ -47,5 +48,6 @@ export const config = {
     "/builder/:path*",
     "/download/:path*",
     "/billing/:path*",
+    "/import/:path*",
   ],
 };

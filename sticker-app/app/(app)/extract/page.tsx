@@ -121,6 +121,20 @@ export default function ExtractPage() {
         <p className="rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">{error}</p>
       )}
 
+      {/* Browser extension */}
+      <div className="rounded-2xl border border-indigo-100 bg-indigo-50 p-5">
+        <h2 className="font-semibold text-indigo-900">Import from your TikTok sticker drawer</h2>
+        <p className="mt-1 text-sm text-indigo-700">
+          Install the StickerPack browser extension, open TikTok, tap the sticker button in
+          a comment reply, then click <strong>Import to WhatsApp</strong> in the extension
+          popup. Your stickers will land here automatically.
+        </p>
+        <p className="mt-2 text-xs text-indigo-500">
+          Extension folder: <code>sticker-app/extension/</code> — load as an unpacked
+          extension in Chrome › Extensions › Developer mode.
+        </p>
+      </div>
+
       {/* Manual upload */}
       <div>
         <button

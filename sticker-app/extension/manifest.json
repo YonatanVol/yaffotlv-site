@@ -1,0 +1,22 @@
+{
+  "manifest_version": 3,
+  "name": "StickerPack: TikTok → WhatsApp",
+  "version": "1.0.0",
+  "description": "Grab stickers from your TikTok sticker drawer and send them to StickerPack to build a WhatsApp sticker pack.",
+  "permissions": ["activeTab", "storage"],
+  "host_permissions": ["https://www.tiktok.com/*"],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "StickerPack"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://www.tiktok.com/*"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "background": {
+    "service_worker": "background.js"
+  }
+}
