@@ -8,6 +8,7 @@ import {
   uuid,
   pgEnum,
   uniqueIndex,
+  index,
 } from "drizzle-orm/pg-core";
 
 export const bookingStatusEnum = pgEnum("booking_status", [
@@ -80,5 +81,25 @@ export const activityLog = pgTable("activity_log", {
   metadata: text("metadata"), // JSON string with extra data (page, locale, dates, etc.)
   userAgent: text("user_agent"),
   ip: text("ip"),
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+});
+
+/** Admin login attempts — per-IP rate limiting / temporary lockout */
+export const adminLoginAttempts = pgTable(
+  "admin_login_attempts",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    ip: text("ip").notNull(),
+    success: boolean("success").notNull().default(false),
+    createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+  },
+  (table) => [index("admin_login_attempts_ip_created_idx").on(table.ip, table.createdAt)]
+);
+
+/** Processed payment-provider webhook events — idempotency / replay guard.
+ *  Provider-agnostic so future rails (e.g. a local Israeli סליקה provider) reuse it. */
+export const processedWebhookEvents = pgTable("processed_webhook_events", {
+  eventId: text("event_id").primaryKey(),
+  provider: text("provider").notNull(), // "stripe" | future providers
   createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
 });

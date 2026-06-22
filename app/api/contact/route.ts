@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Resend } from "resend";
+import { contactSchema, firstError } from "@/lib/validation";
 
 function getResend() {
   return new Resend(process.env.RESEND_API_KEY);
@@ -11,23 +12,12 @@ const WHATSAPP_NUMBER = "972528701670";
 
 export async function POST(request: NextRequest) {
   try {
-    const { name, email, message } = await request.json();
-
-    // Validation
-    if (!name || !email || !message) {
-      return NextResponse.json(
-        { error: "Name, email, and message are required" },
-        { status: 400 }
-      );
+    const json = await request.json().catch(() => null);
+    const parsed = contactSchema.safeParse(json);
+    if (!parsed.success) {
+      return NextResponse.json({ error: firstError(parsed.error) }, { status: 400 });
     }
-
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      return NextResponse.json(
-        { error: "Invalid email address" },
-        { status: 400 }
-      );
-    }
+    const { name, email, message } = parsed.data;
 
     // Log contact submission
     console.log("[Contact] New submission:", { name, email, message: message.slice(0, 100) });

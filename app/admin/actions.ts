@@ -5,6 +5,7 @@ import { reservations, blockedDates, pricingRules } from "@/lib/db/schema";
 import { eq, desc, and, gte, sql } from "drizzle-orm";
 import { getSession } from "@/lib/auth";
 import { todayJerusalem, dateRange } from "@/lib/dates";
+import { pricingUpdateSchema, manualBlockSchema } from "@/lib/validation";
 
 async function requireAdmin() {
   const isAdmin = await getSession();
@@ -64,12 +65,16 @@ export async function getBlockedDatesAdmin() {
 
 export async function blockDateManually(dateStr: string) {
   await requireAdmin();
-  await db.insert(blockedDates).values({
-    date: dateStr,
-    source: "manual",
-    externalUid: `manual-${dateStr}`,
-    summary: "Manually blocked",
-  });
+  const { date } = manualBlockSchema.parse({ date: dateStr });
+  await db
+    .insert(blockedDates)
+    .values({
+      date,
+      source: "manual",
+      externalUid: `manual-${date}`,
+      summary: "Manually blocked",
+    })
+    .onConflictDoNothing();
 }
 
 export async function unblockDate(id: string) {
@@ -102,10 +107,11 @@ export async function updatePricingRule(
   }
 ) {
   await requireAdmin();
+  const clean = pricingUpdateSchema.parse(data);
   await db
     .update(pricingRules)
     .set({
-      ...data,
+      ...clean,
       updatedAt: new Date(),
     })
     .where(eq(pricingRules.id, id));

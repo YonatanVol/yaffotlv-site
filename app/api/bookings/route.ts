@@ -4,28 +4,21 @@ import { blockedDates, reservations, pricingRules } from "@/lib/db/schema";
 import { calculatePrice } from "@/lib/pricing";
 import { dateRange, todayJerusalem, countNights } from "@/lib/dates";
 import { inArray, eq } from "drizzle-orm";
+import { bookingSchema, firstError } from "@/lib/validation";
 
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
-    const { checkIn, checkOut, guestName, guestEmail, guestPhone, guestCount } = body;
-
-    // --- Validation ---
-    if (!checkIn || !checkOut || !guestName || !guestEmail) {
-      return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+    const json = await request.json().catch(() => null);
+    const parsed = bookingSchema.safeParse(json);
+    if (!parsed.success) {
+      return NextResponse.json({ error: firstError(parsed.error) }, { status: 400 });
     }
+    const { checkIn, checkOut, guestName, guestEmail, guestPhone, guestCount } = parsed.data;
 
+    // Check-in must be today or later (Jerusalem). Date ordering + guest-count
+    // bounds + email shape are enforced by bookingSchema.
     if (checkIn < todayJerusalem()) {
       return NextResponse.json({ error: "Check-in must be today or later" }, { status: 400 });
-    }
-
-    if (checkOut <= checkIn) {
-      return NextResponse.json({ error: "Check-out must be after check-in" }, { status: 400 });
-    }
-
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(guestEmail)) {
-      return NextResponse.json({ error: "Invalid email address" }, { status: 400 });
     }
 
     // --- Double-booking prevention ---

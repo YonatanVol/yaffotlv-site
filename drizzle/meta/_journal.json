@@ -1,0 +1,20 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1782139729682,
+      "tag": "0000_baseline_existing_schema",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1782139751792,
+      "tag": "0001_security_rate_limit_and_webhook_idempotency",
+      "breakpoints": true
+    }
+  ]
+}
