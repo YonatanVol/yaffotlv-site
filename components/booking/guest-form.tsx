@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { useI18n } from "@/lib/i18n/context";
 
 interface GuestFormProps {
@@ -82,6 +83,18 @@ export function GuestForm({ onSubmit, loading }: GuestFormProps) {
           ))}
         </select>
       </div>
+
+      <p className="text-xs leading-relaxed text-stone">
+        By continuing you agree to our{" "}
+        <Link href="/legal/terms" target="_blank" className="underline hover:text-accent">
+          {t.footer?.terms || "Terms"}
+        </Link>{" "}
+        &amp;{" "}
+        <Link href="/legal/cancellation" target="_blank" className="underline hover:text-accent">
+          {t.footer?.cancellation || "Cancellation Policy"}
+        </Link>
+        .
+      </p>
 
       <button
         type="submit"

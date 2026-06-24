@@ -143,6 +143,14 @@ export interface Translations {
     save: string;
     superhost: string;
   };
+  // Footer
+  footer?: {
+    tagline: string;
+    terms: string;
+    privacy: string;
+    cancellation: string;
+    rights: string;
+  };
   // Trust badges
   trustBadges?: {
     superhost: string;
@@ -324,6 +332,13 @@ const en: Translations = {
     save: "💰 Save 10% when you book direct",
     superhost: "🏆 Superhost · 12 years hosting",
   },
+  footer: {
+    tagline: "Luxury direct-booking apartment in Jaffa, Tel Aviv.",
+    terms: "Terms of Service",
+    privacy: "Privacy Policy",
+    cancellation: "Cancellation Policy",
+    rights: "All rights reserved.",
+  },
   trustBadges: {
     superhost: "Superhost",
     secure: "Secure Payment",
@@ -499,6 +514,13 @@ const he: Translations = {
     rating: "★★★★★ מדורג ע״י 140+ אורחים",
     save: "💰 חוסכים 10% בהזמנה ישירה",
     superhost: "🏆 סופרהוסט · 12 שנים של אירוח",
+  },
+  footer: {
+    tagline: "דירת יוקרה להזמנה ישירה ביפו, תל אביב.",
+    terms: "תנאי שימוש",
+    privacy: "מדיניות פרטיות",
+    cancellation: "מדיניות ביטולים",
+    rights: "כל הזכויות שמורות.",
   },
   trustBadges: {
     superhost: "סופרהוסט",
@@ -1199,6 +1221,13 @@ const ar: Translations = {
     rating: "★★★★★ تقييم من 140+ ضيف",
     save: "💰 وفر 10% عند الحجز المباشر",
     superhost: "🏆 مضيف متميز · 12 سنة خبرة",
+  },
+  footer: {
+    tagline: "شقة فاخرة للحجز المباشر في يافا، تل أبيب.",
+    terms: "شروط الخدمة",
+    privacy: "سياسة الخصوصية",
+    cancellation: "سياسة الإلغاء",
+    rights: "جميع الحقوق محفوظة.",
   },
   trustBadges: {
     superhost: "مضيف متميز",

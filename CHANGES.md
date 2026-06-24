@@ -4,6 +4,67 @@ Running log of what changed and why. Newest first.
 
 ---
 
+## Phase 6 — Trust, correctness, SEO & legal
+
+Built the independent, non-payment parts of launch-readiness (Phase 4 refunds stay gated on
+PayPlus). All verified in a running dev server.
+
+### Visible correctness
+- **Calendar opens on the current month** (Jerusalem) and can't navigate earlier
+  (`defaultMonth` + `startMonth`); past dates disabled. ([date-picker.tsx](components/booking/date-picker.tsx))
+- **Calendar localizes + RTL** — day/month names via date-fns locales for all 6 site
+  languages; `dir="rtl"` for he/ar; **Sunday-first** kept (correct for IL). Verified: Hebrew
+  shows "יוני 2026" with א׳–ש׳ headers, RTL.
+- **Host photo** — replaced the `👨‍💼` emoji with a tasteful neutral silhouette + a
+  `TODO(host-photo)` pointing at `/public/images/host.jpg` (≥400×400). ([host.tsx](components/sections/host.tsx))
+- **Honest social proof** — removed the fabricated "3 guests booked this week" (invented
+  urgency). The bar now rotates only standing facts (rating / direct-booking discount /
+  Superhost). ([social-proof-bar.tsx](components/ui/social-proof-bar.tsx))
+
+### SEO / metadata
+- **Sitemap** uses real `lastModified` constants instead of `new Date()` (was "always just
+  modified"); legal pages added. ([sitemap.ts](app/sitemap.ts))
+- **Canonical** added on `/` and `/book`; **`/book` OG fixed** (it inherited the homepage
+  `og:url`/image — now has its own). ([layout](app/layout.tsx), [book](app/book/page.tsx))
+- **hreflang:** intentionally NOT added — the site is a single-URL client-side language
+  toggle (no `/en` `/he` routes), so per-locale hreflang URLs don't apply. Documented; the
+  `<html lang>`/`dir` are set correctly per language client-side. (See DECISIONS D-P6.2.)
+
+### Legal (DRAFT — for your lawyer)
+- New **/legal/terms**, **/legal/privacy**, **/legal/cancellation** with substantive DRAFT
+  content, each behind a prominent **"DRAFT — not legal advice"** banner. Privacy is
+  GDPR-aware (Booking.com brings EU guests). Cancellation mirrors the code's current
+  *24h-before-check-in* rule and carries an owner-confirm note.
+- **Cookie posture:** privacy-preserving by default — only one essential admin-session
+  cookie, cookieless analytics → no consent banner needed (explained in the Privacy page).
+- New **Footer** (global, hidden on /admin) links all three; checkout (guest form) now
+  references Terms + Cancellation Policy. Footer labels localized en/he/ar (others fall back
+  to English per the existing pattern); legal bodies are English DRAFT pending translation.
+
+### Google Business Profile
+- Footer has a GBP link slot, currently hidden behind `GBP_URL=""` + a `TODO(gbp)`.
+  **Need the URL from you** (D-P6.4).
+
+### Observability
+- New [lib/alerts.ts](lib/alerts.ts) `alertHost()` — emails the host on critical background
+  failures (reuses the existing Resend dep; no new dependency). Wired into the **calendar
+  sync** failure path; ready to reuse for the payment webhook + refund in Phase 2A/4. A
+  hosted tracker (Sentry) can be layered later if wanted.
+
+### Verification performed
+- `tsc --noEmit` clean; `next build` green (legal routes compile as static).
+- Dev server: footer + 3 legal links render; cancellation page renders with DRAFT banner;
+  calendar opens June 2026, Sunday-first; Hebrew → RTL + localized month/weekday names;
+  emoji gone; no browser console errors.
+- Lint: **no new issues** introduced (the 2 remaining errors are pre-existing in untouched
+  files: `signature.tsx`, `neighborhood-map.tsx`).
+
+### Still needs you (flagged, not blocking the build)
+- Real host photo · GBP URL · confirm the cancellation policy · have the DRAFT legal pages
+  lawyer-reviewed and translated (he/ar) before go-live.
+
+---
+
 ## Phase 3 — Admin management platform
 
 Turned the thin `/admin` into a real control center, all behind the Phase-1 hardened auth

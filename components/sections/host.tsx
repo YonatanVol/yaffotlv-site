@@ -22,8 +22,14 @@ export function Host() {
         <Reveal className="mt-10 flex flex-col items-center gap-8 md:flex-row md:items-start md:gap-12">
           {/* Host avatar */}
           <div className="flex flex-shrink-0 flex-col items-center gap-3">
-            <div className="flex h-24 w-24 items-center justify-center rounded-full bg-sand/60 text-4xl">
-              👨‍💼
+            {/* TODO(host-photo): drop a real square photo at /public/images/host.jpg
+                (≥ 400×400, rendered at 96px) and replace this placeholder with:
+                <img src="/images/host.jpg" alt="Eitan" width={96} height={96}
+                     className="h-24 w-24 rounded-full object-cover" /> */}
+            <div className="flex h-24 w-24 items-center justify-center overflow-hidden rounded-full bg-sand/60 text-stone/70">
+              <svg viewBox="0 0 24 24" fill="currentColor" className="h-12 w-12" aria-hidden="true">
+                <path d="M12 12a5 5 0 1 0 0-10 5 5 0 0 0 0 10Zm0 2c-4.418 0-8 2.686-8 6v2h16v-2c0-3.314-3.582-6-8-6Z" />
+              </svg>
             </div>
             <div className="text-center">
               <p className="text-sm font-medium text-charcoal">Eitan</p>

@@ -92,6 +92,45 @@ at the DB level and still lets airbnb/booking/manual blocks coexist on the same 
 
 ---
 
+## Phase 6
+
+### D-P6.1 — Host photo: neutral placeholder for now ⏳ NEEDS YOU (image)
+No photo was supplied, so the emoji is replaced with a tasteful silhouette + a
+`TODO(host-photo)`. Drop a square photo at `public/images/host.jpg` (≥400×400) and it gets
+swapped in.
+
+### D-P6.2 — No hreflang (single-URL i18n) — decided
+The site serves all languages from one URL via a client-side toggle (no `/en` `/he` routes),
+so per-locale hreflang URLs don't apply. Added a self `canonical` instead and rely on the
+client-set `<html lang>`/`dir`. Real hreflang would require restructuring to per-locale
+routes — a larger change we can do later if SEO in he/ar becomes a priority.
+
+### D-P6.3 — Social proof: removed the fabricated line (not a fake endpoint) — decided
+"3 guests booked this week" was invented urgency. With no real booking data yet (payments
+aren't live), a data endpoint would just return 0. So the honest move now is removal; the
+remaining items (rating, discount, Superhost) are standing facts. We can add a real
+recent-bookings count once PayPlus is live and bookings flow.
+
+### D-P6.4 — Google Business Profile URL ⏳ NEEDS YOU
+Footer has a hidden GBP slot (`GBP_URL=""`). Send me the URL and I'll enable the link.
+
+### D-P6.5 — Legal pages are English DRAFT — decided + ⏳ NEEDS REVIEW
+Generated substantive DRAFT Terms / Privacy / Cancellation behind a "not legal advice"
+banner. Per the brief these are placeholders for **your lawyer**; they also need professional
+**he/ar translation** before go-live. Do not treat as final.
+
+### D-P6.6 — Cancellation policy baseline ⏳ CONFIRM
+Used the code's existing rule — *full refund up to 24h before check-in* — as the draft
+baseline (shown on /legal/cancellation with an owner-confirm note). Confirm or change; if
+changed, I update the page AND the refund logic together so they always match (also a Phase-4
+input).
+
+### D-P6.7 — Error alerts via Resend email — decided
+`alertHost()` emails on critical failures (no new dependency). Sentry/hosted tracking can be
+added later if you want dashboards/grouping.
+
+---
+
 ## Pending (future phases) — noted, not yet decided
 - Cancellation/refund **policy** values (Phase 4.2) — will ask before encoding.
 - Local Israeli payment provider for **Bit** (Phase 2A.5) — will research + recommend,

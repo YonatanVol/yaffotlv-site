@@ -3,6 +3,7 @@ import { serif, sans } from "@/lib/fonts";
 import { I18nProvider } from "@/lib/i18n/context";
 import { WhatsAppButton } from "@/components/ui/whatsapp-button";
 import { SocialProofBar } from "@/components/ui/social-proof-bar";
+import { Footer } from "@/components/sections/footer";
 import { StructuredData } from "@/components/structured-data";
 import { AnalyticsProvider } from "@/components/analytics-provider";
 import "./globals.css";
@@ -17,6 +18,7 @@ export const metadata: Metadata = {
   description:
     "Book direct & save 10%. 3-room luxury apartment in Jaffa — 80 sqm, renovated 2024, 10 min to the beach. Superhost with 140+ reviews.",
   metadataBase: new URL(siteUrl),
+  alternates: { canonical: "/" },
   icons: {
     icon: "/icon.svg",
     apple: "/icon.svg",
@@ -58,6 +60,7 @@ export default function RootLayout({
         <I18nProvider>
           <AnalyticsProvider>
             {children}
+            <Footer />
             <WhatsAppButton />
             <SocialProofBar />
           </AnalyticsProvider>

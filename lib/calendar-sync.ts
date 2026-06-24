@@ -1,6 +1,7 @@
 import { db } from "@/lib/db";
 import { blockedDates, calendarSyncLog } from "@/lib/db/schema";
 import { fetchCalendar, expandEvents } from "@/lib/ical";
+import { alertHost } from "@/lib/alerts";
 import { eq } from "drizzle-orm";
 
 export interface SyncSourceResult {
@@ -64,6 +65,10 @@ export async function runCalendarSync(): Promise<SyncResult> {
       // Leave existing blocks for this source in place; just record the failure.
       console.error(`Calendar sync failed for ${source}:`, result.reason);
       summary.push({ source, status: "error", count: 0, message: String(result.reason).slice(0, 500) });
+      await alertHost(
+        `Calendar sync failed: ${source}`,
+        `The ${source} calendar pull failed. Its existing blocks were left intact.\n\n${String(result.reason).slice(0, 1000)}`
+      );
     }
   }
 

@@ -13,8 +13,10 @@ export function SocialProofBar() {
   const [dismissed, setDismissed] = useState(true); // start hidden, show after mount
   const [messageIndex, setMessageIndex] = useState(0);
 
+  // Honest social proof only — the old hardcoded "3 guests booked this week" was
+  // invented urgency and has been removed. These remaining items are standing facts
+  // (rating, the direct-booking discount, Superhost status), not fabricated activity.
   const messages = [
-    t.socialProof?.booked || "🔥 3 guests booked this week",
     t.socialProof?.rating || "★★★★★ Rated by 140+ guests",
     t.socialProof?.save || "💰 Save 10% when you book direct",
     t.socialProof?.superhost || "🏆 Superhost · 12 years hosting",
