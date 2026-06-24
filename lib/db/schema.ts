@@ -10,6 +10,7 @@ import {
   uniqueIndex,
   index,
 } from "drizzle-orm/pg-core";
+import { sql } from "drizzle-orm";
 
 export const bookingStatusEnum = pgEnum("booking_status", [
   "draft",
@@ -30,7 +31,14 @@ export const blockedDates = pgTable(
     summary: text("summary"),
     createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
   },
-  (table) => [uniqueIndex("blocked_date_source_idx").on(table.date, table.source, table.externalUid)]
+  (table) => [
+    uniqueIndex("blocked_date_source_idx").on(table.date, table.source, table.externalUid),
+    // Atomic double-booking guard: at most ONE direct-reservation hold per date.
+    // (External airbnb/booking/manual blocks may still coexist on the same date.)
+    uniqueIndex("blocked_reservation_date_unique")
+      .on(table.date)
+      .where(sql`${table.source} = 'reservation'`),
+  ]
 );
 
 /** Reservations from direct bookings */
@@ -103,3 +111,17 @@ export const processedWebhookEvents = pgTable("processed_webhook_events", {
   provider: text("provider").notNull(), // "stripe" | future providers
   createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
 });
+
+/** Calendar sync runs — per-source result/count/timestamp. Feeds the admin sync-status panel. */
+export const calendarSyncLog = pgTable(
+  "calendar_sync_log",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    source: text("source").notNull(), // "airbnb" | "booking_com"
+    status: text("status").notNull(), // "success" | "error"
+    count: integer("count").notNull().default(0),
+    message: text("message"),
+    createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+  },
+  (table) => [index("calendar_sync_log_source_created_idx").on(table.source, table.createdAt)]
+);

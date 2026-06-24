@@ -4,6 +4,65 @@ Running log of what changed and why. Newest first.
 
 ---
 
+## Phase 2 — Payments + two-way calendar sync
+
+### 2A — Payments: RESEARCH ONLY this turn (no code; gated on your decisions)
+- **Stripe viability for an Israeli merchant** and **choice of a local Bit provider** are
+  decision gates per the brief. Findings + a recommendation are in the chat report and in
+  DECISIONS (D-P2.1, D-P2.2). **No payment code was written** — building waits on your
+  answer about the Stripe account and your provider approval.
+
+### 2B — Two-way calendar sync (BUILT)
+- **Published iCal feed** — new `app/api/ical/[token]/route.ts` emits a valid RFC-5545
+  `VCALENDAR`. Generator added to `lib/ical.ts` (`generateICalendar`), unit-tested:
+  CRLF line endings, `DTEND` exclusive (checkout day stays free), escaped text, stable UIDs.
+  - Publishes **only confirmed direct reservations + manual blocks**. Never echoes
+    airbnb/booking-imported dates (no sync loop) and never transient drafts/holds.
+  - Manual nights are coalesced into contiguous ranges.
+- **Protected + subscribable** — token lives in the URL path and is compared
+  (constant-time) to the `ICAL_TOKEN` env var. Unset/wrong token → 404. URL shape:
+  `https://yaffotlv.com/api/ical/<ICAL_TOKEN>.ics` — this is what you paste into Airbnb
+  and Booking as an *imported* calendar.
+- **Atomic double-booking guard** — new **partial unique index**
+  `blocked_reservation_date_unique` on `blocked_dates(date) WHERE source='reservation'`
+  (migration `0002`). `/api/bookings` now claims dates under this constraint and, on a
+  unique-violation, **rolls back the just-created draft** and returns 409. This fixes the
+  Phase-0 race where two direct bookings could hold the same night (the old unique index
+  keyed on `externalUid`, so it never blocked that). The pre-check SELECT stays as the
+  fast UX path + the guard for airbnb/booking/manual dates.
+  - *Apply note:* creating this index requires no pre-existing duplicate reservation holds
+    on the same date. Extremely unlikely for one low-traffic apartment, but to be verified
+    at apply time (a dedupe step is included in the deploy runbook later if needed).
+- **Tighter inbound pull + logging** — `vercel.json` now proposes **hourly**
+  `sync-calendars` and registers the **`expire-drafts` sweeper every 15 min** (it existed
+  but was never scheduled — Phase-0 issue D; also the provider-agnostic hold-release the
+  payments phase needs). New `calendar_sync_log` table (migration `0002`) records per-source
+  status/count/timestamp on every run → feeds the Phase-3 sync-status panel.
+  - ⚠️ **Needs your Vercel plan:** Hobby allows only daily crons (and 2 max); this hourly +
+    15-min schedule needs **Pro**. See DECISIONS D-P2.3.
+
+### Residual risk — documented (brief 2B.6)
+iCal is **not real-time.** A direct booking closes our own availability instantly, but
+Airbnb and Booking.com only re-import our published feed on *their* schedule (≈hourly to a
+few times daily). So a same-window cross-platform collision (someone books the same nights
+on Airbnb in the minutes/hours before it re-reads our feed) remains **physically possible
+for anyone** over iCal — it cannot be fully eliminated.
+**Operational mitigation (recommended):** keep a same-day check-in buffer / treat
+same-week cross-platform overlaps as needing a quick manual confirm; the Phase-3 unified
+calendar + sync-status panel makes a stale sync visible so you can react.
+
+### Migrations
+- `0002_calendar_publish_and_atomic_guard.sql` — `calendar_sync_log` table + the partial
+  unique index. Apply to prod only after approval (hard stop), and after `0001`.
+
+### Verification performed
+- `tsc --noEmit` clean; `next build` green (the `/api/ical/[token]` route compiles).
+- iCal generator unit-tested (output shown in chat): valid VCALENDAR, CRLF, exclusive DTEND.
+- End-to-end feed output (with real confirmed reservations) verifies once `DATABASE_URL` +
+  `ICAL_TOKEN` are set — steps provided in the report.
+
+---
+
 ## Phase 1 — Security hardening
 
 Goal: make the admin and payment surfaces safe to expose publicly. No secrets were

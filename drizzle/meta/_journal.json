@@ -15,6 +15,13 @@
       "when": 1782139751792,
       "tag": "0001_security_rate_limit_and_webhook_idempotency",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1782312082198,
+      "tag": "0002_calendar_publish_and_atomic_guard",
+      "breakpoints": true
     }
   ]
 }

@@ -79,15 +79,33 @@ export async function POST(request: NextRequest) {
       })
       .returning();
 
-    // --- Block dates immediately ---
-    await db.insert(blockedDates).values(
-      requestedDates.map((date) => ({
-        date,
-        source: "reservation" as const,
-        externalUid: reservation.id,
-        summary: `Draft: ${guestName}`,
-      }))
-    );
+    // --- Block dates atomically ---
+    // The partial unique index `blocked_reservation_date_unique` enforces at most
+    // one direct-reservation hold per date. A concurrent booking that slips past the
+    // pre-check above will collide here; on conflict we roll back the just-created
+    // draft and return 409. This is the real concurrency guard (the SELECT above is
+    // only a fast UX path and also catches airbnb/booking/manual blocks).
+    try {
+      await db.insert(blockedDates).values(
+        requestedDates.map((date) => ({
+          date,
+          source: "reservation" as const,
+          externalUid: reservation.id,
+          summary: `Draft: ${guestName}`,
+        }))
+      );
+    } catch (e) {
+      await db.delete(reservations).where(eq(reservations.id, reservation.id)).catch(() => {});
+      const err = e as { code?: string; message?: string };
+      const isUnique = err?.code === "23505" || /duplicate key|unique/i.test(err?.message ?? "");
+      if (isUnique) {
+        return NextResponse.json(
+          { error: "Some of your selected dates are no longer available. Please refresh and try again." },
+          { status: 409 }
+        );
+      }
+      throw e; // unexpected — bubble to the 500 handler (draft already cleaned up)
+    }
 
     return NextResponse.json({
       reservationId: reservation.id,

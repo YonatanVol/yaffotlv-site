@@ -54,6 +54,46 @@ Phase 4. Verified no client flow calls this route, so gating it breaks nothing.
 
 ---
 
+## Phase 2
+
+### D-P2.1 — Stripe viability for an Israeli merchant ⏳ NEEDS YOU
+**Research finding:** Stripe is **not** in its list of fully-supported merchant countries
+for Israel. ILS is supported as a *currency*, but an Israeli-*resident* merchant generally
+still needs the **US-entity workaround** (US LLC + EIN + US bank account) to run **live**
+Stripe. Reports are mixed and Stripe's policy can change, so this must be confirmed against
+*your actual account*, not assumed.
+**Need from you:** Is your existing Stripe account registered to (a) a **US entity**
+(LLC/EIN/US bank) or (b) an **Israeli entity**? And is it currently **test** or **live**?
+This determines whether Stripe can be the card/Apple/Google-Pay rail at all, or whether the
+local provider (below) becomes the **primary** rail. **Building paused until you answer.**
+
+### D-P2.2 — Local provider for Bit: recommend **PayPlus** ⏳ NEEDS YOUR APPROVAL
+Bit is not supported by Stripe; it needs an Israeli סליקה provider. All the serious options
+(Tranzila, Cardcom, Grow/Meshulam, PayPlus) support **Bit + Apple Pay + Google Pay + cards**
+in one rail, so any could **replace Stripe entirely**. Recommendation + comparison in the
+chat report. **Lead pick: PayPlus** (modern REST API + webhooks, public GitHub samples,
+hosted payment page that's a near drop-in for our current redirect-to-Stripe flow).
+**Runner-up: Tranzila** (most established; detailed docs). **Building paused for approval.**
+
+### D-P2.3 — Cron frequency needs your Vercel plan ⏳ NEEDS YOU
+I set `vercel.json` to **hourly** `sync-calendars` + **15-min** `expire-drafts` sweeper.
+This requires Vercel **Pro** (Hobby = daily only, max 2 crons). If you're on Hobby, tell me
+and I'll fall back to daily sync and we'll find another mechanism for timely hold-release.
+
+### D-P2.4 — Publish token: env var `ICAL_TOKEN` ⏳ NEEDS YOU (later)
+The feed is gated by an unguessable token in the URL, read from `ICAL_TOKEN`. Like the JWT
+secret, **you set it** (I won't print one): `vercel env add ICAL_TOKEN production`, paste
+`openssl rand -hex 24`. Until set, the endpoint returns 404 (feature disabled).
+
+### D-P2.5 — Atomic guard via partial unique index (decided)
+**Decided:** enforce one-direct-reservation-per-date with a **partial unique index**
+(`WHERE source='reservation'`) + insert-with-rollback, rather than an interactive
+transaction. **Why:** the project uses the **neon-http** driver, which has no interactive
+transactions / `SELECT … FOR UPDATE`. A partial unique index gives a true atomic guarantee
+at the DB level and still lets airbnb/booking/manual blocks coexist on the same date.
+
+---
+
 ## Pending (future phases) — noted, not yet decided
 - Cancellation/refund **policy** values (Phase 4.2) — will ask before encoding.
 - Local Israeli payment provider for **Bit** (Phase 2A.5) — will research + recommend,

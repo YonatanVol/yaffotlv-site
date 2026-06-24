@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
-import { blockedDates } from "@/lib/db/schema";
+import { blockedDates, calendarSyncLog } from "@/lib/db/schema";
 import { fetchCalendar, expandEvents } from "@/lib/ical";
 import { getCronSecret, safeEqual } from "@/lib/env";
 import { inArray } from "drizzle-orm";
@@ -71,6 +71,17 @@ export async function GET(request: NextRequest) {
       for (let i = 0; i < allDates.length; i += BATCH_SIZE) {
         await db.insert(blockedDates).values(allDates.slice(i, i + BATCH_SIZE));
       }
+    }
+
+    // Persist per-source result/count/timestamp (feeds the admin sync-status panel).
+    const logRows = results.map((r, i) => ({
+      source: sources[i].source,
+      status: r.status === "fulfilled" ? ("success" as const) : ("error" as const),
+      count: r.status === "fulfilled" ? r.value.dates.length : 0,
+      message: r.status === "rejected" ? String(r.reason).slice(0, 500) : null,
+    }));
+    if (logRows.length > 0) {
+      await db.insert(calendarSyncLog).values(logRows);
     }
 
     return NextResponse.json({
