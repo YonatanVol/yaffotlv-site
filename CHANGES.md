@@ -4,6 +4,39 @@ Running log of what changed and why. Newest first.
 
 ---
 
+## Phase 3 — Admin management platform
+
+Turned the thin `/admin` into a real control center, all behind the Phase-1 hardened auth
+(verified: unauthenticated `/admin/*` 307-redirects to login). No new dependencies.
+
+- **Unified bookings view** ([app/admin/(dashboard)/bookings/page.tsx](app/admin/(dashboard)/bookings/page.tsx))
+  — one list across **direct + Airbnb + Booking.com**, source-labelled, filterable by source
+  and status. New `getUnifiedBookings()` action merges direct reservations with external
+  platform blocks (coalesced per `(source, externalUid)` into date ranges). Direct rows link
+  to a detail page; external rows show the platform + dates + whatever summary the iCal gave.
+- **Booking detail** (new `app/admin/(dashboard)/bookings/[id]/page.tsx` + `getBookingDetail()`)
+  — full guest/dates/payment detail for a direct reservation, with a clearly-marked
+  **disabled** "Cancel & refund (Phase 4)" slot (it needs the live provider).
+- **Sync-status panel** ([calendar page](app/admin/(dashboard)/calendar/page.tsx) + `getSyncStatus()`)
+  — per platform: last run time, count, and an **OK / Stale (>2h) / Failed** flag read from
+  `calendar_sync_log`. Plus a working **"Sync now"** button.
+- **Fixed "Sync now" properly** — extracted the pull into **`lib/calendar-sync.ts`**
+  (`runCalendarSync()`), called **directly** by both the cron and the admin action. This kills
+  the Phase-0 operator-precedence bug (`https://undefined`) and the fragile self-HTTP call, and
+  makes the pull **per-source resilient**: a transient failure on one platform now leaves its
+  last-good blocks intact instead of wiping them (old code deleted both sources first).
+- **Manual range blocking** — block a single date or a **From–To range**; flows into the
+  published iCal so Airbnb/Booking pick it up (`blockDateRange()`).
+- **Pricing slot** left as-is for Phase 5.
+
+### Verification performed
+- `tsc --noEmit` clean; `next build` green (new `/admin/bookings/[id]` route compiles).
+- Runtime: `/admin/bookings` + `/admin/bookings/[id]` 307→`/admin/login` when unauthenticated;
+  `/admin/login` serves 200. (The data-rendering UI — unified table, sync panel — needs an
+  authenticated session + DB to view; verify on a preview deploy with env set.)
+
+---
+
 ## Phase 2 — Payments + two-way calendar sync
 
 ### 2A — Payments: RESEARCH ONLY this turn (no code; gated on your decisions)

@@ -1,11 +1,12 @@
 "use server";
 
 import { db } from "@/lib/db";
-import { reservations, blockedDates, pricingRules } from "@/lib/db/schema";
-import { eq, desc, and, gte, sql } from "drizzle-orm";
+import { reservations, blockedDates, pricingRules, calendarSyncLog } from "@/lib/db/schema";
+import { eq, desc, and, gte, sql, inArray } from "drizzle-orm";
 import { getSession } from "@/lib/auth";
-import { todayJerusalem, dateRange } from "@/lib/dates";
+import { todayJerusalem, dateRange, addDays } from "@/lib/dates";
 import { pricingUpdateSchema, manualBlockSchema } from "@/lib/validation";
+import { runCalendarSync } from "@/lib/calendar-sync";
 
 async function requireAdmin() {
   const isAdmin = await getSession();
@@ -30,6 +31,89 @@ export async function getAllBookings(statusFilter?: string) {
     .from(reservations)
     .where(conditions.length ? conditions[0] : undefined)
     .orderBy(desc(reservations.createdAt));
+}
+
+/** One row in the unified bookings view (direct reservations + external platform blocks). */
+interface UnifiedBooking {
+  id: string;
+  kind: "direct" | "external";
+  source: "direct" | "airbnb" | "booking_com";
+  guestName: string | null;
+  guestEmail: string | null;
+  checkIn: string;
+  checkOut: string;
+  nights: number;
+  amount: number | null;
+  status: string | null;
+  createdAt: string | null;
+}
+
+/** All reservations across direct + Airbnb + Booking, in one labelled, filterable list. */
+export async function getUnifiedBookings(filters?: {
+  source?: string;
+  status?: string;
+}): Promise<UnifiedBooking[]> {
+  await requireAdmin();
+
+  // Direct reservations — full detail.
+  const directRows = await db.select().from(reservations).orderBy(desc(reservations.createdAt));
+  const direct: UnifiedBooking[] = directRows.map((r) => ({
+    id: r.id,
+    kind: "direct",
+    source: "direct",
+    guestName: r.guestName,
+    guestEmail: r.guestEmail,
+    checkIn: r.checkIn,
+    checkOut: r.checkOut,
+    nights: r.nights,
+    amount: r.totalAmount,
+    status: r.status,
+    createdAt: r.createdAt ? new Date(r.createdAt).toISOString() : null,
+  }));
+
+  // External blocks (Airbnb / Booking) — coalesce per (source, externalUid) into ranges.
+  const ext = await db
+    .select()
+    .from(blockedDates)
+    .where(inArray(blockedDates.source, ["airbnb", "booking_com"]));
+  const groups = new Map<string, { source: string; uid: string; summary: string | null; dates: string[] }>();
+  for (const b of ext) {
+    const key = `${b.source}:${b.externalUid ?? ""}`;
+    const g = groups.get(key);
+    if (g) g.dates.push(b.date);
+    else groups.set(key, { source: b.source, uid: b.externalUid ?? "", summary: b.summary, dates: [b.date] });
+  }
+  const external: UnifiedBooking[] = [...groups.values()].map((g) => {
+    const sorted = [...g.dates].sort();
+    return {
+      id: `${g.source}:${g.uid}`,
+      kind: "external" as const,
+      source: g.source as "airbnb" | "booking_com",
+      guestName: g.summary,
+      guestEmail: null,
+      checkIn: sorted[0],
+      checkOut: addDays(sorted[sorted.length - 1], 1),
+      nights: sorted.length,
+      amount: null,
+      status: "confirmed",
+      createdAt: null,
+    };
+  });
+
+  let all = [...direct, ...external];
+  if (filters?.source) all = all.filter((b) => b.source === filters.source);
+  if (filters?.status) all = all.filter((b) => b.status === filters.status);
+  all.sort((a, b) => (a.checkIn < b.checkIn ? 1 : a.checkIn > b.checkIn ? -1 : 0));
+  return all;
+}
+
+/** Full detail for a single direct reservation (external blocks have no extra detail). */
+export async function getBookingDetail(
+  id: string
+): Promise<typeof reservations.$inferSelect | null> {
+  await requireAdmin();
+  const [r] = await db.select().from(reservations).where(eq(reservations.id, id)).limit(1);
+  return r ?? null;
 }
 
 export async function getDashboardStats() {
@@ -84,11 +168,51 @@ export async function unblockDate(id: string) {
 
 export async function triggerCalendarSync() {
   await requireAdmin();
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000";
-  const res = await fetch(`${baseUrl}/api/cron/sync-calendars`, {
-    headers: { Authorization: `Bearer ${process.env.CRON_SECRET}` },
-  });
-  return res.json();
+  // Call the sync directly — no self-HTTP round trip, no CRON_SECRET needed,
+  // and no base-URL guessing (the old version had an operator-precedence bug).
+  return runCalendarSync();
+}
+
+/** Latest sync result per source (for the admin sync-status panel). */
+export async function getSyncStatus() {
+  await requireAdmin();
+  const rows = await db
+    .select()
+    .from(calendarSyncLog)
+    .orderBy(desc(calendarSyncLog.createdAt))
+    .limit(50);
+  const latest: Record<string, (typeof rows)[number]> = {};
+  for (const r of rows) {
+    if (!latest[r.source]) latest[r.source] = r;
+  }
+  return Object.values(latest).map((r) => ({
+    source: r.source,
+    status: r.status,
+    count: r.count,
+    message: r.message,
+    at: r.createdAt ? new Date(r.createdAt).toISOString() : null,
+  }));
+}
+
+/** Manually block a contiguous range of nights [start, end] (inclusive). Flows to the published iCal. */
+export async function blockDateRange(startStr: string, endStr: string) {
+  await requireAdmin();
+  const { date: start } = manualBlockSchema.parse({ date: startStr });
+  const { date: end } = manualBlockSchema.parse({ date: endStr });
+  const last = end >= start ? end : start; // tolerate reversed input
+  const dates = dateRange(start, addDays(last, 1)); // inclusive of `last`
+  if (dates.length === 0) return;
+  await db
+    .insert(blockedDates)
+    .values(
+      dates.map((d) => ({
+        date: d,
+        source: "manual" as const,
+        externalUid: `manual-${d}`,
+        summary: "Manually blocked",
+      }))
+    )
+    .onConflictDoNothing();
 }
 
 export async function getPricingRules() {
