@@ -56,29 +56,27 @@ Phase 4. Verified no client flow calls this route, so gating it breaks nothing.
 
 ## Phase 2
 
-### D-P2.1 — Stripe viability for an Israeli merchant ⏳ NEEDS YOU
+### D-P2.1 — Stripe viability for an Israeli merchant ✅ RESOLVED
 **Research finding:** Stripe is **not** in its list of fully-supported merchant countries
-for Israel. ILS is supported as a *currency*, but an Israeli-*resident* merchant generally
-still needs the **US-entity workaround** (US LLC + EIN + US bank account) to run **live**
-Stripe. Reports are mixed and Stripe's policy can change, so this must be confirmed against
-*your actual account*, not assumed.
-**Need from you:** Is your existing Stripe account registered to (a) a **US entity**
-(LLC/EIN/US bank) or (b) an **Israeli entity**? And is it currently **test** or **live**?
-This determines whether Stripe can be the card/Apple/Google-Pay rail at all, or whether the
-local provider (below) becomes the **primary** rail. **Building paused until you answer.**
+for Israel; an Israeli-resident merchant generally needs the US-entity workaround for live
+Stripe.
+**Owner answer (2026-06-24):** **No Stripe account yet.** → Decision: **do not use Stripe.**
+A single local provider becomes the primary (and only) rail. The existing Stripe code is
+shelved (left in place, not wired in) and may be removed later.
 
-### D-P2.2 — Local provider for Bit: recommend **PayPlus** ⏳ NEEDS YOUR APPROVAL
-Bit is not supported by Stripe; it needs an Israeli סליקה provider. All the serious options
-(Tranzila, Cardcom, Grow/Meshulam, PayPlus) support **Bit + Apple Pay + Google Pay + cards**
-in one rail, so any could **replace Stripe entirely**. Recommendation + comparison in the
-chat report. **Lead pick: PayPlus** (modern REST API + webhooks, public GitHub samples,
-hosted payment page that's a near drop-in for our current redirect-to-Stripe flow).
-**Runner-up: Tranzila** (most established; detailed docs). **Building paused for approval.**
+### D-P2.2 — Payment provider: **PayPlus** (primary, single rail) ✅ APPROVED
+**Owner answer (2026-06-24):** **PayPlus approved.** It handles **cards + Apple Pay +
+Google Pay + Bit** in one rail, so it replaces Stripe entirely. Integration goes behind the
+**same** booking pipeline (draft + 30-min hold + atomic date-block from Phase 1/2B), with
+confirmation driven by PayPlus's IPN callback under the **same signature + idempotency
+guards** as the Phase-1 Stripe webhook (reuses `processed_webhook_events`).
+**Blocker:** no PayPlus account yet → no sandbox credentials → the integration cannot be
+built-and-verified until onboarding is underway. Onboarding is the critical path (owner
+action). I will not ship spec-guessed money-path code; I build + verify against sandbox.
 
-### D-P2.3 — Cron frequency needs your Vercel plan ⏳ NEEDS YOU
-I set `vercel.json` to **hourly** `sync-calendars` + **15-min** `expire-drafts` sweeper.
-This requires Vercel **Pro** (Hobby = daily only, max 2 crons). If you're on Hobby, tell me
-and I'll fall back to daily sync and we'll find another mechanism for timely hold-release.
+### D-P2.3 — Cron frequency ✅ RESOLVED (Vercel Pro)
+**Owner answer (2026-06-24):** **Pro.** → Keep `vercel.json` as set: **hourly**
+`sync-calendars` + **15-min** `expire-drafts` sweeper. No fallback needed.
 
 ### D-P2.4 — Publish token: env var `ICAL_TOKEN` ⏳ NEEDS YOU (later)
 The feed is gated by an unguessable token in the URL, read from `ICAL_TOKEN`. Like the JWT
