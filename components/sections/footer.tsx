@@ -4,9 +4,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useI18n } from "@/lib/i18n/context";
 
-// TODO(gbp): set Yonatan's Google Business Profile URL (ask for it). When set, the
-// "Google Business Profile" link renders in the footer; until then it's hidden.
-const GBP_URL = "";
+// Yonatan's Google Business Profile.
+const GBP_URL = "https://maps.app.goo.gl/MG8Hppe3vibuFLJb8";
 
 export function Footer() {
   const pathname = usePathname();

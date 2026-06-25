@@ -1,7 +1,7 @@
 import { z } from "zod";
 
-/** Maximum guests the apartment sleeps — matches the booking UI <select> (1–6). */
-export const MAX_GUESTS = 6;
+/** Maximum guests the apartment sleeps — matches the booking UI <select> (1–8). */
+export const MAX_GUESTS = 8;
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 

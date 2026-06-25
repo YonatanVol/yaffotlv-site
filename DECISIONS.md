@@ -31,11 +31,9 @@ logged out of `/admin` and must sign in again. Also set it for `preview` and
 lightweight, and the standard choice. Used regex for email (not `.email()`) to stay
 agnostic to the zod v3/v4 method change.
 
-### D-P1.4 — MAX_GUESTS = 6 ⏳ CONFIRM
-**Decided:** server-side guest-count bound is **1–6**, matching the existing booking
-UI `<select>`. **Why:** no stated capacity anywhere in the code; 6 matches what guests
-can already pick. If the apartment's real max is different, tell me and I'll change the
-one constant (`MAX_GUESTS` in `lib/validation.ts`).
+### D-P1.4 — MAX_GUESTS = 8 ✅ RESOLVED
+**Owner answer (2026-06-25):** the apartment sleeps up to **8** (2 bedrooms + living room).
+`MAX_GUESTS = 8` and the booking `<select>` now offers 1–8.
 
 ### D-P1.5 — Migration baseline strategy
 **Decided:** introduced `drizzle/` with `0000` = a baseline of the **existing** schema
@@ -111,8 +109,8 @@ aren't live), a data endpoint would just return 0. So the honest move now is rem
 remaining items (rating, discount, Superhost) are standing facts. We can add a real
 recent-bookings count once PayPlus is live and bookings flow.
 
-### D-P6.4 — Google Business Profile URL ⏳ NEEDS YOU
-Footer has a hidden GBP slot (`GBP_URL=""`). Send me the URL and I'll enable the link.
+### D-P6.4 — Google Business Profile URL ✅ RESOLVED
+Owner provided https://maps.app.goo.gl/MG8Hppe3vibuFLJb8 — footer link enabled.
 
 ### D-P6.5 — Legal pages are English DRAFT — decided + ⏳ NEEDS REVIEW
 Generated substantive DRAFT Terms / Privacy / Cancellation behind a "not legal advice"
@@ -128,6 +126,33 @@ input).
 ### D-P6.7 — Error alerts via Resend email — decided
 `alertHost()` emails on critical failures (no new dependency). Sentry/hosted tracking can be
 added later if you want dashboards/grouping.
+
+---
+
+## Inputs received 2026-06-25 (to build / clarify next)
+
+- **Calendar feeds:** owner provided the Airbnb + Booking.com iCal URLs (secrets → set as
+  `ICAL_AIRBNB_URL` / `ICAL_BOOKING_URL` env vars, never committed). Verified both fetch +
+  parse with our sync (Airbnb ≈21 nights, Booking ≈164 nights). GBP URL set.
+- **Cancellation policy (Phase 4 baseline):** 100% refund if cancelled MORE than 5 days
+  before check-in; 50% if within 5 days; last-minute bookings (made for check-in ≤3 days
+  away) also get 50%. OPEN: is there a 0% / no-show / same-day window? (asked owner).
+- **Sleeping arrangements:** 3 rooms = 2 bedrooms (double bed each) + living room (double
+  sofa-bed, a non-folding sofa, a thick folding single) → up to 8 guests; baby cot on
+  request. To add as a site section (needs 6-locale translation).
+- **House rules:** guest must APPROVE before booking (required checkbox gate). No smoking
+  ($200/day), no parties, quiet 21:00–08:00, $100/day per extra guest over booked count,
+  valid phone required, $100 extra-cleaning, violation = termination w/o refund. Needs
+  translation.
+- **Check-in instructions:** owner provided the automated check-in text (address, entry/
+  safe/wifi codes, shower/heater notes, contacts). This is **Phase 4 confirmed-guest email**
+  content and contains sensitive codes → must NOT be committed to git; store as config (env
+  or a settings row) and reference from the email. (Codes intentionally not written here.)
+- **Corrections to publish:** check-in time is **14:00** (legal + structured-data currently
+  say 15:00); street address is **Barukh Karo 24** (structured-data says "ברוך קרוא 100").
+  Confirm whether to publish the exact address or keep it neighbourhood-level.
+- **Branding:** no logo yet — owner wants a YaffoTLV logo designed; brand/host photo coming.
+- **Deferred:** improve SEO + web/social marketing later (owner: "don't forget").
 
 ---
 

@@ -76,7 +76,7 @@ export function GuestForm({ onSubmit, loading }: GuestFormProps) {
           onChange={(e) => setGuests(Number(e.target.value))}
           className="mt-2 w-full border-b border-sand bg-transparent pb-2 text-sm text-charcoal outline-none transition-colors focus:border-accent"
         >
-          {[1, 2, 3, 4, 5, 6].map((n) => (
+          {[1, 2, 3, 4, 5, 6, 7, 8].map((n) => (
             <option key={n} value={n}>
               {n} {t.book.guests}
             </option>
