@@ -134,9 +134,11 @@ added later if you want dashboards/grouping.
 - **Calendar feeds:** owner provided the Airbnb + Booking.com iCal URLs (secrets → set as
   `ICAL_AIRBNB_URL` / `ICAL_BOOKING_URL` env vars, never committed). Verified both fetch +
   parse with our sync (Airbnb ≈21 nights, Booking ≈164 nights). GBP URL set.
-- **Cancellation policy (Phase 4 baseline):** 100% refund if cancelled MORE than 5 days
-  before check-in; 50% if within 5 days; last-minute bookings (made for check-in ≤3 days
-  away) also get 50%. OPEN: is there a 0% / no-show / same-day window? (asked owner).
+- **Cancellation policy (CONFIRMED 2026-06-25):** measured against **14:00 Jerusalem** on the
+  arrival date — **>5 days** before = **100%**; **1–5 days** = **50%** (incl. last-minute
+  bookings for a check-in ≤3 days away); **<1 day** before / no-show = **0%**.
+  `/legal/cancellation` updated to match; the refund LOGIC gets wired in **Phase 4** (partial
+  50% refunds need the payment provider).
 - **Sleeping arrangements:** 3 rooms = 2 bedrooms (double bed each) + living room (double
   sofa-bed, a non-folding sofa, a thick folding single) → up to 8 guests; baby cot on
   request. To add as a site section (needs 6-locale translation).
@@ -148,9 +150,15 @@ added later if you want dashboards/grouping.
   safe/wifi codes, shower/heater notes, contacts). This is **Phase 4 confirmed-guest email**
   content and contains sensitive codes → must NOT be committed to git; store as config (env
   or a settings row) and reference from the email. (Codes intentionally not written here.)
-- **Corrections to publish:** check-in time is **14:00** (legal + structured-data currently
-  say 15:00); street address is **Barukh Karo 24** (structured-data says "ברוך קרוא 100").
-  Confirm whether to publish the exact address or keep it neighbourhood-level.
+- **Corrections applied (2026-06-25):** check-in time set to **14:00** (was 15:00) in
+  structured-data + legal/terms + cancellation page; public address set to **Baruch Karo 24,
+  Tel Aviv** (was "ברוך קרוא 100") in structured-data — owner confirmed publishing the exact
+  address. OPEN: the visible map pin / structured-data geo is `32.0485, 34.7545` — owner to
+  confirm it sits on the right building (offered to update the pin).
+- **Parking (provided 2026-06-25):** free street parking 19:00–09:00 on the marked side;
+  paid daytime 09:00–19:00 (~6₪/hr via the Cello app) on the building side; host assists on
+  arrival. → short public note (neighbourhood/amenities) + full text in the Phase-4 check-in
+  email.
 - **Branding:** no logo yet — owner wants a YaffoTLV logo designed; brand/host photo coming.
 - **Deferred:** improve SEO + web/social marketing later (owner: "don't forget").
 

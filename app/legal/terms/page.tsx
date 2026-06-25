@@ -37,7 +37,7 @@ const SECTIONS: LegalSection[] = [
   {
     h: "5. Check-in, check-out and house rules",
     p: [
-      "Standard check-in is from 15:00 and check-out is by 11:00, unless otherwise agreed. Occupancy may not exceed the number of guests in your booking.",
+      "Standard check-in is from 14:00 and check-out is by 11:00, unless otherwise agreed. Occupancy may not exceed the number of guests in your booking.",
       "No parties or events. Please treat the Property and neighbours with respect. Any house rules provided in your confirmation form part of these terms.",
     ],
   },
