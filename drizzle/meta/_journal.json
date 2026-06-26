@@ -22,6 +22,13 @@
       "when": 1782312082198,
       "tag": "0002_calendar_publish_and_atomic_guard",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1782479758324,
+      "tag": "0003_pricing_seasons_overrides_discounts",
+      "breakpoints": true
     }
   ]
 }

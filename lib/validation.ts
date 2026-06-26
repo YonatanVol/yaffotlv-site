@@ -45,14 +45,39 @@ export const contactSchema = z.object({
 
 // Money bounds expressed in agorot (ILS cents): 0 .. 100,000 ILS.
 const agorot = z.coerce.number().int().min(0).max(10_000_000);
+const pct = z.coerce.number().int().min(0).max(90);
 
 /** Admin: update pricing rule (server action). */
 export const pricingUpdateSchema = z.object({
   baseRateNight: agorot,
   thursdayRate: agorot,
   fridayRate: agorot,
+  saturdayRate: agorot,
   cleaningFee: agorot,
   minNights: z.coerce.number().int().min(1).max(30),
+  lastMinuteDiscountPct: pct,
+  lastMinuteDays: z.coerce.number().int().min(0).max(60),
+  longStay7Pct: pct,
+  longStay28Pct: pct,
+});
+
+/** Admin: add a seasonal pricing window. */
+export const seasonSchema = z
+  .object({
+    name: z.string().trim().min(1).max(60),
+    startDate: dateString,
+    endDate: dateString,
+    adjustmentPct: z.coerce.number().int().min(-90).max(300),
+  })
+  .refine((d) => d.endDate >= d.startDate, {
+    message: "End date must be on or after start date",
+    path: ["endDate"],
+  });
+
+/** Admin: set a per-date price override (price in agorot). */
+export const overrideSchema = z.object({
+  date: dateString,
+  price: agorot,
 });
 
 /** Admin: manually block a date (server action). */

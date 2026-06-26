@@ -74,11 +74,36 @@ export const pricingRules = pgTable("pricing_rules", {
   baseRateNight: integer("base_rate_night").notNull(), // agorot (55000 = 550 ILS)
   thursdayRate: integer("thursday_rate").notNull(),
   fridayRate: integer("friday_rate").notNull(),
+  saturdayRate: integer("saturday_rate").notNull().default(100000), // weekend (Israel: Fri–Sat)
   cleaningFee: integer("cleaning_fee").notNull(),
   minNights: integer("min_nights").notNull().default(1),
+  // Discounts (percent). The single largest applicable discount is applied.
+  lastMinuteDiscountPct: integer("last_minute_discount_pct").notNull().default(10),
+  lastMinuteDays: integer("last_minute_days").notNull().default(5),
+  longStay7Pct: integer("long_stay_7_pct").notNull().default(10),
+  longStay28Pct: integer("long_stay_28_pct").notNull().default(20),
   currency: text("currency").notNull().default("ILS"),
   isActive: boolean("is_active").notNull().default(true),
   updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
+});
+
+/** Seasonal pricing windows — a date range that nudges the nightly rate by a percent. */
+export const seasonalRates = pgTable("seasonal_rates", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  name: text("name").notNull(),
+  startDate: date("start_date", { mode: "string" }).notNull(),
+  endDate: date("end_date", { mode: "string" }).notNull(),
+  adjustmentPct: integer("adjustment_pct").notNull(), // +25 (summer) / -10 (low season)
+  isActive: boolean("is_active").notNull().default(true),
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+});
+
+/** Manual per-date price override (agorot) — wins over rules + seasons for that night. */
+export const priceOverrides = pgTable("price_overrides", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  date: date("date", { mode: "string" }).notNull().unique(),
+  price: integer("price").notNull(), // agorot — accommodation price for that night
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
 });
 
 /** Activity log — anonymous event tracking for analytics */

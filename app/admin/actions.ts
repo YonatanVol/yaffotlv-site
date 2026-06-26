@@ -1,12 +1,20 @@
 "use server";
 
 import { db } from "@/lib/db";
-import { reservations, blockedDates, pricingRules, calendarSyncLog } from "@/lib/db/schema";
+import {
+  reservations,
+  blockedDates,
+  pricingRules,
+  calendarSyncLog,
+  seasonalRates,
+  priceOverrides,
+} from "@/lib/db/schema";
 import { eq, desc, and, gte, sql, inArray } from "drizzle-orm";
 import { getSession } from "@/lib/auth";
 import { todayJerusalem, dateRange, addDays } from "@/lib/dates";
-import { pricingUpdateSchema, manualBlockSchema } from "@/lib/validation";
+import { pricingUpdateSchema, manualBlockSchema, seasonSchema, overrideSchema } from "@/lib/validation";
 import { runCalendarSync } from "@/lib/calendar-sync";
+import { quoteForRange } from "@/lib/pricing-data";
 
 async function requireAdmin() {
   const isAdmin = await getSession();
@@ -226,8 +234,13 @@ export async function updatePricingRule(
     baseRateNight: number;
     thursdayRate: number;
     fridayRate: number;
+    saturdayRate: number;
     cleaningFee: number;
     minNights: number;
+    lastMinuteDiscountPct: number;
+    lastMinuteDays: number;
+    longStay7Pct: number;
+    longStay28Pct: number;
   }
 ) {
   await requireAdmin();
@@ -239,4 +252,56 @@ export async function updatePricingRule(
       updatedAt: new Date(),
     })
     .where(eq(pricingRules.id, id));
+}
+
+// --- Seasonal pricing windows ---
+
+export async function getSeasons() {
+  await requireAdmin();
+  return db.select().from(seasonalRates).orderBy(seasonalRates.startDate);
+}
+
+export async function addSeason(data: {
+  name: string;
+  startDate: string;
+  endDate: string;
+  adjustmentPct: number;
+}) {
+  await requireAdmin();
+  const clean = seasonSchema.parse(data);
+  await db.insert(seasonalRates).values({ ...clean, isActive: true });
+}
+
+export async function removeSeason(id: string) {
+  await requireAdmin();
+  await db.delete(seasonalRates).where(eq(seasonalRates.id, id));
+}
+
+// --- Per-date price overrides ---
+
+export async function getOverrides() {
+  await requireAdmin();
+  return db.select().from(priceOverrides).orderBy(priceOverrides.date);
+}
+
+/** Set/replace the override price (given in ILS) for a single date. */
+export async function setOverride(date: string, priceIls: number) {
+  await requireAdmin();
+  const clean = overrideSchema.parse({ date, price: Math.round(priceIls * 100) });
+  await db
+    .insert(priceOverrides)
+    .values({ date: clean.date, price: clean.price })
+    .onConflictDoUpdate({ target: priceOverrides.date, set: { price: clean.price } });
+}
+
+export async function removeOverride(id: string) {
+  await requireAdmin();
+  await db.delete(priceOverrides).where(eq(priceOverrides.id, id));
+}
+
+/** Admin price preview for a date range (uses the same server-authoritative engine). */
+export async function previewQuote(checkIn: string, checkOut: string) {
+  await requireAdmin();
+  const result = await quoteForRange(checkIn, checkOut);
+  return result?.quote ?? null;
 }

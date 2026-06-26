@@ -67,10 +67,24 @@ export function PriceBreakdown({ quote, loading }: PriceBreakdownProps) {
             transition={{ duration: 0.3, delay: 0.15 }}
             className="mt-4 border-t border-sand pt-4 space-y-2"
           >
+            {quote.discountAmount > 0 && (
+              <div className="flex justify-between text-sm">
+                <span className="text-green-700">{t.book.discount || "Discount"}</span>
+                <span className="font-mono text-sm text-green-700 tabular-nums">
+                  −{formatILS(quote.discountAmount)} ILS
+                </span>
+              </div>
+            )}
+
             <div className="flex justify-between text-sm">
-              <span className="text-graphite">
-                {quote.nights} {t.book.nights}
+              <span className="text-stone">{t.book.cleaning}</span>
+              <span className="font-mono text-sm text-stone tabular-nums">
+                {formatILS(quote.cleaningFee)} ILS
               </span>
+            </div>
+
+            <div className="flex justify-between text-sm">
+              <span className="text-graphite">{t.book.subtotal}</span>
               <span className="font-mono text-sm text-charcoal tabular-nums">
                 {formatILS(quote.totalBeforeVat)} ILS
               </span>

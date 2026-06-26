@@ -124,6 +124,7 @@ export interface Translations {
     vat: string;
     total: string;
     inclVat?: string;
+    discount?: string;
   };
   // WhatsApp
   whatsapp?: {
@@ -298,7 +299,8 @@ const en: Translations = {
     step1Title: "Select Your Dates",
     step2: "Step 2 of 2",
     step2Title: "Guest Details",
-    cancellation: "Flexible cancellation: full refund up to 3 days before check-in.",
+    cancellation: "Free cancellation up to 5 days before check-in (50% within 5 days).",
+    discount: "Discount",
     checkIn: "Check-in",
     checkOut: "Check-out",
     nights: "nights",
@@ -333,7 +335,7 @@ const en: Translations = {
     superhost: "🏆 Superhost · 12 years hosting",
   },
   footer: {
-    tagline: "Luxury direct-booking apartment in Jaffa, Tel Aviv.",
+    tagline: "Luxury 2-bedroom apartment · short-term rental in Jaffa, Tel Aviv.",
     terms: "Terms of Service",
     privacy: "Privacy Policy",
     cancellation: "Cancellation Policy",
@@ -481,7 +483,8 @@ const he: Translations = {
     step1Title: "מתי אתם מגיעים?",
     step2: "שלב 2 מתוך 2",
     step2Title: "ספרו לנו קצת על עצמכם",
-    cancellation: "ביטול גמיש: עד 3 ימים לפני — החזר מלא!",
+    cancellation: "ביטול חינם עד 5 ימים לפני הצ׳ק-אין (50% בתוך 5 ימים).",
+    discount: "הנחה",
     checkIn: "הגעה",
     checkOut: "עזיבה",
     nights: "לילות",
@@ -516,7 +519,7 @@ const he: Translations = {
     superhost: "🏆 סופרהוסט · 12 שנים של אירוח",
   },
   footer: {
-    tagline: "דירת יוקרה להזמנה ישירה ביפו, תל אביב.",
+    tagline: "דירת יוקרה בת 2 חדרי שינה · השכרה לטווח קצר ביפו, תל אביב.",
     terms: "תנאי שימוש",
     privacy: "מדיניות פרטיות",
     cancellation: "מדיניות ביטולים",
@@ -663,7 +666,7 @@ const ru: Translations = {
     step1Title: "Выберите даты",
     step2: "Шаг 2 из 2",
     step2Title: "Данные гостя",
-    cancellation: "Гибкая отмена: полный возврат за 3 дня до заезда.",
+    cancellation: "Бесплатная отмена за 5 дней до заезда (50% в течение 5 дней).",
     checkIn: "Заезд",
     checkOut: "Выезд",
     nights: "ночей",
@@ -838,7 +841,7 @@ const fr: Translations = {
     step1Title: "Choisissez vos dates",
     step2: "Étape 2 sur 2",
     step2Title: "Détails de l'invité",
-    cancellation: "Annulation flexible : remboursement intégral jusqu'à 3 jours avant l'arrivée.",
+    cancellation: "Annulation gratuite jusqu'à 5 jours avant l'arrivée (50% ensuite).",
     checkIn: "Arrivée",
     checkOut: "Départ",
     nights: "nuits",
@@ -1013,7 +1016,7 @@ const es: Translations = {
     step1Title: "Elige tus fechas",
     step2: "Paso 2 de 2",
     step2Title: "Datos del huésped",
-    cancellation: "Cancelación flexible: reembolso completo hasta 3 días antes del check-in.",
+    cancellation: "Cancelación gratis hasta 5 días antes del check-in (50% después).",
     checkIn: "Llegada",
     checkOut: "Salida",
     nights: "noches",
@@ -1188,7 +1191,8 @@ const ar: Translations = {
     step1Title: "اختر التواريخ",
     step2: "الخطوة 2 من 2",
     step2Title: "بيانات الضيف",
-    cancellation: "إلغاء مرن: استرداد كامل حتى 3 أيام قبل الوصول.",
+    cancellation: "إلغاء مجاني حتى 5 أيام قبل الوصول (50% خلال 5 أيام).",
+    discount: "خصم",
     checkIn: "الوصول",
     checkOut: "المغادرة",
     nights: "ليالٍ",
@@ -1223,7 +1227,7 @@ const ar: Translations = {
     superhost: "🏆 مضيف متميز · 12 سنة خبرة",
   },
   footer: {
-    tagline: "شقة فاخرة للحجز المباشر في يافا، تل أبيب.",
+    tagline: "شقة فاخرة بغرفتي نوم · إيجار قصير الأمد في يافا، تل أبيب.",
     terms: "شروط الخدمة",
     privacy: "سياسة الخصوصية",
     cancellation: "سياسة الإلغاء",

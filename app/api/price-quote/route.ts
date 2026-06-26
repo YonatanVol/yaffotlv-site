@@ -1,10 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { db } from "@/lib/db";
-import { pricingRules } from "@/lib/db/schema";
-import { calculatePrice } from "@/lib/pricing";
-import { countNights, todayJerusalem } from "@/lib/dates";
-import { eq } from "drizzle-orm";
+import { todayJerusalem } from "@/lib/dates";
 import { priceQuoteSchema, firstError } from "@/lib/validation";
+import { quoteForRange } from "@/lib/pricing-data";
 
 export async function POST(request: NextRequest) {
   try {
@@ -19,26 +16,18 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Check-in must be today or later" }, { status: 400 });
     }
 
-    const [rule] = await db
-      .select()
-      .from(pricingRules)
-      .where(eq(pricingRules.isActive, true))
-      .limit(1);
-
-    if (!rule) {
+    const result = await quoteForRange(checkIn, checkOut);
+    if (!result) {
       return NextResponse.json({ error: "No pricing rule configured" }, { status: 500 });
     }
-
-    const nights = countNights(checkIn, checkOut);
-    if (nights < rule.minNights) {
+    if (result.quote.nights < result.rule.minNights) {
       return NextResponse.json(
-        { error: `Minimum stay is ${rule.minNights} night(s)` },
+        { error: `Minimum stay is ${result.rule.minNights} night(s)` },
         { status: 400 }
       );
     }
 
-    const quote = calculatePrice(checkIn, checkOut, rule);
-    return NextResponse.json(quote);
+    return NextResponse.json(result.quote);
   } catch (error) {
     console.error("Price quote error:", error);
     return NextResponse.json({ error: "Failed to calculate price" }, { status: 500 });

@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
-import { blockedDates, reservations, pricingRules } from "@/lib/db/schema";
-import { calculatePrice } from "@/lib/pricing";
-import { dateRange, todayJerusalem, countNights } from "@/lib/dates";
+import { blockedDates, reservations } from "@/lib/db/schema";
+import { dateRange, todayJerusalem } from "@/lib/dates";
 import { inArray, eq } from "drizzle-orm";
 import { bookingSchema, firstError } from "@/lib/validation";
+import { quoteForRange } from "@/lib/pricing-data";
 
 export async function POST(request: NextRequest) {
   try {
@@ -36,26 +36,18 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // --- Price calculation ---
-    const [rule] = await db
-      .select()
-      .from(pricingRules)
-      .where(eq(pricingRules.isActive, true))
-      .limit(1);
-
-    if (!rule) {
+    // --- Price calculation (server-authoritative: seasons + overrides + discounts) ---
+    const priced = await quoteForRange(checkIn, checkOut);
+    if (!priced) {
       return NextResponse.json({ error: "Pricing not configured" }, { status: 500 });
     }
-
-    const nights = countNights(checkIn, checkOut);
-    if (nights < rule.minNights) {
+    if (priced.quote.nights < priced.rule.minNights) {
       return NextResponse.json(
-        { error: `Minimum stay is ${rule.minNights} night(s)` },
+        { error: `Minimum stay is ${priced.rule.minNights} night(s)` },
         { status: 400 }
       );
     }
-
-    const quote = calculatePrice(checkIn, checkOut, rule);
+    const quote = priced.quote;
 
     // --- Create draft reservation ---
     const expiresAt = new Date(Date.now() + 30 * 60 * 1000); // 30 minutes
