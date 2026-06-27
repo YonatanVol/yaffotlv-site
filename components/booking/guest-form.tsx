@@ -19,6 +19,7 @@ export function GuestForm({ onSubmit, loading }: GuestFormProps) {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [guests, setGuests] = useState(1);
+  const [agreed, setAgreed] = useState(false);
   const { t } = useI18n();
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -84,21 +85,36 @@ export function GuestForm({ onSubmit, loading }: GuestFormProps) {
         </select>
       </div>
 
-      <p className="text-xs leading-relaxed text-stone">
-        By continuing you agree to our{" "}
+      <label className="flex items-start gap-2 text-xs leading-relaxed text-stone">
+        <input
+          type="checkbox"
+          required
+          checked={agreed}
+          onChange={(e) => setAgreed(e.target.checked)}
+          className="mt-0.5 accent-accent"
+        />
+        <span>
+          {t.book.agreeRules ||
+            "I have read and agree to the House Rules, Terms and Cancellation Policy."}
+        </span>
+      </label>
+      <p className="text-xs text-stone">
+        <Link href="/legal/house-rules" target="_blank" className="underline hover:text-accent">
+          {t.houseRules?.title || "House Rules"}
+        </Link>
+        {" · "}
         <Link href="/legal/terms" target="_blank" className="underline hover:text-accent">
           {t.footer?.terms || "Terms"}
-        </Link>{" "}
-        &amp;{" "}
+        </Link>
+        {" · "}
         <Link href="/legal/cancellation" target="_blank" className="underline hover:text-accent">
           {t.footer?.cancellation || "Cancellation Policy"}
         </Link>
-        .
       </p>
 
       <button
         type="submit"
-        disabled={loading}
+        disabled={loading || !agreed}
         className="mt-4 w-full border border-accent px-8 py-4 text-xs font-medium uppercase tracking-[0.2em] text-accent transition-colors duration-300 hover:bg-accent hover:text-white disabled:opacity-50"
       >
         {loading ? "..." : t.book.payNow}

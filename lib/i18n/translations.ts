@@ -125,6 +125,7 @@ export interface Translations {
     total: string;
     inclVat?: string;
     discount?: string;
+    agreeRules?: string;
   };
   // WhatsApp
   whatsapp?: {
@@ -151,6 +152,23 @@ export interface Translations {
     privacy: string;
     cancellation: string;
     rights: string;
+  };
+  // Sleeping arrangements
+  sleeping?: {
+    overline: string;
+    title: string;
+    bedroom: string;
+    doubleBed: string;
+    living: string;
+    livingBeds: string;
+    cot: string;
+    parking: string;
+  };
+  // House rules
+  houseRules?: {
+    title: string;
+    intro: string;
+    rules: string[];
   };
   // Trust badges
   trustBadges?: {
@@ -301,6 +319,7 @@ const en: Translations = {
     step2Title: "Guest Details",
     cancellation: "Free cancellation up to 5 days before check-in (50% within 5 days).",
     discount: "Discount",
+    agreeRules: "I have read and agree to the House Rules, Terms and Cancellation Policy.",
     checkIn: "Check-in",
     checkOut: "Check-out",
     nights: "nights",
@@ -340,6 +359,29 @@ const en: Translations = {
     privacy: "Privacy Policy",
     cancellation: "Cancellation Policy",
     rights: "All rights reserved.",
+  },
+  sleeping: {
+    overline: "The Space",
+    title: "Comfortably sleeps up to 8",
+    bedroom: "Bedroom",
+    doubleBed: "Double bed",
+    living: "Living room",
+    livingBeds: "Double sofa-bed, a sofa & a folding single bed",
+    cot: "Baby cot available on request",
+    parking: "Free street parking 19:00–09:00; paid during the day (~₪6/hr via the Cello app).",
+  },
+  houseRules: {
+    title: "House Rules",
+    intro: "By booking, you agree to the following house rules:",
+    rules: [
+      "No smoking inside the apartment ($200 fine per booked day).",
+      "No parties and no loud events.",
+      "Quiet hours are 21:00–08:00. Please respect the neighbors.",
+      "A fine of $100 per booked day, per guest, applies for exceeding the number of guests booked. Any change in the guest count must be updated in advance.",
+      "You must have a valid, active phone number before booking.",
+      "If the apartment is left excessively dirty (beyond what a considerate guest would leave), a $100 additional cleaning charge applies.",
+      "Breaking any house rule is grounds for immediate termination of the stay with no refund.",
+    ],
   },
   trustBadges: {
     superhost: "Superhost",
@@ -485,6 +527,7 @@ const he: Translations = {
     step2Title: "ספרו לנו קצת על עצמכם",
     cancellation: "ביטול חינם עד 5 ימים לפני הצ׳ק-אין (50% בתוך 5 ימים).",
     discount: "הנחה",
+    agreeRules: "קראתי ואני מאשר/ת את כללי הבית, תנאי השימוש ומדיניות הביטולים.",
     checkIn: "הגעה",
     checkOut: "עזיבה",
     nights: "לילות",
@@ -524,6 +567,29 @@ const he: Translations = {
     privacy: "מדיניות פרטיות",
     cancellation: "מדיניות ביטולים",
     rights: "כל הזכויות שמורות.",
+  },
+  sleeping: {
+    overline: "החלל",
+    title: "מתאים בנוחות עד 8 אורחים",
+    bedroom: "חדר שינה",
+    doubleBed: "מיטה זוגית",
+    living: "סלון",
+    livingBeds: "ספה זוגית נפתחת, ספה ומיטת יחיד מתקפלת",
+    cot: "מיטת תינוק זמינה לפי בקשה",
+    parking: "חניה חופשית ברחוב 19:00–09:00; בתשלום במהלך היום (~6₪ לשעה, אפליקציית Cello).",
+  },
+  houseRules: {
+    title: "כללי הבית",
+    intro: "בהזמנתכם אתם מאשרים את כללי הבית הבאים:",
+    rules: [
+      "אסור לעשן בדירה (קנס של 200 דולר לכל יום שהוזמן).",
+      "אין מסיבות ואין אירועים רועשים.",
+      "שעות השקט הן בין 21:00 ל-08:00. אנא כבדו את השכנים.",
+      "קנס של 100 דולר ליום שהוזמן, לכל אורח, עבור חריגה ממספר האורחים שהוזמן. כל שינוי במספר האורחים יש לעדכן מראש.",
+      "עליכם להיות בעלי מספר טלפון תקף ופעיל לפני ביצוע ההזמנה.",
+      "אם הדירה מלוכלכת במיוחד (מעבר למה שאורח אדיב היה משאיר), יחול חיוב ניקיון נוסף של 100 דולר.",
+      "הפרה של אחד מכללי הבית מהווה עילה לסיום מיידי של ההזמנה ללא החזר כספי.",
+    ],
   },
   trustBadges: {
     superhost: "סופרהוסט",
@@ -1193,6 +1259,7 @@ const ar: Translations = {
     step2Title: "بيانات الضيف",
     cancellation: "إلغاء مجاني حتى 5 أيام قبل الوصول (50% خلال 5 أيام).",
     discount: "خصم",
+    agreeRules: "لقد قرأت وأوافق على قواعد المنزل وشروط الخدمة وسياسة الإلغاء.",
     checkIn: "الوصول",
     checkOut: "المغادرة",
     nights: "ليالٍ",
@@ -1232,6 +1299,29 @@ const ar: Translations = {
     privacy: "سياسة الخصوصية",
     cancellation: "سياسة الإلغاء",
     rights: "جميع الحقوق محفوظة.",
+  },
+  sleeping: {
+    overline: "المكان",
+    title: "يتسع بشكل مريح حتى 8 ضيوف",
+    bedroom: "غرفة نوم",
+    doubleBed: "سرير مزدوج",
+    living: "غرفة المعيشة",
+    livingBeds: "أريكة سرير مزدوجة، وأريكة، وسرير مفرد قابل للطي",
+    cot: "سرير أطفال متوفر عند الطلب",
+    parking: "وقوف مجاني في الشارع 19:00–09:00؛ مدفوع نهارًا (~6₪/ساعة عبر تطبيق Cello).",
+  },
+  houseRules: {
+    title: "قواعد المنزل",
+    intro: "بحجزك، فإنك توافق على قواعد المنزل التالية:",
+    rules: [
+      "ممنوع التدخين داخل الشقة (غرامة 200 دولار عن كل يوم محجوز).",
+      "ممنوع الحفلات والفعاليات الصاخبة.",
+      "ساعات الهدوء من 21:00 إلى 08:00. يرجى احترام الجيران.",
+      "غرامة 100 دولار عن كل يوم محجوز ولكل ضيف عند تجاوز عدد الضيوف المحجوز. يجب تحديث أي تغيير في عدد الضيوف مسبقًا.",
+      "يجب أن يكون لديك رقم هاتف صالح وفعّال قبل الحجز.",
+      "إذا تُركت الشقة متسخة بشكل مفرط (أكثر مما يتركه ضيف مراعٍ)، تُطبّق رسوم تنظيف إضافية قدرها 100 دولار.",
+      "مخالفة أي من قواعد المنزل تُعد سببًا لإنهاء الإقامة فورًا دون استرداد.",
+    ],
   },
   trustBadges: {
     superhost: "مضيف متميز",

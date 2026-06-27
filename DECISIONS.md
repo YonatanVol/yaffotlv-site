@@ -139,13 +139,13 @@ added later if you want dashboards/grouping.
   bookings for a check-in ≤3 days away); **<1 day** before / no-show = **0%**.
   `/legal/cancellation` updated to match; the refund LOGIC gets wired in **Phase 4** (partial
   50% refunds need the payment provider).
-- **Sleeping arrangements:** 3 rooms = 2 bedrooms (double bed each) + living room (double
-  sofa-bed, a non-folding sofa, a thick folding single) → up to 8 guests; baby cot on
-  request. To add as a site section (needs 6-locale translation).
-- **House rules:** guest must APPROVE before booking (required checkbox gate). No smoking
-  ($200/day), no parties, quiet 21:00–08:00, $100/day per extra guest over booked count,
-  valid phone required, $100 extra-cleaning, violation = termination w/o refund. Needs
-  translation.
+- **Sleeping arrangements + parking — BUILT (2026-06-27):** "The Space" section on the home
+  page (2 doubles + living-room sofa-beds = up to 8, cot on request) + a short public parking
+  note; en/he/ar. Full parking + check-in detail still goes in the Phase-4 guest email.
+- **House rules — BUILT (2026-06-27):** `/legal/house-rules` page + a required agreement
+  checkbox in the booking flow (blocks payment until ticked); en/he/ar + footer/sitemap links.
+  ⚠️ The fines and "termination without refund" should be checked with the lawyer for
+  enforceability (esp. for EU consumers via Booking.com).
 - **Check-in instructions:** owner provided the automated check-in text (address, entry/
   safe/wifi codes, shower/heater notes, contacts). This is **Phase 4 confirmed-guest email**
   content and contains sensitive codes → must NOT be committed to git; store as config (env

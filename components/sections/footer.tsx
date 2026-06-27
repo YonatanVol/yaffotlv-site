@@ -39,6 +39,9 @@ export function Footer() {
             <Link href="/legal/cancellation" className="transition-colors hover:text-accent">
               {t.footer?.cancellation || "Cancellation Policy"}
             </Link>
+            <Link href="/legal/house-rules" className="transition-colors hover:text-accent">
+              {t.houseRules?.title || "House Rules"}
+            </Link>
             {GBP_URL ? (
               <a href={GBP_URL} target="_blank" rel="noopener noreferrer" className="transition-colors hover:text-accent">
                 Google Business Profile
