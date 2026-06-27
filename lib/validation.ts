@@ -22,6 +22,7 @@ export const bookingSchema = z
     guestEmail: email,
     guestPhone: z.string().trim().max(40).optional().nullable(),
     guestCount: z.coerce.number().int().min(1).max(MAX_GUESTS).default(1),
+    promoCode: z.string().trim().max(40).optional(),
   })
   .refine((d) => d.checkOut > d.checkIn, {
     message: "Check-out must be after check-in",
@@ -30,7 +31,7 @@ export const bookingSchema = z
 
 /** POST /api/price-quote — server-authoritative price calculation. */
 export const priceQuoteSchema = z
-  .object({ checkIn: dateString, checkOut: dateString })
+  .object({ checkIn: dateString, checkOut: dateString, promoCode: z.string().trim().max(40).optional() })
   .refine((d) => d.checkOut > d.checkIn, {
     message: "Check-out must be after check-in",
     path: ["checkOut"],
@@ -78,6 +79,14 @@ export const seasonSchema = z
 export const overrideSchema = z.object({
   date: dateString,
   price: agorot,
+});
+
+/** Admin: create a promo code. */
+export const promoCodeCreateSchema = z.object({
+  code: z.string().trim().min(2).max(40).regex(/^[A-Za-z0-9_-]+$/, "Use letters, numbers, - or _ only"),
+  discountPct: z.coerce.number().int().min(1).max(90),
+  maxUses: z.coerce.number().int().min(1).max(100000).optional().nullable(),
+  expiresAt: dateString.optional().nullable(),
 });
 
 /** Admin: manually block a date (server action). */

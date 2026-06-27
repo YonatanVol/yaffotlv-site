@@ -106,6 +106,18 @@ export const priceOverrides = pgTable("price_overrides", {
   createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
 });
 
+/** Promo / coupon codes the owner hands out (Instagram, WhatsApp, email campaigns). */
+export const promoCodes = pgTable("promo_codes", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  code: text("code").notNull().unique(), // stored UPPERCASE
+  discountPct: integer("discount_pct").notNull(), // percent off accommodation
+  maxUses: integer("max_uses"), // null = unlimited
+  usedCount: integer("used_count").notNull().default(0),
+  expiresAt: date("expires_at", { mode: "string" }), // null = never expires
+  isActive: boolean("is_active").notNull().default(true),
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+});
+
 /** Activity log — anonymous event tracking for analytics */
 export const activityLog = pgTable("activity_log", {
   id: uuid("id").defaultRandom().primaryKey(),

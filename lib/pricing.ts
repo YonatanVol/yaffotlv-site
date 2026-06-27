@@ -52,6 +52,7 @@ interface CalcOptions {
   seasons?: SeasonalRate[];
   overrides?: Record<string, number>; // date -> agorot
   today?: string; // "YYYY-MM-DD" — for the last-minute discount
+  promo?: { code: string; discountPct: number }; // an applied promo code
 }
 
 function baseRateForDow(rule: PricingRule, dow: number): number {
@@ -103,10 +104,15 @@ export function calculatePrice(
     const daysUntil = countNights(today, checkIn);
     if (daysUntil >= 0 && daysUntil <= rule.lastMinuteDays) lastMinutePct = rule.lastMinuteDiscountPct;
   }
+  const promoPct = opts.promo?.discountPct ?? 0;
 
+  // Apply the single best discount — promo, long-stay, or last-minute (no stacking).
   let discountPct = 0;
   let discountLabel: string | null = null;
-  if (longStayPct >= lastMinutePct && longStayPct > 0) {
+  if (promoPct > 0 && promoPct >= longStayPct && promoPct >= lastMinutePct) {
+    discountPct = promoPct;
+    discountLabel = `Promo code ${opts.promo!.code}`;
+  } else if (longStayPct > 0 && longStayPct >= lastMinutePct) {
     discountPct = longStayPct;
     discountLabel = numNights >= 28 ? "Long-stay discount (28+ nights)" : "Long-stay discount (7+ nights)";
   } else if (lastMinutePct > 0) {

@@ -13,7 +13,7 @@ export async function POST(request: NextRequest) {
     if (!parsed.success) {
       return NextResponse.json({ error: firstError(parsed.error) }, { status: 400 });
     }
-    const { checkIn, checkOut, guestName, guestEmail, guestPhone, guestCount } = parsed.data;
+    const { checkIn, checkOut, guestName, guestEmail, guestPhone, guestCount, promoCode } = parsed.data;
 
     // Check-in must be today or later (Jerusalem). Date ordering + guest-count
     // bounds + email shape are enforced by bookingSchema.
@@ -37,7 +37,7 @@ export async function POST(request: NextRequest) {
     }
 
     // --- Price calculation (server-authoritative: seasons + overrides + discounts) ---
-    const priced = await quoteForRange(checkIn, checkOut);
+    const priced = await quoteForRange(checkIn, checkOut, promoCode);
     if (!priced) {
       return NextResponse.json({ error: "Pricing not configured" }, { status: 500 });
     }

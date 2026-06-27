@@ -126,6 +126,10 @@ export interface Translations {
     inclVat?: string;
     discount?: string;
     agreeRules?: string;
+    promo?: string;
+    apply?: string;
+    promoApplied?: string;
+    promoInvalid?: string;
   };
   // WhatsApp
   whatsapp?: {
@@ -320,6 +324,10 @@ const en: Translations = {
     cancellation: "Free cancellation up to 5 days before check-in (50% within 5 days).",
     discount: "Discount",
     agreeRules: "I have read and agree to the House Rules, Terms and Cancellation Policy.",
+    promo: "Promo code",
+    apply: "Apply",
+    promoApplied: "Promo code applied!",
+    promoInvalid: "That code isn't valid.",
     checkIn: "Check-in",
     checkOut: "Check-out",
     nights: "nights",
@@ -528,6 +536,10 @@ const he: Translations = {
     cancellation: "ביטול חינם עד 5 ימים לפני הצ׳ק-אין (50% בתוך 5 ימים).",
     discount: "הנחה",
     agreeRules: "קראתי ואני מאשר/ת את כללי הבית, תנאי השימוש ומדיניות הביטולים.",
+    promo: "קוד קופון",
+    apply: "החל",
+    promoApplied: "הקוד הופעל!",
+    promoInvalid: "הקוד אינו תקף.",
     checkIn: "הגעה",
     checkOut: "עזיבה",
     nights: "לילות",
@@ -1260,6 +1272,10 @@ const ar: Translations = {
     cancellation: "إلغاء مجاني حتى 5 أيام قبل الوصول (50% خلال 5 أيام).",
     discount: "خصم",
     agreeRules: "لقد قرأت وأوافق على قواعد المنزل وشروط الخدمة وسياسة الإلغاء.",
+    promo: "رمز ترويجي",
+    apply: "تطبيق",
+    promoApplied: "تم تطبيق الرمز!",
+    promoInvalid: "الرمز غير صالح.",
     checkIn: "الوصول",
     checkOut: "المغادرة",
     nights: "ليالٍ",

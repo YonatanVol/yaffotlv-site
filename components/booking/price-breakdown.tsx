@@ -35,6 +35,16 @@ export function PriceBreakdown({ quote, loading }: PriceBreakdownProps) {
           transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
           className="mt-8 border border-sand bg-ivory p-6"
         >
+          {/* Deal badge — surfaces whatever discount applied (promo / last-minute / long-stay) */}
+          {quote.discountAmount > 0 && (
+            <div className="mb-4 flex items-center gap-2 rounded-sm bg-green-50 px-3 py-2 text-sm font-medium text-green-700">
+              <span aria-hidden>🎉</span>
+              <span>
+                {quote.discountLabel} · −{formatILS(quote.discountAmount)} ILS
+              </span>
+            </div>
+          )}
+
           {/* Header */}
           <p className="text-xs font-medium uppercase tracking-[0.2em] text-accent">
             {t.book.total}

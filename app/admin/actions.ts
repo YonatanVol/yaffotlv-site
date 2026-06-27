@@ -8,11 +8,18 @@ import {
   calendarSyncLog,
   seasonalRates,
   priceOverrides,
+  promoCodes,
 } from "@/lib/db/schema";
 import { eq, desc, and, gte, sql, inArray } from "drizzle-orm";
 import { getSession } from "@/lib/auth";
 import { todayJerusalem, dateRange, addDays } from "@/lib/dates";
-import { pricingUpdateSchema, manualBlockSchema, seasonSchema, overrideSchema } from "@/lib/validation";
+import {
+  pricingUpdateSchema,
+  manualBlockSchema,
+  seasonSchema,
+  overrideSchema,
+  promoCodeCreateSchema,
+} from "@/lib/validation";
 import { runCalendarSync } from "@/lib/calendar-sync";
 import { quoteForRange } from "@/lib/pricing-data";
 
@@ -300,8 +307,40 @@ export async function removeOverride(id: string) {
 }
 
 /** Admin price preview for a date range (uses the same server-authoritative engine). */
-export async function previewQuote(checkIn: string, checkOut: string) {
+export async function previewQuote(checkIn: string, checkOut: string, promoCode?: string) {
   await requireAdmin();
-  const result = await quoteForRange(checkIn, checkOut);
+  const result = await quoteForRange(checkIn, checkOut, promoCode);
   return result?.quote ?? null;
+}
+
+// --- Promo / coupon codes ---
+
+export async function getPromoCodes() {
+  await requireAdmin();
+  return db.select().from(promoCodes).orderBy(desc(promoCodes.createdAt));
+}
+
+export async function addPromoCode(data: {
+  code: string;
+  discountPct: number;
+  maxUses?: number | null;
+  expiresAt?: string | null;
+}) {
+  await requireAdmin();
+  const clean = promoCodeCreateSchema.parse(data);
+  await db
+    .insert(promoCodes)
+    .values({
+      code: clean.code.toUpperCase(),
+      discountPct: clean.discountPct,
+      maxUses: clean.maxUses ?? null,
+      expiresAt: clean.expiresAt ?? null,
+      isActive: true,
+    })
+    .onConflictDoNothing();
+}
+
+export async function removePromoCode(id: string) {
+  await requireAdmin();
+  await db.delete(promoCodes).where(eq(promoCodes.id, id));
 }

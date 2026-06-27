@@ -29,6 +29,13 @@
       "when": 1782479758324,
       "tag": "0003_pricing_seasons_overrides_discounts",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1782574774099,
+      "tag": "0004_promo_codes",
+      "breakpoints": true
     }
   ]
 }

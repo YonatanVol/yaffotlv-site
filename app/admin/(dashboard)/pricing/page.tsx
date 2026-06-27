@@ -11,11 +11,15 @@ import {
   setOverride,
   removeOverride,
   previewQuote,
+  getPromoCodes,
+  addPromoCode,
+  removePromoCode,
 } from "../../actions";
 import { formatILS } from "@/lib/pricing";
 
 type Season = Awaited<ReturnType<typeof getSeasons>>[number];
 type Override = Awaited<ReturnType<typeof getOverrides>>[number];
+type Promo = Awaited<ReturnType<typeof getPromoCodes>>[number];
 type Quote = Awaited<ReturnType<typeof previewQuote>>;
 
 export default function PricingPage() {
@@ -47,14 +51,20 @@ export default function PricingPage() {
   const [oDate, setODate] = useState("");
   const [oPrice, setOPrice] = useState(0);
 
+  const [promos, setPromos] = useState<Promo[]>([]);
+  const [pCode, setPCode] = useState("");
+  const [pPct, setPPct] = useState(10);
+  const [pMax, setPMax] = useState("");
+  const [pExp, setPExp] = useState("");
+
   const [pIn, setPIn] = useState("");
   const [pOut, setPOut] = useState("");
   const [quote, setQuote] = useState<Quote>(null);
   const [previewing, setPreviewing] = useState(false);
 
   useEffect(() => {
-    Promise.all([getPricingRules(), getSeasons(), getOverrides()])
-      .then(([rules, ss, ov]) => {
+    Promise.all([getPricingRules(), getSeasons(), getOverrides(), getPromoCodes()])
+      .then(([rules, ss, ov, pc]) => {
         if (rules.length > 0) {
           const r = rules[0];
           setRuleId(r.id);
@@ -71,10 +81,26 @@ export default function PricingPage() {
         }
         setSeasons(ss);
         setOverrides(ov);
+        setPromos(pc);
       })
       .catch(() => {})
       .finally(() => setLoading(false));
   }, []);
+
+  async function handleAddPromo() {
+    if (!pCode || !pPct) return;
+    await addPromoCode({
+      code: pCode,
+      discountPct: pPct,
+      maxUses: pMax ? Number(pMax) : null,
+      expiresAt: pExp || null,
+    });
+    setPCode("");
+    setPPct(10);
+    setPMax("");
+    setPExp("");
+    getPromoCodes().then(setPromos);
+  }
 
   async function handleSaveRules(e: React.FormEvent) {
     e.preventDefault();
@@ -234,6 +260,41 @@ export default function PricingPage() {
             Set
           </button>
         </div>
+      </Card>
+
+      {/* Promo codes */}
+      <Card title="Promo codes" className="mt-8">
+        {promos.length === 0 ? (
+          <p className="text-sm text-stone">No codes yet. Create one to hand out on Instagram, WhatsApp or email.</p>
+        ) : (
+          <div className="space-y-1">
+            {promos.map((p) => (
+              <div key={p.id} className="flex items-center justify-between border border-sand/50 bg-cream px-4 py-2 text-sm">
+                <span className="text-graphite">
+                  <span className="font-mono font-medium text-brass">{p.code}</span> · {p.discountPct}% off
+                  {p.maxUses != null ? ` · ${p.usedCount}/${p.maxUses} used` : ` · ${p.usedCount} used`}
+                  {p.expiresAt ? ` · until ${p.expiresAt}` : ""}
+                </span>
+                <button onClick={() => removePromoCode(p.id).then(() => getPromoCodes().then(setPromos))} className="text-xs text-red-500 hover:text-red-700">
+                  Remove
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+        <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-5">
+          <input value={pCode} onChange={(e) => setPCode(e.target.value.toUpperCase())} placeholder="CODE" className="border border-sand bg-cream px-3 py-2 font-mono text-sm uppercase" />
+          <div className="flex items-center gap-1">
+            <input type="number" value={pPct} onChange={(e) => setPPct(Number(e.target.value))} className="w-16 border border-sand bg-cream px-2 py-2 text-sm" />
+            <span className="text-sm text-stone">%</span>
+          </div>
+          <input type="number" value={pMax} onChange={(e) => setPMax(e.target.value)} placeholder="Max uses" className="border border-sand bg-cream px-3 py-2 text-sm" />
+          <input type="date" value={pExp} onChange={(e) => setPExp(e.target.value)} className="border border-sand bg-cream px-3 py-2 text-sm" />
+          <button onClick={handleAddPromo} disabled={!pCode || !pPct} className="bg-brass px-4 py-2 text-xs font-medium uppercase tracking-[0.15em] text-white hover:bg-brass-dark disabled:opacity-50">
+            Create
+          </button>
+        </div>
+        <p className="mt-2 text-xs text-stone">Max uses &amp; expiry are optional. A promo replaces the automatic discount when it&rsquo;s larger.</p>
       </Card>
 
       {/* Live preview */}

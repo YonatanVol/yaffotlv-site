@@ -10,13 +10,13 @@ export async function POST(request: NextRequest) {
     if (!parsed.success) {
       return NextResponse.json({ error: firstError(parsed.error) }, { status: 400 });
     }
-    const { checkIn, checkOut } = parsed.data;
+    const { checkIn, checkOut, promoCode } = parsed.data;
 
     if (checkIn < todayJerusalem()) {
       return NextResponse.json({ error: "Check-in must be today or later" }, { status: 400 });
     }
 
-    const result = await quoteForRange(checkIn, checkOut);
+    const result = await quoteForRange(checkIn, checkOut, promoCode);
     if (!result) {
       return NextResponse.json({ error: "No pricing rule configured" }, { status: 500 });
     }
@@ -27,7 +27,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    return NextResponse.json(result.quote);
+    // promoValid distinguishes "no code" from "invalid code" for the UI.
+    return NextResponse.json({ ...result.quote, promoValid: result.promoValid });
   } catch (error) {
     console.error("Price quote error:", error);
     return NextResponse.json({ error: "Failed to calculate price" }, { status: 500 });

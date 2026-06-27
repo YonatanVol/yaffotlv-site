@@ -33,6 +33,8 @@ export function Signature() {
   );
   const subtitleOpacity = useTransform(scrollYProgress, [0.35, 0.5], [0, 1]);
   const subtitleY = useTransform(scrollYProgress, [0.35, 0.5], [20, 0]);
+  // Hooks must run unconditionally — derive the clip-path value here, use it below.
+  const clipPath = useTransform(clipProgress, (v) => `inset(0 ${v}% 0 0)`);
 
   return (
     <section
@@ -50,16 +52,7 @@ export function Signature() {
         {/* Headline with clip-path wipe reveal */}
         <motion.h2
           className="mt-12 font-serif text-5xl font-light tracking-tight text-charcoal md:text-6xl lg:text-7xl"
-          style={
-            reduceMotion
-              ? undefined
-              : {
-                  clipPath: useTransform(
-                    clipProgress,
-                    (v) => `inset(0 ${v}% 0 0)`
-                  ),
-                }
-          }
+          style={reduceMotion ? undefined : { clipPath }}
         >
           {t.signature.headline}
         </motion.h2>

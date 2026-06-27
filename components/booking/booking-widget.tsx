@@ -20,6 +20,9 @@ export function BookingWidget() {
   const [quoteLoading, setQuoteLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [bookingLoading, setBookingLoading] = useState(false);
+  const [promoInput, setPromoInput] = useState("");
+  const [appliedPromo, setAppliedPromo] = useState("");
+  const [promoValid, setPromoValid] = useState<boolean | null>(null);
   const { t } = useI18n();
 
   // Fetch availability on mount
@@ -41,7 +44,7 @@ export function BookingWidget() {
     fetch("/api/price-quote", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(selectedRange),
+      body: JSON.stringify({ ...selectedRange, promoCode: appliedPromo || undefined }),
     })
       .then((r) => r.json())
       .then((data) => {
@@ -50,6 +53,7 @@ export function BookingWidget() {
           setQuote(null);
         } else {
           setQuote(data);
+          setPromoValid(appliedPromo ? !!data.promoValid : null);
         }
         setQuoteLoading(false);
       })
@@ -57,7 +61,7 @@ export function BookingWidget() {
         setError("Failed to get price. Please try again.");
         setQuoteLoading(false);
       });
-  }, [selectedRange]);
+  }, [selectedRange, appliedPromo]);
 
   const handleBooking = async (guestData: {
     guestName: string;
@@ -74,7 +78,7 @@ export function BookingWidget() {
       const bookingRes = await fetch("/api/bookings", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...selectedRange, ...guestData }),
+        body: JSON.stringify({ ...selectedRange, ...guestData, promoCode: appliedPromo || undefined }),
       });
 
       const bookingData = await bookingRes.json();
@@ -148,6 +152,32 @@ export function BookingWidget() {
             />
 
             <PriceBreakdown quote={quote} loading={quoteLoading} />
+
+            {quote && (
+              <div className="mt-6">
+                <div className="flex flex-wrap items-center gap-2">
+                  <input
+                    value={promoInput}
+                    onChange={(e) => setPromoInput(e.target.value.toUpperCase())}
+                    placeholder={t.book.promo || "Promo code"}
+                    className="flex-1 border border-sand bg-ivory px-4 py-2.5 text-sm uppercase tracking-wide text-charcoal outline-none transition-colors focus:border-accent"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setAppliedPromo(promoInput.trim())}
+                    className="border border-accent px-5 py-2.5 text-xs font-medium uppercase tracking-[0.15em] text-accent transition-colors hover:bg-accent hover:text-white"
+                  >
+                    {t.book.apply || "Apply"}
+                  </button>
+                </div>
+                {appliedPromo && promoValid === true && (
+                  <p className="mt-2 text-xs text-green-700">{t.book.promoApplied || "Promo code applied!"}</p>
+                )}
+                {appliedPromo && promoValid === false && (
+                  <p className="mt-2 text-xs text-red-600">{t.book.promoInvalid || "That code isn't valid."}</p>
+                )}
+              </div>
+            )}
 
             {quote && (
               <button
