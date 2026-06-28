@@ -9,7 +9,7 @@ export function StructuredData() {
     image: "https://yaffotlv.com/images/livingroom1.jpg",
     address: {
       "@type": "PostalAddress",
-      streetAddress: "ברוך קרוא 100",
+      streetAddress: "Baruch Karo 24",
       addressLocality: "Jaffa",
       addressRegion: "Tel Aviv",
       addressCountry: "IL",
@@ -35,7 +35,7 @@ export function StructuredData() {
       { "@type": "LocationFeatureSpecification", name: "Pet Friendly", value: true },
       { "@type": "LocationFeatureSpecification", name: "Washer/Dryer", value: true },
     ],
-    checkinTime: "15:00",
+    checkinTime: "14:00",
     checkoutTime: "11:00",
     numberOfRooms: 3,
     floorSize: {

@@ -1,0 +1,41 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1782139729682,
+      "tag": "0000_baseline_existing_schema",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1782139751792,
+      "tag": "0001_security_rate_limit_and_webhook_idempotency",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1782312082198,
+      "tag": "0002_calendar_publish_and_atomic_guard",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1782479758324,
+      "tag": "0003_pricing_seasons_overrides_discounts",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1782574774099,
+      "tag": "0004_promo_codes",
+      "breakpoints": true
+    }
+  ]
+}

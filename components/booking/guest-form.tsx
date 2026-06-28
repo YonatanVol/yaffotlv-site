@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { useI18n } from "@/lib/i18n/context";
 
 interface GuestFormProps {
@@ -11,13 +12,15 @@ interface GuestFormProps {
     guestCount: number;
   }) => void;
   loading: boolean;
+  paymentsEnabled?: boolean;
 }
 
-export function GuestForm({ onSubmit, loading }: GuestFormProps) {
+export function GuestForm({ onSubmit, loading, paymentsEnabled }: GuestFormProps) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [guests, setGuests] = useState(1);
+  const [agreed, setAgreed] = useState(false);
   const { t } = useI18n();
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -75,7 +78,7 @@ export function GuestForm({ onSubmit, loading }: GuestFormProps) {
           onChange={(e) => setGuests(Number(e.target.value))}
           className="mt-2 w-full border-b border-sand bg-transparent pb-2 text-sm text-charcoal outline-none transition-colors focus:border-accent"
         >
-          {[1, 2, 3, 4, 5, 6].map((n) => (
+          {[1, 2, 3, 4, 5, 6, 7, 8].map((n) => (
             <option key={n} value={n}>
               {n} {t.book.guests}
             </option>
@@ -83,12 +86,39 @@ export function GuestForm({ onSubmit, loading }: GuestFormProps) {
         </select>
       </div>
 
+      <label className="flex items-start gap-2 text-xs leading-relaxed text-stone">
+        <input
+          type="checkbox"
+          required
+          checked={agreed}
+          onChange={(e) => setAgreed(e.target.checked)}
+          className="mt-0.5 accent-accent"
+        />
+        <span>
+          {t.book.agreeRules ||
+            "I have read and agree to the House Rules, Terms and Cancellation Policy."}
+        </span>
+      </label>
+      <p className="text-xs text-stone">
+        <Link href="/legal/house-rules" target="_blank" className="underline hover:text-accent">
+          {t.houseRules?.title || "House Rules"}
+        </Link>
+        {" · "}
+        <Link href="/legal/terms" target="_blank" className="underline hover:text-accent">
+          {t.footer?.terms || "Terms"}
+        </Link>
+        {" · "}
+        <Link href="/legal/cancellation" target="_blank" className="underline hover:text-accent">
+          {t.footer?.cancellation || "Cancellation Policy"}
+        </Link>
+      </p>
+
       <button
         type="submit"
-        disabled={loading}
+        disabled={loading || !agreed}
         className="mt-4 w-full border border-accent px-8 py-4 text-xs font-medium uppercase tracking-[0.2em] text-accent transition-colors duration-300 hover:bg-accent hover:text-white disabled:opacity-50"
       >
-        {loading ? "..." : t.book.payNow}
+        {loading ? "..." : paymentsEnabled ? t.book.payNow : t.book.requestBook || "Request to book on WhatsApp"}
       </button>
     </form>
   );

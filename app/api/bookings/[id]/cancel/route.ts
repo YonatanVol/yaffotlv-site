@@ -4,12 +4,19 @@ import { reservations, blockedDates } from "@/lib/db/schema";
 import { getStripe } from "@/lib/stripe";
 import { eq } from "drizzle-orm";
 import { sendCancellationConfirmation } from "@/lib/email";
+import { getSession } from "@/lib/auth";
 
 export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    // Money movement: admin-only. (Phase 4 will build the full admin-initiated
+    // cancellation/refund UX on top of this guard.)
+    if (!(await getSession())) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const { id } = await params;
 
     const [reservation] = await db

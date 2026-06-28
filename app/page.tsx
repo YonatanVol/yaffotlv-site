@@ -8,6 +8,7 @@ import { PhotoSlider } from "@/components/sections/photo-slider";
 import { Navbar } from "@/components/sections/navbar";
 import { ContactModal } from "@/components/sections/contact-modal";
 import { Amenities } from "@/components/sections/amenities";
+import { Sleeping } from "@/components/sections/sleeping";
 import { Reviews } from "@/components/sections/reviews";
 import { NeighborhoodMap } from "@/components/sections/neighborhood-map";
 import { WhyDirect } from "@/components/sections/why-direct";
@@ -55,6 +56,8 @@ export default function Home() {
       <Reviews />
 
       <Amenities />
+
+      <Sleeping />
 
       <PerfectFor />
 

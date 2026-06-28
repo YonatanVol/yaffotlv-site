@@ -38,6 +38,61 @@ export function parseICS(icsText: string): CalendarEvent[] {
   });
 }
 
+/** Escape text per RFC 5545 (backslash, semicolon, comma, newline). */
+function escapeICalText(s: string): string {
+  return s.replace(/\\/g, "\\\\").replace(/;/g, "\\;").replace(/,/g, "\\,").replace(/\n/g, "\\n");
+}
+
+/** Format a Date as a UTC iCal timestamp "YYYYMMDDTHHMMSSZ". */
+function formatICalStamp(d: Date): string {
+  return d.toISOString().replace(/[-:]/g, "").replace(/\.\d{3}Z$/, "Z");
+}
+
+interface ICalEvent {
+  uid: string;
+  summary: string;
+  start: string; // "YYYY-MM-DD" inclusive
+  end: string; // "YYYY-MM-DD" EXCLUSIVE (checkout day stays free)
+}
+
+/**
+ * Build a valid VCALENDAR (RFC 5545) of all-day blocked ranges, with CRLF line
+ * endings. DTEND is exclusive, matching iCal's DATE semantics (so the checkout
+ * day is left available). Used by the published feed Airbnb/Booking import.
+ */
+export function generateICalendar(
+  events: ICalEvent[],
+  opts: { prodId?: string; calName?: string; now?: Date } = {}
+): string {
+  const prodId = opts.prodId ?? "-//YaffoTLV//Booking Calendar//EN";
+  const dtstamp = formatICalStamp(opts.now ?? new Date());
+
+  const lines: string[] = [
+    "BEGIN:VCALENDAR",
+    "VERSION:2.0",
+    `PRODID:${prodId}`,
+    "CALSCALE:GREGORIAN",
+    "METHOD:PUBLISH",
+  ];
+  if (opts.calName) lines.push(`X-WR-CALNAME:${escapeICalText(opts.calName)}`);
+
+  for (const ev of events) {
+    lines.push(
+      "BEGIN:VEVENT",
+      `UID:${ev.uid}`,
+      `DTSTAMP:${dtstamp}`,
+      `DTSTART;VALUE=DATE:${ev.start.replace(/-/g, "")}`,
+      `DTEND;VALUE=DATE:${ev.end.replace(/-/g, "")}`,
+      `SUMMARY:${escapeICalText(ev.summary)}`,
+      "TRANSP:OPAQUE",
+      "END:VEVENT"
+    );
+  }
+
+  lines.push("END:VCALENDAR");
+  return lines.join("\r\n") + "\r\n";
+}
+
 /** Expand events into individual blocked date records */
 export function expandEvents(
   events: CalendarEvent[]

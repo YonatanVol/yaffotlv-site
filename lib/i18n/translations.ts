@@ -124,6 +124,14 @@ export interface Translations {
     vat: string;
     total: string;
     inclVat?: string;
+    discount?: string;
+    agreeRules?: string;
+    promo?: string;
+    apply?: string;
+    promoApplied?: string;
+    promoInvalid?: string;
+    requestBook?: string;
+    inquiryNote?: string;
   };
   // WhatsApp
   whatsapp?: {
@@ -142,6 +150,31 @@ export interface Translations {
     rating: string;
     save: string;
     superhost: string;
+  };
+  // Footer
+  footer?: {
+    tagline: string;
+    terms: string;
+    privacy: string;
+    cancellation: string;
+    rights: string;
+  };
+  // Sleeping arrangements
+  sleeping?: {
+    overline: string;
+    title: string;
+    bedroom: string;
+    doubleBed: string;
+    living: string;
+    livingBeds: string;
+    cot: string;
+    parking: string;
+  };
+  // House rules
+  houseRules?: {
+    title: string;
+    intro: string;
+    rules: string[];
   };
   // Trust badges
   trustBadges?: {
@@ -290,7 +323,15 @@ const en: Translations = {
     step1Title: "Select Your Dates",
     step2: "Step 2 of 2",
     step2Title: "Guest Details",
-    cancellation: "Flexible cancellation: full refund up to 3 days before check-in.",
+    cancellation: "Free cancellation up to 5 days before check-in (50% within 5 days).",
+    discount: "Discount",
+    agreeRules: "I have read and agree to the House Rules, Terms and Cancellation Policy.",
+    promo: "Promo code",
+    apply: "Apply",
+    promoApplied: "Promo code applied!",
+    promoInvalid: "That code isn't valid.",
+    requestBook: "Request to book on WhatsApp",
+    inquiryNote: "Online payment is launching soon — reserve your dates on WhatsApp and we'll confirm availability right away.",
     checkIn: "Check-in",
     checkOut: "Check-out",
     nights: "nights",
@@ -323,6 +364,36 @@ const en: Translations = {
     rating: "★★★★★ Rated by 140+ guests",
     save: "💰 Save 10% when you book direct",
     superhost: "🏆 Superhost · 12 years hosting",
+  },
+  footer: {
+    tagline: "Luxury 2-bedroom apartment · short-term rental in Jaffa, Tel Aviv.",
+    terms: "Terms of Service",
+    privacy: "Privacy Policy",
+    cancellation: "Cancellation Policy",
+    rights: "All rights reserved.",
+  },
+  sleeping: {
+    overline: "The Space",
+    title: "Comfortably sleeps up to 8",
+    bedroom: "Bedroom",
+    doubleBed: "Double bed",
+    living: "Living room",
+    livingBeds: "Double sofa-bed, a sofa & a folding single bed",
+    cot: "Baby cot available on request",
+    parking: "Free street parking 19:00–09:00; paid during the day (~₪6/hr via the Cello app).",
+  },
+  houseRules: {
+    title: "House Rules",
+    intro: "By booking, you agree to the following house rules:",
+    rules: [
+      "No smoking inside the apartment ($200 fine per booked day).",
+      "No parties and no loud events.",
+      "Quiet hours are 21:00–08:00. Please respect the neighbors.",
+      "A fine of $100 per booked day, per guest, applies for exceeding the number of guests booked. Any change in the guest count must be updated in advance.",
+      "You must have a valid, active phone number before booking.",
+      "If the apartment is left excessively dirty (beyond what a considerate guest would leave), a $100 additional cleaning charge applies.",
+      "Breaking any house rule is grounds for immediate termination of the stay with no refund.",
+    ],
   },
   trustBadges: {
     superhost: "Superhost",
@@ -466,7 +537,15 @@ const he: Translations = {
     step1Title: "מתי אתם מגיעים?",
     step2: "שלב 2 מתוך 2",
     step2Title: "ספרו לנו קצת על עצמכם",
-    cancellation: "ביטול גמיש: עד 3 ימים לפני — החזר מלא!",
+    cancellation: "ביטול חינם עד 5 ימים לפני הצ׳ק-אין (50% בתוך 5 ימים).",
+    discount: "הנחה",
+    agreeRules: "קראתי ואני מאשר/ת את כללי הבית, תנאי השימוש ומדיניות הביטולים.",
+    promo: "קוד קופון",
+    apply: "החל",
+    promoApplied: "הקוד הופעל!",
+    promoInvalid: "הקוד אינו תקף.",
+    requestBook: "בקשת הזמנה בוואטסאפ",
+    inquiryNote: "תשלום מקוון מגיע בקרוב — שריינו את התאריכים בוואטסאפ ונאשר זמינות מיד.",
     checkIn: "הגעה",
     checkOut: "עזיבה",
     nights: "לילות",
@@ -499,6 +578,36 @@ const he: Translations = {
     rating: "★★★★★ מדורג ע״י 140+ אורחים",
     save: "💰 חוסכים 10% בהזמנה ישירה",
     superhost: "🏆 סופרהוסט · 12 שנים של אירוח",
+  },
+  footer: {
+    tagline: "דירת יוקרה בת 2 חדרי שינה · השכרה לטווח קצר ביפו, תל אביב.",
+    terms: "תנאי שימוש",
+    privacy: "מדיניות פרטיות",
+    cancellation: "מדיניות ביטולים",
+    rights: "כל הזכויות שמורות.",
+  },
+  sleeping: {
+    overline: "החלל",
+    title: "מתאים בנוחות עד 8 אורחים",
+    bedroom: "חדר שינה",
+    doubleBed: "מיטה זוגית",
+    living: "סלון",
+    livingBeds: "ספה זוגית נפתחת, ספה ומיטת יחיד מתקפלת",
+    cot: "מיטת תינוק זמינה לפי בקשה",
+    parking: "חניה חופשית ברחוב 19:00–09:00; בתשלום במהלך היום (~6₪ לשעה, אפליקציית Cello).",
+  },
+  houseRules: {
+    title: "כללי הבית",
+    intro: "בהזמנתכם אתם מאשרים את כללי הבית הבאים:",
+    rules: [
+      "אסור לעשן בדירה (קנס של 200 דולר לכל יום שהוזמן).",
+      "אין מסיבות ואין אירועים רועשים.",
+      "שעות השקט הן בין 21:00 ל-08:00. אנא כבדו את השכנים.",
+      "קנס של 100 דולר ליום שהוזמן, לכל אורח, עבור חריגה ממספר האורחים שהוזמן. כל שינוי במספר האורחים יש לעדכן מראש.",
+      "עליכם להיות בעלי מספר טלפון תקף ופעיל לפני ביצוע ההזמנה.",
+      "אם הדירה מלוכלכת במיוחד (מעבר למה שאורח אדיב היה משאיר), יחול חיוב ניקיון נוסף של 100 דולר.",
+      "הפרה של אחד מכללי הבית מהווה עילה לסיום מיידי של ההזמנה ללא החזר כספי.",
+    ],
   },
   trustBadges: {
     superhost: "סופרהוסט",
@@ -641,7 +750,7 @@ const ru: Translations = {
     step1Title: "Выберите даты",
     step2: "Шаг 2 из 2",
     step2Title: "Данные гостя",
-    cancellation: "Гибкая отмена: полный возврат за 3 дня до заезда.",
+    cancellation: "Бесплатная отмена за 5 дней до заезда (50% в течение 5 дней).",
     checkIn: "Заезд",
     checkOut: "Выезд",
     nights: "ночей",
@@ -816,7 +925,7 @@ const fr: Translations = {
     step1Title: "Choisissez vos dates",
     step2: "Étape 2 sur 2",
     step2Title: "Détails de l'invité",
-    cancellation: "Annulation flexible : remboursement intégral jusqu'à 3 jours avant l'arrivée.",
+    cancellation: "Annulation gratuite jusqu'à 5 jours avant l'arrivée (50% ensuite).",
     checkIn: "Arrivée",
     checkOut: "Départ",
     nights: "nuits",
@@ -991,7 +1100,7 @@ const es: Translations = {
     step1Title: "Elige tus fechas",
     step2: "Paso 2 de 2",
     step2Title: "Datos del huésped",
-    cancellation: "Cancelación flexible: reembolso completo hasta 3 días antes del check-in.",
+    cancellation: "Cancelación gratis hasta 5 días antes del check-in (50% después).",
     checkIn: "Llegada",
     checkOut: "Salida",
     nights: "noches",
@@ -1166,7 +1275,15 @@ const ar: Translations = {
     step1Title: "اختر التواريخ",
     step2: "الخطوة 2 من 2",
     step2Title: "بيانات الضيف",
-    cancellation: "إلغاء مرن: استرداد كامل حتى 3 أيام قبل الوصول.",
+    cancellation: "إلغاء مجاني حتى 5 أيام قبل الوصول (50% خلال 5 أيام).",
+    discount: "خصم",
+    agreeRules: "لقد قرأت وأوافق على قواعد المنزل وشروط الخدمة وسياسة الإلغاء.",
+    promo: "رمز ترويجي",
+    apply: "تطبيق",
+    promoApplied: "تم تطبيق الرمز!",
+    promoInvalid: "الرمز غير صالح.",
+    requestBook: "اطلب الحجز عبر واتساب",
+    inquiryNote: "الدفع الإلكتروني قريبًا — احجز تواريخك عبر واتساب وسنؤكد التوفر فورًا.",
     checkIn: "الوصول",
     checkOut: "المغادرة",
     nights: "ليالٍ",
@@ -1199,6 +1316,36 @@ const ar: Translations = {
     rating: "★★★★★ تقييم من 140+ ضيف",
     save: "💰 وفر 10% عند الحجز المباشر",
     superhost: "🏆 مضيف متميز · 12 سنة خبرة",
+  },
+  footer: {
+    tagline: "شقة فاخرة بغرفتي نوم · إيجار قصير الأمد في يافا، تل أبيب.",
+    terms: "شروط الخدمة",
+    privacy: "سياسة الخصوصية",
+    cancellation: "سياسة الإلغاء",
+    rights: "جميع الحقوق محفوظة.",
+  },
+  sleeping: {
+    overline: "المكان",
+    title: "يتسع بشكل مريح حتى 8 ضيوف",
+    bedroom: "غرفة نوم",
+    doubleBed: "سرير مزدوج",
+    living: "غرفة المعيشة",
+    livingBeds: "أريكة سرير مزدوجة، وأريكة، وسرير مفرد قابل للطي",
+    cot: "سرير أطفال متوفر عند الطلب",
+    parking: "وقوف مجاني في الشارع 19:00–09:00؛ مدفوع نهارًا (~6₪/ساعة عبر تطبيق Cello).",
+  },
+  houseRules: {
+    title: "قواعد المنزل",
+    intro: "بحجزك، فإنك توافق على قواعد المنزل التالية:",
+    rules: [
+      "ممنوع التدخين داخل الشقة (غرامة 200 دولار عن كل يوم محجوز).",
+      "ممنوع الحفلات والفعاليات الصاخبة.",
+      "ساعات الهدوء من 21:00 إلى 08:00. يرجى احترام الجيران.",
+      "غرامة 100 دولار عن كل يوم محجوز ولكل ضيف عند تجاوز عدد الضيوف المحجوز. يجب تحديث أي تغيير في عدد الضيوف مسبقًا.",
+      "يجب أن يكون لديك رقم هاتف صالح وفعّال قبل الحجز.",
+      "إذا تُركت الشقة متسخة بشكل مفرط (أكثر مما يتركه ضيف مراعٍ)، تُطبّق رسوم تنظيف إضافية قدرها 100 دولار.",
+      "مخالفة أي من قواعد المنزل تُعد سببًا لإنهاء الإقامة فورًا دون استرداد.",
+    ],
   },
   trustBadges: {
     superhost: "مضيف متميز",

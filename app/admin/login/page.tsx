@@ -21,10 +21,11 @@ export default function AdminLoginPage() {
         body: JSON.stringify({ password }),
       });
 
+      const data = await res.json().catch(() => ({}));
       if (res.ok) {
         router.push("/admin");
       } else {
-        setError("Invalid password");
+        setError(data.error || "Invalid credentials");
       }
     } catch {
       setError("Something went wrong");

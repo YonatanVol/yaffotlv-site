@@ -8,7 +8,9 @@ import {
   uuid,
   pgEnum,
   uniqueIndex,
+  index,
 } from "drizzle-orm/pg-core";
+import { sql } from "drizzle-orm";
 
 export const bookingStatusEnum = pgEnum("booking_status", [
   "draft",
@@ -29,7 +31,14 @@ export const blockedDates = pgTable(
     summary: text("summary"),
     createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
   },
-  (table) => [uniqueIndex("blocked_date_source_idx").on(table.date, table.source, table.externalUid)]
+  (table) => [
+    uniqueIndex("blocked_date_source_idx").on(table.date, table.source, table.externalUid),
+    // Atomic double-booking guard: at most ONE direct-reservation hold per date.
+    // (External airbnb/booking/manual blocks may still coexist on the same date.)
+    uniqueIndex("blocked_reservation_date_unique")
+      .on(table.date)
+      .where(sql`${table.source} = 'reservation'`),
+  ]
 );
 
 /** Reservations from direct bookings */
@@ -65,11 +74,48 @@ export const pricingRules = pgTable("pricing_rules", {
   baseRateNight: integer("base_rate_night").notNull(), // agorot (55000 = 550 ILS)
   thursdayRate: integer("thursday_rate").notNull(),
   fridayRate: integer("friday_rate").notNull(),
+  saturdayRate: integer("saturday_rate").notNull().default(100000), // weekend (Israel: Fri–Sat)
   cleaningFee: integer("cleaning_fee").notNull(),
   minNights: integer("min_nights").notNull().default(1),
+  // Discounts (percent). The single largest applicable discount is applied.
+  lastMinuteDiscountPct: integer("last_minute_discount_pct").notNull().default(10),
+  lastMinuteDays: integer("last_minute_days").notNull().default(5),
+  longStay7Pct: integer("long_stay_7_pct").notNull().default(10),
+  longStay28Pct: integer("long_stay_28_pct").notNull().default(20),
   currency: text("currency").notNull().default("ILS"),
   isActive: boolean("is_active").notNull().default(true),
   updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
+});
+
+/** Seasonal pricing windows — a date range that nudges the nightly rate by a percent. */
+export const seasonalRates = pgTable("seasonal_rates", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  name: text("name").notNull(),
+  startDate: date("start_date", { mode: "string" }).notNull(),
+  endDate: date("end_date", { mode: "string" }).notNull(),
+  adjustmentPct: integer("adjustment_pct").notNull(), // +25 (summer) / -10 (low season)
+  isActive: boolean("is_active").notNull().default(true),
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+});
+
+/** Manual per-date price override (agorot) — wins over rules + seasons for that night. */
+export const priceOverrides = pgTable("price_overrides", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  date: date("date", { mode: "string" }).notNull().unique(),
+  price: integer("price").notNull(), // agorot — accommodation price for that night
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+});
+
+/** Promo / coupon codes the owner hands out (Instagram, WhatsApp, email campaigns). */
+export const promoCodes = pgTable("promo_codes", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  code: text("code").notNull().unique(), // stored UPPERCASE
+  discountPct: integer("discount_pct").notNull(), // percent off accommodation
+  maxUses: integer("max_uses"), // null = unlimited
+  usedCount: integer("used_count").notNull().default(0),
+  expiresAt: date("expires_at", { mode: "string" }), // null = never expires
+  isActive: boolean("is_active").notNull().default(true),
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
 });
 
 /** Activity log — anonymous event tracking for analytics */
@@ -82,3 +128,37 @@ export const activityLog = pgTable("activity_log", {
   ip: text("ip"),
   createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
 });
+
+/** Admin login attempts — per-IP rate limiting / temporary lockout */
+export const adminLoginAttempts = pgTable(
+  "admin_login_attempts",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    ip: text("ip").notNull(),
+    success: boolean("success").notNull().default(false),
+    createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+  },
+  (table) => [index("admin_login_attempts_ip_created_idx").on(table.ip, table.createdAt)]
+);
+
+/** Processed payment-provider webhook events — idempotency / replay guard.
+ *  Provider-agnostic so future rails (e.g. a local Israeli סליקה provider) reuse it. */
+export const processedWebhookEvents = pgTable("processed_webhook_events", {
+  eventId: text("event_id").primaryKey(),
+  provider: text("provider").notNull(), // "stripe" | future providers
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+});
+
+/** Calendar sync runs — per-source result/count/timestamp. Feeds the admin sync-status panel. */
+export const calendarSyncLog = pgTable(
+  "calendar_sync_log",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    source: text("source").notNull(), // "airbnb" | "booking_com"
+    status: text("status").notNull(), // "success" | "error"
+    count: integer("count").notNull().default(0),
+    message: text("message"),
+    createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+  },
+  (table) => [index("calendar_sync_log_source_created_idx").on(table.source, table.createdAt)]
+);

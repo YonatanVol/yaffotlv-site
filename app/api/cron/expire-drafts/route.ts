@@ -2,10 +2,18 @@ import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { reservations, blockedDates } from "@/lib/db/schema";
 import { eq, and, lte } from "drizzle-orm";
+import { getCronSecret, safeEqual } from "@/lib/env";
 
 export async function GET(request: NextRequest) {
-  const authHeader = request.headers.get("authorization");
-  if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+  // Verify cron secret (constant-time; requires CRON_SECRET to be set).
+  const authHeader = request.headers.get("authorization") || "";
+  let expected: string;
+  try {
+    expected = `Bearer ${getCronSecret()}`;
+  } catch {
+    return NextResponse.json({ error: "Server misconfigured" }, { status: 500 });
+  }
+  if (!safeEqual(authHeader, expected)) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
