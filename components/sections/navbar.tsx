@@ -66,6 +66,12 @@ export function Navbar({ onContactClick }: NavbarProps) {
               </button>
             ))}
             <Link
+              href="/reviews"
+              className="text-xs font-medium uppercase tracking-[0.2em] text-white/70 transition-colors duration-300 hover:text-white"
+            >
+              {t.nav.reviews || "Reviews"}
+            </Link>
+            <Link
               href="/book"
               className="border border-white/30 px-6 py-2 text-xs font-medium uppercase tracking-[0.2em] text-white transition-colors duration-300 hover:border-white hover:bg-white hover:text-ink"
             >
@@ -128,6 +134,19 @@ export function Navbar({ onContactClick }: NavbarProps) {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 + links.length * 0.08, duration: 0.4 }}
+            >
+              <Link
+                href="/reviews"
+                onClick={() => setMobileOpen(false)}
+                className="py-4 font-serif text-3xl font-light text-white transition-colors hover:text-accent-light"
+              >
+                {t.nav.reviews || "Reviews"}
+              </Link>
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 + (links.length + 1) * 0.08, duration: 0.4 }}
             >
               <Link
                 href="/book"

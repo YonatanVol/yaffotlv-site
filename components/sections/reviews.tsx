@@ -1,14 +1,15 @@
 "use client";
 
 import { useRef, useState, useEffect } from "react";
+import Link from "next/link";
 import { Reveal } from "@/components/ui/reveal";
 import { GoldStars } from "@/components/ui/gold-stars";
+import { ReviewCard } from "./review-card";
 import { useI18n } from "@/lib/i18n/context";
 import { reviews } from "@/lib/reviews-data";
-import type { Locale } from "@/lib/i18n/translations";
 
 export function Reviews() {
-  const { t, locale } = useI18n();
+  const { t } = useI18n();
   const scrollRef = useRef<HTMLDivElement>(null);
   const [isPaused, setIsPaused] = useState(false);
 
@@ -30,7 +31,7 @@ export function Reviews() {
   }, [isPaused]);
 
   return (
-    <section className="bg-cream py-24">
+    <section id="reviews" className="bg-cream py-24">
       <Reveal className="mb-12 text-center px-6">
         <p className="text-xs font-medium uppercase tracking-[0.3em] text-accent">
           {t.reviews?.title || "Guest Reviews"}
@@ -55,51 +56,22 @@ export function Reviews() {
         {reviews.map((review) => (
           <div
             key={review.id}
-            className="min-w-[300px] max-w-[360px] flex-shrink-0 rounded-sm border border-sand/60 bg-ivory p-6 transition-shadow hover:shadow-md"
+            className="min-w-[300px] max-w-[360px] flex-shrink-0"
             style={{ scrollSnapAlign: "start" }}
           >
-            {/* Header */}
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <span className="text-lg">{review.countryFlag}</span>
-                <span className="text-sm font-medium text-charcoal">{review.guestName}</span>
-              </div>
-              <span className="rounded bg-sand/40 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider text-stone">
-                {review.source === "airbnb" ? "Airbnb" : "Booking.com"}
-              </span>
-            </div>
-
-            {/* Gold stars */}
-            <div className="mt-3">
-              <GoldStars size="sm" showLabel={false} />
-            </div>
-
-            {/* Review text */}
-            <p className="mt-3 text-sm leading-relaxed text-graphite">
-              {review.text[locale as Locale] || review.text.en}
-            </p>
-
-            {/* Date */}
-            <p className="mt-4 text-xs text-stone">
-              {new Date(review.date + "-01").toLocaleDateString(locale === "he" ? "he-IL" : locale === "ar" ? "ar-SA" : locale, {
-                year: "numeric",
-                month: "long",
-              })}
-            </p>
+            <ReviewCard review={review} />
           </div>
         ))}
       </div>
 
-      {/* View all link */}
+      {/* See all reviews → dedicated page */}
       <div className="mt-8 text-center">
-        <a
-          href="https://www.airbnb.com/h/yaffotlv"
-          target="_blank"
-          rel="noopener noreferrer"
+        <Link
+          href="/reviews"
           className="inline-flex items-center gap-2 text-sm font-medium text-accent transition-colors hover:text-accent-dark"
         >
-          {t.reviews?.viewAll || "View all reviews on Airbnb"} →
-        </a>
+          {t.reviews?.seeAll || "See all reviews"} →
+        </Link>
       </div>
     </section>
   );

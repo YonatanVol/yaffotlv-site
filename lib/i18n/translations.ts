@@ -17,6 +17,7 @@ export interface Translations {
     residence: string;
     contact: string;
     bookNow: string;
+    reviews?: string;
   };
   hero: {
     overline: string;
@@ -143,6 +144,8 @@ export interface Translations {
     subtitle: string;
     reviewCount: string;
     viewAll: string;
+    seeAll?: string;
+    verified?: string;
   };
   // Social proof bar
   socialProof?: {
@@ -232,6 +235,7 @@ export interface Translations {
 const en: Translations = {
   nav: {
     gallery: "Gallery",
+    reviews: "Reviews",
     residence: "The Apartment",
     contact: "Contact",
     bookNow: "Book Now",
@@ -358,6 +362,8 @@ const en: Translations = {
     subtitle: "What our guests say",
     reviewCount: "reviews",
     viewAll: "View all reviews on Airbnb",
+    seeAll: "See all reviews",
+    verified: "Verified on Airbnb",
   },
   socialProof: {
     booked: "🔥 3 guests booked this week",
@@ -446,6 +452,7 @@ const en: Translations = {
 const he: Translations = {
   nav: {
     gallery: "גלריה",
+    reviews: "ביקורות",
     residence: "הדירה",
     contact: "דברו איתנו",
     bookNow: "הזמינו עכשיו",
@@ -572,6 +579,8 @@ const he: Translations = {
     subtitle: "מתוך 140+ ביקורות",
     reviewCount: "ביקורות",
     viewAll: "כל הביקורות ב-Airbnb →",
+    seeAll: "לכל הביקורות",
+    verified: "מאומת ב-Airbnb",
   },
   socialProof: {
     booked: "🔥 3 אורחים הזמינו השבוע",
@@ -1184,6 +1193,7 @@ const es: Translations = {
 const ar: Translations = {
   nav: {
     gallery: "صور",
+    reviews: "تقييمات",
     residence: "الشقة",
     contact: "اتصل بنا",
     bookNow: "احجز الآن",
@@ -1310,6 +1320,8 @@ const ar: Translations = {
     subtitle: "ماذا يقول ضيوفنا",
     reviewCount: "تقييم",
     viewAll: "جميع التقييمات على Airbnb",
+    seeAll: "كل التقييمات",
+    verified: "موثّق على Airbnb",
   },
   socialProof: {
     booked: "🔥 3 ضيوف حجزوا هذا الأسبوع",
