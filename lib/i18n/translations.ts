@@ -130,6 +130,8 @@ export interface Translations {
     apply?: string;
     promoApplied?: string;
     promoInvalid?: string;
+    requestBook?: string;
+    inquiryNote?: string;
   };
   // WhatsApp
   whatsapp?: {
@@ -328,6 +330,8 @@ const en: Translations = {
     apply: "Apply",
     promoApplied: "Promo code applied!",
     promoInvalid: "That code isn't valid.",
+    requestBook: "Request to book on WhatsApp",
+    inquiryNote: "Online payment is launching soon — reserve your dates on WhatsApp and we'll confirm availability right away.",
     checkIn: "Check-in",
     checkOut: "Check-out",
     nights: "nights",
@@ -540,6 +544,8 @@ const he: Translations = {
     apply: "החל",
     promoApplied: "הקוד הופעל!",
     promoInvalid: "הקוד אינו תקף.",
+    requestBook: "בקשת הזמנה בוואטסאפ",
+    inquiryNote: "תשלום מקוון מגיע בקרוב — שריינו את התאריכים בוואטסאפ ונאשר זמינות מיד.",
     checkIn: "הגעה",
     checkOut: "עזיבה",
     nights: "לילות",
@@ -1276,6 +1282,8 @@ const ar: Translations = {
     apply: "تطبيق",
     promoApplied: "تم تطبيق الرمز!",
     promoInvalid: "الرمز غير صالح.",
+    requestBook: "اطلب الحجز عبر واتساب",
+    inquiryNote: "الدفع الإلكتروني قريبًا — احجز تواريخك عبر واتساب وسنؤكد التوفر فورًا.",
     checkIn: "الوصول",
     checkOut: "المغادرة",
     nights: "ليالٍ",

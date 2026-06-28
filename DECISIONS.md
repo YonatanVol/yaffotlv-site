@@ -164,6 +164,20 @@ added later if you want dashboards/grouping.
 
 ---
 
+## D-LAUNCH — Go live now as a marketing + inquiry site (Path A) ✅ 2026-06-28
+
+Owner chose to launch immediately rather than wait for PayPlus. The booking flow runs in
+**inquiry mode**: it collects dates + guest details + shows the price, then the final button
+(**"Request to book on WhatsApp"**) opens a pre-filled WhatsApp message to the host instead of
+a (non-existent) online-payment step. No draft reservation / no `/api/checkout` call in this
+mode. The owner confirms availability + handles payment manually, and blocks the dates in admin.
+
+Controlled by the `NEXT_PUBLIC_PAYMENTS_ENABLED` env var (unset/false = inquiry mode). When
+PayPlus is wired and this is set to `true`, the full online-payment flow takes over with no
+other change. WhatsApp number: 972528701670.
+
+---
+
 ## Pending (future phases) — noted, not yet decided
 - Cancellation/refund **policy** values (Phase 4.2) — will ask before encoding.
 - Local Israeli payment provider for **Bit** (Phase 2A.5) — will research + recommend,

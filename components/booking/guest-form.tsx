@@ -12,9 +12,10 @@ interface GuestFormProps {
     guestCount: number;
   }) => void;
   loading: boolean;
+  paymentsEnabled?: boolean;
 }
 
-export function GuestForm({ onSubmit, loading }: GuestFormProps) {
+export function GuestForm({ onSubmit, loading, paymentsEnabled }: GuestFormProps) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -117,7 +118,7 @@ export function GuestForm({ onSubmit, loading }: GuestFormProps) {
         disabled={loading || !agreed}
         className="mt-4 w-full border border-accent px-8 py-4 text-xs font-medium uppercase tracking-[0.2em] text-accent transition-colors duration-300 hover:bg-accent hover:text-white disabled:opacity-50"
       >
-        {loading ? "..." : t.book.payNow}
+        {loading ? "..." : paymentsEnabled ? t.book.payNow : t.book.requestBook || "Request to book on WhatsApp"}
       </button>
     </form>
   );

@@ -10,6 +10,11 @@ import { formatILS } from "@/lib/pricing";
 import type { PriceQuote } from "@/lib/pricing";
 import { useI18n } from "@/lib/i18n/context";
 
+// Online payments are off until a provider (PayPlus) is wired. Until then the
+// booking flow collects dates + details and sends the request to WhatsApp.
+const PAYMENTS_ENABLED = process.env.NEXT_PUBLIC_PAYMENTS_ENABLED === "true";
+const WHATSAPP_NUMBER = "972528701670";
+
 type BookingStep = "dates" | "details" | "processing";
 
 export function BookingWidget() {
@@ -70,6 +75,25 @@ export function BookingWidget() {
     guestCount: number;
   }) => {
     if (!selectedRange) return;
+
+    if (!PAYMENTS_ENABLED) {
+      // Inquiry mode: send the booking request to WhatsApp (no online payment yet).
+      const lines = [
+        "Hi! I'd like to book YaffoTLV 🏠",
+        "",
+        `Dates: ${formatDateDisplay(selectedRange.checkIn)} → ${formatDateDisplay(selectedRange.checkOut)}${quote ? ` (${quote.nights} nights)` : ""}`,
+        `Guests: ${guestData.guestCount}`,
+        `Name: ${guestData.guestName}`,
+        quote ? `Estimated total: ${formatILS(quote.totalAmount)} ILS` : "",
+        appliedPromo ? `Promo code: ${appliedPromo}` : "",
+        "",
+        "Is it available?",
+      ].filter(Boolean);
+      const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(lines.join("\n"))}`;
+      window.open(url, "_blank", "noopener,noreferrer");
+      return;
+    }
+
     setBookingLoading(true);
     setError(null);
 
@@ -224,7 +248,14 @@ export function BookingWidget() {
               </div>
             )}
 
-            <GuestForm onSubmit={handleBooking} loading={bookingLoading} />
+            {!PAYMENTS_ENABLED && (
+              <p className="mb-6 rounded-sm border border-accent/30 bg-accent/5 px-4 py-3 text-sm leading-relaxed text-graphite">
+                {t.book.inquiryNote ||
+                  "Online payment is launching soon — reserve your dates on WhatsApp and we'll confirm availability right away."}
+              </p>
+            )}
+
+            <GuestForm onSubmit={handleBooking} loading={bookingLoading} paymentsEnabled={PAYMENTS_ENABLED} />
 
             <button
               onClick={() => setStep("dates")}
