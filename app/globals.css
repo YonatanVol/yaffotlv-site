@@ -81,6 +81,9 @@
 /* ── Luxury Baseline ───────────────────────────────────────────────── */
 
 html {
+  /* The site is light-only by design — opt out of the browser's dark canvas so
+     pages without an explicit section background (e.g. /reviews, /legal) stay light. */
+  color-scheme: light;
   scroll-behavior: smooth;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
