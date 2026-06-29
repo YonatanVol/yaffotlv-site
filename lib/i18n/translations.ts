@@ -173,6 +173,12 @@ export interface Translations {
     cot: string;
     parking: string;
   };
+  // About the apartment
+  apartment?: {
+    overline: string;
+    title: string;
+    paragraphs?: string[];
+  };
   // House rules
   houseRules?: {
     title: string;
@@ -377,6 +383,10 @@ const en: Translations = {
     privacy: "Privacy Policy",
     cancellation: "Cancellation Policy",
     rights: "All rights reserved.",
+  },
+  apartment: {
+    overline: "The Apartment",
+    title: "A home in the heart of Jaffa",
   },
   sleeping: {
     overline: "The Space",
@@ -594,6 +604,10 @@ const he: Translations = {
     privacy: "מדיניות פרטיות",
     cancellation: "מדיניות ביטולים",
     rights: "כל הזכויות שמורות.",
+  },
+  apartment: {
+    overline: "הדירה",
+    title: "בית בלב יפו",
   },
   sleeping: {
     overline: "החלל",
@@ -1335,6 +1349,10 @@ const ar: Translations = {
     privacy: "سياسة الخصوصية",
     cancellation: "سياسة الإلغاء",
     rights: "جميع الحقوق محفوظة.",
+  },
+  apartment: {
+    overline: "الشقة",
+    title: "بيت في قلب يافا",
   },
   sleeping: {
     overline: "المكان",
