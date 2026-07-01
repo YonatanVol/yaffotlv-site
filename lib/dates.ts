@@ -53,6 +53,18 @@ export function countNights(checkIn: string, checkOut: string): number {
   return Math.round((b.getTime() - a.getTime()) / (1000 * 60 * 60 * 24));
 }
 
+/**
+ * True when every NIGHT in [checkIn, checkOut) is free. The check-out day itself is
+ * NOT a night (exclusive), so a booked day can still be a valid DEPARTURE day —
+ * this is what lets a 1-night stay end on the morning another guest checks in
+ * (same-day turnover). Requires at least one night.
+ */
+export function isRangeAvailable(checkIn: string, checkOut: string, blocked: Set<string>): boolean {
+  const nights = dateRange(checkIn, checkOut);
+  if (nights.length === 0) return false;
+  return nights.every((d) => !blocked.has(d));
+}
+
 /** Format a date string for display: "Mar 15, 2026" */
 export function formatDateDisplay(dateStr: string): string {
   const d = new Date(dateStr + "T12:00:00");
