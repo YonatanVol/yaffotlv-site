@@ -133,6 +133,10 @@ export interface Translations {
     promoInvalid?: string;
     requestBook?: string;
     inquiryNote?: string;
+    datesUnavailable?: string;
+    pickDates?: string;
+    pickCheckout?: string;
+    night?: string;
   };
   // WhatsApp
   whatsapp?: {
