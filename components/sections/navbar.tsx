@@ -10,6 +10,8 @@ interface NavbarProps {
   onContactClick: () => void;
 }
 
+type NavLink = { label: string; href?: string; action?: () => void };
+
 export function Navbar({ onContactClick }: NavbarProps) {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -21,15 +23,12 @@ export function Navbar({ onContactClick }: NavbarProps) {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const scrollTo = (id: string) => {
-    setMobileOpen(false);
-    const el = document.getElementById(id);
-    el?.scrollIntoView({ behavior: "smooth" });
-  };
-
-  const links = [
-    { label: t.nav.gallery, action: () => scrollTo("gallery") },
-    { label: t.nav.residence, action: () => scrollTo("signature") },
+  // Section links use hash hrefs so they work from ANY page (Next navigates to the
+  // home page and scrolls; on the home page it scrolls smoothly via global CSS).
+  const links: NavLink[] = [
+    { label: t.nav.gallery, href: "/#gallery" },
+    { label: t.nav.residence, href: "/#apartment" },
+    { label: t.nav.reviews || "Reviews", href: "/reviews" },
     { label: t.nav.contact, action: () => { setMobileOpen(false); onContactClick(); } },
   ];
 
@@ -42,8 +41,8 @@ export function Navbar({ onContactClick }: NavbarProps) {
       >
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5 md:px-12">
           {/* Logo */}
-          <button
-            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+          <Link
+            href="/"
             className="flex items-baseline gap-0.5 transition-opacity hover:opacity-70"
           >
             <span className="font-serif text-xl font-light uppercase tracking-[0.2em] text-white">
@@ -52,19 +51,30 @@ export function Navbar({ onContactClick }: NavbarProps) {
             <span className="font-serif text-lg font-medium uppercase tracking-[0.15em] text-accent">
               TLV
             </span>
-          </button>
+          </Link>
 
           {/* Desktop links */}
           <div className="hidden items-center gap-8 md:flex">
-            {links.map((link) => (
-              <button
-                key={link.label}
-                onClick={link.action}
-                className="text-xs font-medium uppercase tracking-[0.2em] text-white/70 transition-colors duration-300 hover:text-white"
-              >
-                {link.label}
-              </button>
-            ))}
+            {links.map((link) =>
+              link.href ? (
+                <Link
+                  key={link.label}
+                  href={link.href}
+                  onClick={() => setMobileOpen(false)}
+                  className="text-xs font-medium uppercase tracking-[0.2em] text-white/70 transition-colors duration-300 hover:text-white"
+                >
+                  {link.label}
+                </Link>
+              ) : (
+                <button
+                  key={link.label}
+                  onClick={link.action}
+                  className="text-xs font-medium uppercase tracking-[0.2em] text-white/70 transition-colors duration-300 hover:text-white"
+                >
+                  {link.label}
+                </button>
+              )
+            )}
             <Link
               href="/book"
               className="border border-white/30 px-6 py-2 text-xs font-medium uppercase tracking-[0.2em] text-white transition-colors duration-300 hover:border-white hover:bg-white hover:text-ink"
@@ -112,18 +122,28 @@ export function Navbar({ onContactClick }: NavbarProps) {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
           >
-            {links.map((link, i) => (
-              <motion.button
-                key={link.label}
-                onClick={link.action}
-                className="py-4 font-serif text-3xl font-light text-white transition-colors hover:text-accent-light"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1 + i * 0.08, duration: 0.4 }}
-              >
-                {link.label}
-              </motion.button>
-            ))}
+            {links.map((link, i) => {
+              const cls =
+                "py-4 font-serif text-3xl font-light text-white transition-colors hover:text-accent-light";
+              return (
+                <motion.div
+                  key={link.label}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.1 + i * 0.08, duration: 0.4 }}
+                >
+                  {link.href ? (
+                    <Link href={link.href} onClick={() => setMobileOpen(false)} className={cls}>
+                      {link.label}
+                    </Link>
+                  ) : (
+                    <button onClick={link.action} className={cls}>
+                      {link.label}
+                    </button>
+                  )}
+                </motion.div>
+              );
+            })}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}

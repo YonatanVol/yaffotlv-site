@@ -12,6 +12,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   return [
     { url: baseUrl, lastModified: LAST_CONTENT_UPDATE, changeFrequency: "weekly", priority: 1 },
     { url: `${baseUrl}/book`, lastModified: LAST_CONTENT_UPDATE, changeFrequency: "daily", priority: 0.9 },
+    { url: `${baseUrl}/reviews`, lastModified: LAST_CONTENT_UPDATE, changeFrequency: "weekly", priority: 0.7 },
     { url: `${baseUrl}/legal/terms`, lastModified: LEGAL_UPDATED, changeFrequency: "yearly", priority: 0.3 },
     { url: `${baseUrl}/legal/privacy`, lastModified: LEGAL_UPDATED, changeFrequency: "yearly", priority: 0.3 },
     { url: `${baseUrl}/legal/cancellation`, lastModified: LEGAL_UPDATED, changeFrequency: "yearly", priority: 0.3 },

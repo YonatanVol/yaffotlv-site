@@ -68,7 +68,7 @@ export function PhotoSlider() {
   };
 
   return (
-    <section id="gallery" className="bg-cream py-32">
+    <section id="gallery" className="scroll-mt-24 bg-cream py-32">
       <Reveal className="mb-16 text-center px-6">
         <p className="text-xs font-medium uppercase tracking-[0.3em] text-accent">
           {t.slider.title}

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Hero } from "@/components/sections/hero";
 import { Signature } from "@/components/sections/signature";
 import { PhotoSlider } from "@/components/sections/photo-slider";
+import { Apartment } from "@/components/sections/apartment";
 import { Navbar } from "@/components/sections/navbar";
 import { ContactModal } from "@/components/sections/contact-modal";
 import { Amenities } from "@/components/sections/amenities";
@@ -53,6 +54,8 @@ export default function Home() {
 
       <PhotoSlider />
 
+      <Apartment />
+
       <Reviews />
 
       <Amenities />
@@ -68,7 +71,7 @@ export default function Home() {
       <NeighborhoodMap />
 
       {/* Closing CTA */}
-      <section id="contact" className="bg-ivory py-32">
+      <section id="contact" className="scroll-mt-24 bg-ivory py-32">
         <Reveal className="mx-auto max-w-xl px-6 text-center">
           <p className="text-xs font-medium uppercase tracking-[0.3em] text-accent">
             {t.cta.overline}
