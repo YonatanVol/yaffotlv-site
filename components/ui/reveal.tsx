@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useMemo, useRef } from "react";
 import { motion, useInView, useReducedMotion } from "framer-motion";
 import { fadeUp, fadeIn, staggerContainer } from "@/lib/motion";
 import { cn } from "@/lib/utils";
@@ -38,7 +38,10 @@ export function Reveal({
   const reduceMotion = useReducedMotion();
 
   const variants = variantMap[variant];
-  const Component = motion.create(as);
+  // Create the motion component ONCE per `as` value. Recreating it on every
+  // render remounts the node, which resets the in-view observer and restarts
+  // the entrance animation from opacity:0 — leaving the section stuck invisible.
+  const Component = useMemo(() => motion.create(as), [as]);
 
   return (
     <Component
