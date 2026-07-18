@@ -19,10 +19,8 @@ export const metadata: Metadata = {
     "Book direct & save 10%. 3-room luxury apartment in Jaffa — 80 sqm, renovated 2024, 10 min to the beach. Superhost with 140+ reviews.",
   metadataBase: new URL(siteUrl),
   alternates: { canonical: "/" },
-  icons: {
-    icon: "/icon.svg",
-    apple: "/icon.svg",
-  },
+  // Icons come from the app/ file convention: icon.svg (browsers) and
+  // apple-icon.png (iOS home screen). No manual `icons` override needed.
   openGraph: {
     title: "YaffoTLV | Luxury Apartment in Jaffa, Tel Aviv",
     description:
