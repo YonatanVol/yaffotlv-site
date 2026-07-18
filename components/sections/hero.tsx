@@ -45,7 +45,7 @@ export function Hero() {
         style={reduceMotion ? undefined : { y: bgY }}
       >
         <Image
-          src="/images/livingroom1.jpg"
+          src="/images/livingroom-hero.jpg"
           alt="Bright living room with panoramic Jaffa view"
           fill
           priority
