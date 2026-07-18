@@ -5,6 +5,7 @@ import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import { useI18n } from "@/lib/i18n/context";
 import { LanguageToggle } from "@/components/ui/language-toggle";
+import { LogoMark } from "@/components/ui/logo-mark";
 
 interface NavbarProps {
   onContactClick: () => void;
@@ -43,13 +44,17 @@ export function Navbar({ onContactClick }: NavbarProps) {
           {/* Logo */}
           <Link
             href="/"
-            className="flex items-baseline gap-0.5 transition-opacity hover:opacity-70"
+            aria-label="YaffoTLV — home"
+            className="flex items-center gap-2.5 transition-opacity hover:opacity-70"
           >
-            <span className="font-serif text-xl font-light uppercase tracking-[0.2em] text-white">
-              Yaffo
-            </span>
-            <span className="font-serif text-lg font-medium uppercase tracking-[0.15em] text-accent">
-              TLV
+            <LogoMark className="h-8 w-auto text-white" />
+            <span className="flex items-baseline gap-0.5">
+              <span className="font-serif text-xl font-light uppercase tracking-[0.2em] text-white">
+                Yaffo
+              </span>
+              <span className="font-serif text-lg font-medium uppercase tracking-[0.15em] text-accent">
+                TLV
+              </span>
             </span>
           </Link>
 
