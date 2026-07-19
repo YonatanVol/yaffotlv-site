@@ -40,6 +40,9 @@ export async function sendFollowUp(id: string) {
   if (lead.status === "unsubscribed") {
     return { ok: false, error: "This guest unsubscribed — not sending." };
   }
+  if (!lead.email) {
+    return { ok: false, error: "This enquiry has no email — reach them on WhatsApp instead." };
+  }
 
   const result = await sendEnquiryFollowUp({
     to: lead.email,

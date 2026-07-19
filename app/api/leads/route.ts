@@ -12,7 +12,7 @@ import { z } from "zod";
  * only ever moves `stage` forward.
  */
 const schema = z.object({
-  email: z.string().email().max(200),
+  email: z.string().email().max(200).optional(),
   name: z.string().max(120).optional(),
   phone: z.string().max(40).optional(),
   checkIn: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
@@ -33,13 +33,26 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Invalid payload" }, { status: 400 });
     }
     const input = parsed.data;
-    const email = input.email.trim().toLowerCase();
+    const email = input.email?.trim().toLowerCase();
+    const phone = input.phone?.trim();
+
+    // A contact detail is the whole point — ignore pings that carry neither.
+    if (!email && !phone) {
+      return NextResponse.json({ error: "Need an email or phone" }, { status: 400 });
+    }
 
     const { db } = await import("@/lib/db");
-    const [existing] = await db.select().from(leads).where(eq(leads.email, email)).limit(1);
+    // Match on email when we have one; otherwise keep one row per browser
+    // session so a guest who only left a phone number isn't duplicated on
+    // every keystroke-blur.
+    const [existing] = email
+      ? await db.select().from(leads).where(eq(leads.email, email)).limit(1)
+      : input.sessionId
+        ? await db.select().from(leads).where(eq(leads.sessionId, input.sessionId)).limit(1)
+        : [];
 
     if (!existing) {
-      await db.insert(leads).values({ ...input, email });
+      await db.insert(leads).values({ ...input, email, phone });
       return NextResponse.json({ ok: true }, { status: 201 });
     }
 
@@ -51,8 +64,10 @@ export async function POST(request: NextRequest) {
     await db
       .update(leads)
       .set({
+        // Fill in details as they arrive; a later blank must not wipe what we have.
+        email: email ?? existing.email,
         name: input.name ?? existing.name,
-        phone: input.phone ?? existing.phone,
+        phone: phone ?? existing.phone,
         checkIn: input.checkIn ?? existing.checkIn,
         checkOut: input.checkOut ?? existing.checkOut,
         guests: input.guests ?? existing.guests,

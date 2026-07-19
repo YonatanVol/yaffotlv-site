@@ -192,3 +192,71 @@ export async function sendWeeklyReport(params: {
     `,
   });
 }
+
+/**
+ * Immediate heads-up about enquiries that left a contact detail. Sent by the
+ * hourly job, and only when there is actually something new — silence means
+ * nothing happened, so the mail is always worth opening.
+ */
+export async function sendLeadAlert(params: {
+  leads: Array<{
+    email: string | null;
+    name: string | null;
+    phone: string | null;
+    checkIn: string | null;
+    checkOut: string | null;
+    guests: number | null;
+    stage: string;
+  }>;
+}) {
+  const { leads } = params;
+  const stageLabel: Record<string, string> = {
+    typed_email: "left after entering contact details",
+    filled_details: "filled in their details",
+    submitted: "sent a request",
+  };
+
+  const items = leads
+    .map((l) => {
+      const who = l.name || l.email || l.phone || "Someone";
+      const contact = [
+        l.email ? `<a href="mailto:${l.email}" style="color:#b8976a;">${l.email}</a>` : "",
+        l.phone
+          ? `<a href="https://wa.me/${l.phone.replace(/\D/g, "")}" style="color:#b8976a;">${l.phone}</a>`
+          : "",
+      ]
+        .filter(Boolean)
+        .join(" &middot; ");
+      const dates =
+        l.checkIn && l.checkOut
+          ? `${formatDateDisplay(l.checkIn)} &rarr; ${formatDateDisplay(l.checkOut)}${l.guests ? `, ${l.guests} guests` : ""}`
+          : "no dates chosen";
+      return `
+        <div style="border-bottom: 1px solid #e8e3dc; padding: 14px 0;">
+          <p style="margin: 0; color: #2c2926; font-size: 16px;"><strong>${who}</strong></p>
+          <p style="margin: 4px 0; color: #4a4640;">${contact || "no contact details"}</p>
+          <p style="margin: 4px 0; color: #4a4640;">${dates}</p>
+          <p style="margin: 4px 0; color: #a69f95; font-size: 13px;">${stageLabel[l.stage] ?? l.stage}</p>
+        </div>`;
+    })
+    .join("");
+
+  const count = leads.length;
+  await getResend().emails.send({
+    from: FROM_EMAIL,
+    to: HOST_EMAIL,
+    subject: count === 1 ? "New enquiry on yaffotlv.com" : `${count} new enquiries on yaffotlv.com`,
+    html: `
+      <div style="font-family: Georgia, serif; max-width: 600px; margin: 0 auto; padding: 40px 20px;">
+        <h1 style="font-size: 24px; font-weight: 300; color: #2c2926;">
+          ${count === 1 ? "Someone just enquired" : `${count} people just enquired`}
+        </h1>
+        <p style="color: #4a4640; line-height: 1.7;">They left contact details on the booking form but haven't confirmed a stay.</p>
+        ${items}
+        <p style="margin-top: 24px;">
+          <a href="${SITE_URL}/admin/leads" style="color: #b8976a;">Open enquiries in the admin &rarr;</a>
+        </p>
+      </div>
+    `,
+  });
+}
