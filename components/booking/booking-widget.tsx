@@ -255,7 +255,13 @@ export function BookingWidget() {
               </p>
             )}
 
-            <GuestForm onSubmit={handleBooking} loading={bookingLoading} paymentsEnabled={PAYMENTS_ENABLED} />
+            <GuestForm
+              onSubmit={handleBooking}
+              loading={bookingLoading}
+              paymentsEnabled={PAYMENTS_ENABLED}
+              checkIn={selectedRange?.checkIn}
+              checkOut={selectedRange?.checkOut}
+            />
 
             <button
               onClick={() => setStep("dates")}

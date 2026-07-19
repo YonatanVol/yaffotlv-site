@@ -36,6 +36,20 @@
       "when": 1782574774099,
       "tag": "0004_promo_codes",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1784418999661,
+      "tag": "0005_site_photos",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1784419889108,
+      "tag": "0006_leads_and_analytics",
+      "breakpoints": true
     }
   ]
 }

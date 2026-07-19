@@ -119,15 +119,65 @@ export const promoCodes = pgTable("promo_codes", {
 });
 
 /** Activity log — anonymous event tracking for analytics */
-export const activityLog = pgTable("activity_log", {
-  id: uuid("id").defaultRandom().primaryKey(),
-  sessionId: text("session_id").notNull(),
-  event: text("event").notNull(), // "page_view" | "book_started" | "book_completed" | "contact_opened" | "whatsapp_clicked" | "gallery_opened" | "language_changed"
-  metadata: text("metadata"), // JSON string with extra data (page, locale, dates, etc.)
-  userAgent: text("user_agent"),
-  ip: text("ip"),
-  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
-});
+export const activityLog = pgTable(
+  "activity_log",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    sessionId: text("session_id").notNull(),
+    event: text("event").notNull(), // "page_view" | "book_started" | "book_completed" | "contact_opened" | "whatsapp_clicked" | "gallery_opened" | "language_changed"
+    metadata: text("metadata"), // JSON string with extra data (page, locale, dates, etc.)
+    /** Promoted out of `metadata` so the weekly report can aggregate in SQL. */
+    path: text("path"),
+    referrer: text("referrer"),
+    country: text("country"),
+    userAgent: text("user_agent"),
+    /**
+     * Salted hash of the caller IP, never the address itself. Still unique per
+     * visitor for counting, but not personal data we have to justify holding.
+     */
+    ip: text("ip"),
+    createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+  },
+  (table) => [index("activity_log_event_created_idx").on(table.event, table.createdAt)]
+);
+
+export const leadStatusEnum = pgEnum("lead_status", ["new", "contacted", "converted", "unsubscribed"]);
+
+/**
+ * Enquiries that were started but never completed.
+ *
+ * A row is written as soon as a guest finishes entering their email in the
+ * booking form, together with whatever they had chosen at that point, so the
+ * owner can follow up on drop-offs. One row per email — later attempts update
+ * the same record rather than piling up duplicates.
+ */
+export const leads = pgTable(
+  "leads",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    email: text("email").notNull(),
+    name: text("name"),
+    phone: text("phone"),
+    checkIn: date("check_in", { mode: "string" }),
+    checkOut: date("check_out", { mode: "string" }),
+    guests: integer("guests"),
+    /** Furthest point reached: "typed_email" | "filled_details" | "submitted". */
+    stage: text("stage").notNull().default("typed_email"),
+    sessionId: text("session_id"),
+    locale: text("locale"),
+    referrer: text("referrer"),
+    status: leadStatusEnum("status").notNull().default("new"),
+    /** Lets a follow-up email carry a working one-click unsubscribe. */
+    unsubscribeToken: uuid("unsubscribe_token").defaultRandom().notNull(),
+    followUpSentAt: timestamp("follow_up_sent_at", { withTimezone: true }),
+    createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
+  },
+  (table) => [
+    uniqueIndex("leads_email_unique").on(table.email),
+    index("leads_status_created_idx").on(table.status, table.createdAt),
+  ]
+);
 
 /** Admin login attempts — per-IP rate limiting / temporary lockout */
 export const adminLoginAttempts = pgTable(
@@ -161,4 +211,37 @@ export const calendarSyncLog = pgTable(
     createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
   },
   (table) => [index("calendar_sync_log_source_created_idx").on(table.source, table.createdAt)]
+);
+
+/** Where a photo appears on the site. */
+export const photoSlotEnum = pgEnum("photo_slot", ["hero", "gallery", "host"]);
+
+/**
+ * Site photos managed from the admin, stored in Vercel Blob.
+ *
+ * `slot` decides placement: exactly one visible `hero` is used as the homepage
+ * background (enforced in the action layer, not the DB, so promoting a new hero
+ * is a single write). Site reads fall back to the bundled files in
+ * `public/images` whenever this table is empty or unreachable, so the public
+ * site can never render without photos.
+ */
+export const sitePhotos = pgTable(
+  "site_photos",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    url: text("url").notNull(),
+    /** Blob pathname — needed to delete the underlying object. */
+    pathname: text("pathname").notNull(),
+    /** Alt text: read by screen readers and used by search engines. */
+    alt: text("alt").notNull().default(""),
+    /** Short caption shown on the slider, e.g. "Living Room". */
+    label: text("label"),
+    slot: photoSlotEnum("slot").notNull().default("gallery"),
+    sortOrder: integer("sort_order").notNull().default(0),
+    isVisible: boolean("is_visible").notNull().default(true),
+    width: integer("width"),
+    height: integer("height"),
+    createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+  },
+  (table) => [index("site_photos_slot_order_idx").on(table.slot, table.sortOrder)]
 );
