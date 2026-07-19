@@ -6,23 +6,7 @@ import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { Reveal } from "@/components/ui/reveal";
 import { Lightbox } from "@/components/ui/lightbox";
 import { useI18n } from "@/lib/i18n/context";
-import type { Translations } from "@/lib/i18n/translations";
-
-interface Slide {
-  src: string;
-  labelKey: keyof Translations["slider"]["rooms"];
-  alt: string;
-}
-
-const slides: Slide[] = [
-  { src: "/images/livingroom1.jpg", labelKey: "livingRoom", alt: "Bright living room with panoramic Jaffa view" },
-  { src: "/images/gallery-2.jpg", labelKey: "kitchen", alt: "Modern kitchen and dining area" },
-  { src: "/images/gallery-1.jpg", labelKey: "bedroom1", alt: "Master bedroom with luxury finishes" },
-  { src: "/images/gallery-4.jpg", labelKey: "bedroom2", alt: "Second bedroom with warm tones" },
-  { src: "/images/gallery-3.jpg", labelKey: "entryway", alt: "Elegant apartment entryway" },
-];
-
-const lightboxImages = slides.map((s) => ({ src: s.src, alt: s.alt }));
+import type { SitePhotoView } from "@/lib/photos";
 
 const slideVariants = {
   enter: (direction: number) => ({
@@ -39,12 +23,17 @@ const slideVariants = {
   }),
 };
 
-export function PhotoSlider() {
+export function PhotoSlider({ photos }: { photos: SitePhotoView[] }) {
   const [[current, direction], setCurrent] = useState([0, 0]);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState(0);
   const reduceMotion = useReducedMotion();
   const { t, isRtl } = useI18n();
+
+  const slides = photos;
+  const lightboxImages = slides.map((s) => ({ src: s.src, alt: s.alt }));
+  /** Bundled defaults keep their translated captions; uploads use their own label. */
+  const labelOf = (p: SitePhotoView) => (p.labelKey ? t.slider.rooms[p.labelKey] : p.label ?? "");
 
   const paginate = useCallback(
     (newDirection: number) => {
@@ -55,7 +44,7 @@ export function PhotoSlider() {
         return [next, dir];
       });
     },
-    [isRtl]
+    [isRtl, slides.length]
   );
 
   const goTo = useCallback((index: number) => {
@@ -137,7 +126,7 @@ export function PhotoSlider() {
               className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-ink/60 to-transparent px-8 pb-8 pt-20"
             >
               <p className="font-serif text-3xl font-light text-white md:text-4xl">
-                {t.slider.rooms[slides[current].labelKey]}
+                {labelOf(slides[current])}
               </p>
             </motion.div>
           </AnimatePresence>
@@ -161,7 +150,7 @@ export function PhotoSlider() {
         <div className="mt-8 flex flex-wrap justify-center gap-2 md:gap-4">
           {slides.map((slide, i) => (
             <button
-              key={slide.labelKey}
+              key={slide.id}
               onClick={() => goTo(i)}
               className={`px-4 py-2 text-xs font-medium uppercase tracking-[0.15em] transition-all duration-300 ${
                 i === current
@@ -169,7 +158,7 @@ export function PhotoSlider() {
                   : "text-stone hover:text-charcoal"
               }`}
             >
-              {t.slider.rooms[slide.labelKey]}
+              {labelOf(slide)}
             </button>
           ))}
         </div>

@@ -162,3 +162,36 @@ export const calendarSyncLog = pgTable(
   },
   (table) => [index("calendar_sync_log_source_created_idx").on(table.source, table.createdAt)]
 );
+
+/** Where a photo appears on the site. */
+export const photoSlotEnum = pgEnum("photo_slot", ["hero", "gallery", "host"]);
+
+/**
+ * Site photos managed from the admin, stored in Vercel Blob.
+ *
+ * `slot` decides placement: exactly one visible `hero` is used as the homepage
+ * background (enforced in the action layer, not the DB, so promoting a new hero
+ * is a single write). Site reads fall back to the bundled files in
+ * `public/images` whenever this table is empty or unreachable, so the public
+ * site can never render without photos.
+ */
+export const sitePhotos = pgTable(
+  "site_photos",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    url: text("url").notNull(),
+    /** Blob pathname — needed to delete the underlying object. */
+    pathname: text("pathname").notNull(),
+    /** Alt text: read by screen readers and used by search engines. */
+    alt: text("alt").notNull().default(""),
+    /** Short caption shown on the slider, e.g. "Living Room". */
+    label: text("label"),
+    slot: photoSlotEnum("slot").notNull().default("gallery"),
+    sortOrder: integer("sort_order").notNull().default(0),
+    isVisible: boolean("is_visible").notNull().default(true),
+    width: integer("width"),
+    height: integer("height"),
+    createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+  },
+  (table) => [index("site_photos_slot_order_idx").on(table.slot, table.sortOrder)]
+);

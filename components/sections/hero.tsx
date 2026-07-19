@@ -9,10 +9,11 @@ import {
   useReducedMotion,
 } from "framer-motion";
 import { useI18n } from "@/lib/i18n/context";
+import type { SitePhotoView } from "@/lib/photos";
 
 const EASE_OUT_EXPO: [number, number, number, number] = [0.16, 1, 0.3, 1];
 
-export function Hero() {
+export function Hero({ photo }: { photo: SitePhotoView }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const reduceMotion = useReducedMotion();
   const { t } = useI18n();
@@ -45,8 +46,8 @@ export function Hero() {
         style={reduceMotion ? undefined : { y: bgY }}
       >
         <Image
-          src="/images/livingroom-hero.jpg"
-          alt="Bright living room with panoramic Jaffa view"
+          src={photo.src}
+          alt={photo.alt}
           fill
           priority
           className="object-cover"
