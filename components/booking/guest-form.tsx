@@ -13,15 +13,56 @@ interface GuestFormProps {
   }) => void;
   loading: boolean;
   paymentsEnabled?: boolean;
+  /** Dates chosen upstream, recorded alongside an unfinished enquiry. */
+  checkIn?: string;
+  checkOut?: string;
 }
 
-export function GuestForm({ onSubmit, loading, paymentsEnabled }: GuestFormProps) {
+export function GuestForm({
+  onSubmit,
+  loading,
+  paymentsEnabled,
+  checkIn,
+  checkOut,
+}: GuestFormProps) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [guests, setGuests] = useState(1);
   const [agreed, setAgreed] = useState(false);
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
+
+  /**
+   * Save the enquiry once the guest has finished entering their email and moved
+   * on, so an abandoned booking can still be followed up. Fire-and-forget: this
+   * must never interfere with actually completing the booking.
+   */
+  const captureLead = () => {
+    const value = email.trim();
+    if (!value || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(value)) return;
+    fetch("/api/leads", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      keepalive: true,
+      body: JSON.stringify({
+        email: value,
+        name: name || undefined,
+        phone: phone || undefined,
+        checkIn,
+        checkOut,
+        guests,
+        stage: name && phone ? "filled_details" : "typed_email",
+        locale,
+        referrer: typeof document !== "undefined" ? document.referrer || undefined : undefined,
+        sessionId:
+          typeof window !== "undefined"
+            ? sessionStorage.getItem("yaffotlv-session-id") ?? undefined
+            : undefined,
+      }),
+    }).catch(() => {
+      /* analytics must never break checkout */
+    });
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -52,8 +93,13 @@ export function GuestForm({ onSubmit, loading, paymentsEnabled }: GuestFormProps
           required
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          onBlur={captureLead}
           className="mt-2 w-full border-b border-sand bg-transparent pb-2 text-sm text-charcoal outline-none transition-colors focus:border-accent"
         />
+        <p className="mt-1.5 text-[11px] leading-relaxed text-stone">
+          {t.book.enquiryFollowUpNotice ||
+            "If you don't finish, we may email you about this enquiry. Unsubscribe anytime."}
+        </p>
       </div>
 
       <div>

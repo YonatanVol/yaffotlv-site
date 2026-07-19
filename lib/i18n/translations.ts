@@ -127,6 +127,8 @@ export interface Translations {
     inclVat?: string;
     discount?: string;
     agreeRules?: string;
+    /** Shown under the email field, since an unfinished enquiry may be followed up. */
+    enquiryFollowUpNotice?: string;
     promo?: string;
     apply?: string;
     promoApplied?: string;
@@ -340,6 +342,8 @@ const en: Translations = {
     cancellation: "Free cancellation up to 5 days before check-in (50% within 5 days).",
     discount: "Discount",
     agreeRules: "I have read and agree to the House Rules, Terms and Cancellation Policy.",
+    enquiryFollowUpNotice:
+      "If you don't finish, we may email you about this enquiry. Unsubscribe anytime.",
     promo: "Promo code",
     apply: "Apply",
     promoApplied: "Promo code applied!",
