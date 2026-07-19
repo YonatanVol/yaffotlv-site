@@ -90,7 +90,29 @@ export function BookingWidget() {
         "Is it available?",
       ].filter(Boolean);
       const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(lines.join("\n"))}`;
-      window.open(url, "_blank", "noopener,noreferrer");
+
+      // Record the enquiry before handing off. If WhatsApp never opens — blocked,
+      // not installed, guest changes their mind — the request still reaches the
+      // owner instead of vanishing.
+      fetch("/api/leads", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        keepalive: true,
+        body: JSON.stringify({
+          email: guestData.guestEmail,
+          name: guestData.guestName || undefined,
+          phone: guestData.guestPhone || undefined,
+          checkIn: selectedRange.checkIn,
+          checkOut: selectedRange.checkOut,
+          guests: guestData.guestCount,
+          stage: "submitted",
+        }),
+      }).catch(() => {});
+
+      // Popup blockers make window.open return null. Without a fallback the
+      // button appears to do nothing at all, which is what guests were hitting.
+      const opened = window.open(url, "_blank", "noopener,noreferrer");
+      if (!opened) window.location.href = url;
       return;
     }
 
