@@ -1,0 +1,38 @@
+# Hourly enquiry alerts.
+#
+# Vercel's Hobby plan rejects any cron that runs more than once a day, so the
+# hourly cadence lives here instead. The daily cron in vercel.json stays as a
+# safety net: the endpoint claims rows via `alertedAt`, so the two schedules
+# overlapping can never alert the same lead twice.
+name: Hourly lead alerts
+
+on:
+  schedule:
+    # Every hour, on the hour (UTC). GitHub queues these best-effort, so a busy
+    # period may delay a run by a few minutes — harmless, since nothing is lost.
+    - cron: "0 * * * *"
+  # Lets the owner fire a run by hand from the Actions tab.
+  workflow_dispatch:
+
+jobs:
+  alert:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger enquiry alerts
+        env:
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+        run: |
+          if [ -z "$CRON_SECRET" ]; then
+            echo "::error::CRON_SECRET is not set. Add it under Settings → Secrets and variables → Actions, using the same value as the Vercel environment variable."
+            exit 1
+          fi
+          code=$(curl -sS -o response.json -w "%{http_code}" \
+            -H "Authorization: Bearer $CRON_SECRET" \
+            https://www.yaffotlv.com/api/cron/lead-alerts)
+          echo "HTTP $code"
+          cat response.json || true
+          echo
+          if [ "$code" != "200" ]; then
+            echo "::error::Alert endpoint returned $code"
+            exit 1
+          fi
