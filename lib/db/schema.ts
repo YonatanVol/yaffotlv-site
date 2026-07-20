@@ -155,7 +155,13 @@ export const leads = pgTable(
   "leads",
   {
     id: uuid("id").defaultRandom().primaryKey(),
-    email: text("email").notNull(),
+    /**
+     * Nullable: a guest who typed only a phone number is still a lead worth
+     * chasing — arguably a better one here, since enquiries run over WhatsApp.
+     * Postgres allows repeated NULLs under a unique index, so phone-only rows
+     * coexist with the one-row-per-email rule below.
+     */
+    email: text("email"),
     name: text("name"),
     phone: text("phone"),
     checkIn: date("check_in", { mode: "string" }),
@@ -170,6 +176,12 @@ export const leads = pgTable(
     /** Lets a follow-up email carry a working one-click unsubscribe. */
     unsubscribeToken: uuid("unsubscribe_token").defaultRandom().notNull(),
     followUpSentAt: timestamp("follow_up_sent_at", { withTimezone: true }),
+    /**
+     * When the owner was alerted about this lead. The hourly job claims rows
+     * where this is null, so a skipped or failed run catches up next hour
+     * instead of losing the lead, and a retry cannot double-send.
+     */
+    alertedAt: timestamp("alerted_at", { withTimezone: true }),
     createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
     updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
   },

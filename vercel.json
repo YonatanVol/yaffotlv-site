@@ -5,6 +5,10 @@
       "schedule": "0 6 * * *"
     },
     {
+      "path": "/api/cron/lead-alerts",
+      "schedule": "0 * * * *"
+    },
+    {
       "path": "/api/cron/weekly-report",
       "schedule": "0 6 * * 1"
     }

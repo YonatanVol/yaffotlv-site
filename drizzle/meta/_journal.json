@@ -50,6 +50,13 @@
       "when": 1784419889108,
       "tag": "0006_leads_and_analytics",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1784451865010,
+      "tag": "0007_lead_alerts",
+      "breakpoints": true
     }
   ]
 }

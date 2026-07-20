@@ -39,13 +39,17 @@ export function GuestForm({
    */
   const captureLead = () => {
     const value = email.trim();
-    if (!value || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(value)) return;
+    const hasEmail = /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(value);
+    // A phone number alone is still worth chasing here, since enquiries run
+    // over WhatsApp — but don't fire until there is something usable.
+    const hasPhone = phone.replace(/\D/g, "").length >= 7;
+    if (!hasEmail && !hasPhone) return;
     fetch("/api/leads", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       keepalive: true,
       body: JSON.stringify({
-        email: value,
+        email: hasEmail ? value : undefined,
         name: name || undefined,
         phone: phone || undefined,
         checkIn,
@@ -110,6 +114,7 @@ export function GuestForm({
           type="tel"
           value={phone}
           onChange={(e) => setPhone(e.target.value)}
+          onBlur={captureLead}
           className="mt-2 w-full border-b border-sand bg-transparent pb-2 text-sm text-charcoal outline-none transition-colors focus:border-accent"
           placeholder="+972..."
         />

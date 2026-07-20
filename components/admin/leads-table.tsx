@@ -6,7 +6,8 @@ import { deleteLead, sendFollowUp, setLeadStatus } from "@/app/admin/leads-actio
 
 interface Lead {
   id: string;
-  email: string;
+  /** Null when the guest left only a phone number. */
+  email: string | null;
   name: string | null;
   phone: string | null;
   checkIn: string | null;
@@ -81,10 +82,23 @@ export function LeadsTable({ leads }: { leads: Lead[] }) {
                 <tr key={lead.id} className="border-b border-sand/60 align-top">
                   <td className="py-3 pr-4">
                     <div className="font-medium text-graphite">{lead.name || "—"}</div>
-                    <a href={`mailto:${lead.email}`} className="text-xs text-brass hover:underline">
-                      {lead.email}
-                    </a>
-                    {lead.phone && <div className="text-xs text-stone">{lead.phone}</div>}
+                    {lead.email && (
+                      <a href={`mailto:${lead.email}`} className="block text-xs text-brass hover:underline">
+                        {lead.email}
+                      </a>
+                    )}
+                    {lead.phone && (
+                      // Enquiries here run over WhatsApp, so link straight into a chat.
+                      <a
+                        href={`https://wa.me/${lead.phone.replace(/\D/g, "")}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="block text-xs text-brass hover:underline"
+                      >
+                        {lead.phone}
+                      </a>
+                    )}
+                    {!lead.email && !lead.phone && <span className="text-xs text-stone">no contact</span>}
                   </td>
                   <td className="py-3 pr-4 text-graphite">
                     {fmt(lead.checkIn)} → {fmt(lead.checkOut)}
@@ -101,7 +115,7 @@ export function LeadsTable({ leads }: { leads: Lead[] }) {
                   </td>
                   <td className="py-3">
                     <div className="flex flex-wrap gap-1.5">
-                      {lead.status !== "unsubscribed" && (
+                      {lead.status !== "unsubscribed" && lead.email && (
                         <button
                           onClick={run(lead.id, () => sendFollowUp(lead.id))}
                           disabled={busy}
