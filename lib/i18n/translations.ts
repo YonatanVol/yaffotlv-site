@@ -135,10 +135,25 @@ export interface Translations {
     promoInvalid?: string;
     requestBook?: string;
     inquiryNote?: string;
-    datesUnavailable?: string;
-    pickDates?: string;
-    pickCheckout?: string;
-    night?: string;
+    /* Required on purpose: these render on the booking page in every language.
+       As optional keys they were defined in no locale at all, so every visitor
+       — including Hebrew ones — saw the English fallback. Keeping them required
+       makes `tsc` fail the build if a locale is ever missing one. */
+    datesUnavailable: string;
+    pickDates: string;
+    pickCheckout: string;
+    night: string;
+    /** "{month} is fully booked." — {month} is substituted at render. */
+    monthFull: string;
+    /** "Try {month}" — jump to the next month with availability. */
+    tryMonth: string;
+  };
+  /** Reassurance strip on the booking page. */
+  securityBadges: {
+    ssl: string;
+    payment: string;
+    verified: string;
+    data: string;
   };
   // WhatsApp
   whatsapp?: {
@@ -366,6 +381,12 @@ const en: Translations = {
     subtotal: "Subtotal",
     vat: "VAT (18%)",
     total: "Total",
+    datesUnavailable: "Those nights are already booked. Please pick different dates.",
+    pickDates: "Tap your check-in date, then your check-out date. One night = two dates.",
+    pickCheckout: "Now pick your check-out date (the morning you leave).",
+    night: "night",
+    monthFull: "{month} is fully booked.",
+    tryMonth: "Try {month}",
     inclVat: "Price includes VAT",
   },
   whatsapp: {
@@ -463,6 +484,12 @@ const en: Translations = {
     remoteDesc: "Fast WiFi, dedicated workspace, Nespresso machine, and quiet neighborhood. Stay productive, live beautifully.",
     travelers: "Explorers",
     travelersDesc: "Walk to Old Jaffa, light rail to Tel Aviv center in 15 min, Abu Hasan hummus 3 minutes away.",
+  },
+  securityBadges: {
+    ssl: "Encrypted connection",
+    payment: "Secure payment",
+    verified: "Book direct with the owner",
+    data: "Your details are never shared",
   },
 };
 
@@ -589,6 +616,12 @@ const he: Translations = {
     subtotal: "סיכום ביניים",
     vat: "מע״מ (18%)",
     total: "סה״כ",
+    datesUnavailable: "הלילות האלה כבר תפוסים. אנא בחרו תאריכים אחרים.",
+    pickDates: "בחרו תאריך כניסה ואז תאריך יציאה. לילה אחד = שני תאריכים.",
+    pickCheckout: "עכשיו בחרו תאריך יציאה (הבוקר שבו אתם עוזבים).",
+    night: "לילה",
+    monthFull: "{month} תפוס במלואו.",
+    tryMonth: "נסו {month}",
     inclVat: "המחיר כולל מע״מ",
   },
   whatsapp: {
@@ -686,6 +719,12 @@ const he: Translations = {
     remoteDesc: "WiFi מהיר, פינת עבודה שקטה, נספרסו, ושכונה רגועה. תעבדו טוב, תחיו יפה.",
     travelers: "מטיילים",
     travelersDesc: "יפו העתיקה ברגל, רכבת קלה למרכז ת״א ב-15 דקות, והחומוס של אבו חסן 3 דקות מפה.",
+  },
+  securityBadges: {
+    ssl: "חיבור מאובטח",
+    payment: "תשלום מאובטח",
+    verified: "הזמנה ישירה מול בעל הדירה",
+    data: "הפרטים שלכם לא מועברים לאף אחד",
   },
 };
 
@@ -800,6 +839,12 @@ const ru: Translations = {
     subtotal: "Промежуточный итог",
     vat: "НДС (18%)",
     total: "Итого",
+    datesUnavailable: "Эти ночи уже заняты. Пожалуйста, выберите другие даты.",
+    pickDates: "Выберите дату заезда, затем дату выезда. Одна ночь = две даты.",
+    pickCheckout: "Теперь выберите дату выезда (утро вашего отъезда).",
+    night: "ночь",
+    monthFull: "{month} полностью занят.",
+    tryMonth: "Попробуйте {month}",
     inclVat: "Цена включает НДС",
   },
   whatsapp: {
@@ -861,6 +906,12 @@ const ru: Translations = {
     remoteDesc: "Быстрый WiFi, рабочее место, кофемашина Nespresso и тихий район. Работайте продуктивно, живите красиво.",
     travelers: "Путешественники",
     travelersDesc: "Старая Яффа пешком, трамвай до центра Тель-Авива за 15 мин, хумус Абу-Хасана в 3 минутах.",
+  },
+  securityBadges: {
+    ssl: "Защищённое соединение",
+    payment: "Безопасная оплата",
+    verified: "Бронирование напрямую у владельца",
+    data: "Ваши данные не передаются третьим лицам",
   },
 };
 
@@ -975,6 +1026,12 @@ const fr: Translations = {
     subtotal: "Sous-total",
     vat: "TVA (18%)",
     total: "Total",
+    datesUnavailable: "Ces nuits sont déjà réservées. Veuillez choisir d'autres dates.",
+    pickDates: "Choisissez votre date d'arrivée, puis celle de départ. Une nuit = deux dates.",
+    pickCheckout: "Choisissez maintenant votre date de départ (le matin où vous partez).",
+    night: "nuit",
+    monthFull: "{month} est complet.",
+    tryMonth: "Essayez {month}",
     inclVat: "Prix TTC",
   },
   whatsapp: {
@@ -1036,6 +1093,12 @@ const fr: Translations = {
     remoteDesc: "WiFi rapide, espace de travail dédié, machine Nespresso et quartier calme. Productif et inspirant.",
     travelers: "Explorateurs",
     travelersDesc: "La vieille Jaffa à pied, tramway vers le centre de Tel-Aviv en 15 min, le houmous d'Abu Hassan à 3 minutes.",
+  },
+  securityBadges: {
+    ssl: "Connexion sécurisée",
+    payment: "Paiement sécurisé",
+    verified: "Réservez directement auprès du propriétaire",
+    data: "Vos données ne sont jamais partagées",
   },
 };
 
@@ -1150,6 +1213,12 @@ const es: Translations = {
     subtotal: "Subtotal",
     vat: "IVA (18%)",
     total: "Total",
+    datesUnavailable: "Esas noches ya están reservadas. Por favor elige otras fechas.",
+    pickDates: "Elige tu fecha de entrada y luego la de salida. Una noche = dos fechas.",
+    pickCheckout: "Ahora elige tu fecha de salida (la mañana en que te vas).",
+    night: "noche",
+    monthFull: "{month} está completo.",
+    tryMonth: "Prueba {month}",
     inclVat: "Precio incluye IVA",
   },
   whatsapp: {
@@ -1211,6 +1280,12 @@ const es: Translations = {
     remoteDesc: "WiFi rápido, espacio de trabajo, cafetera Nespresso y barrio tranquilo. Productividad con estilo de vida.",
     travelers: "Exploradores",
     travelersDesc: "Jaffa antigua a pie, tranvía al centro de Tel Aviv en 15 min, el hummus de Abu Hassan a 3 minutos.",
+  },
+  securityBadges: {
+    ssl: "Conexión cifrada",
+    payment: "Pago seguro",
+    verified: "Reserva directa con el propietario",
+    data: "Tus datos nunca se comparten",
   },
 };
 
@@ -1334,6 +1409,12 @@ const ar: Translations = {
     subtotal: "المجموع الفرعي",
     vat: "ضريبة القيمة المضافة (18%)",
     total: "المجموع",
+    datesUnavailable: "هذه الليالي محجوزة بالفعل. يرجى اختيار تواريخ أخرى.",
+    pickDates: "اختر تاريخ الوصول ثم تاريخ المغادرة. ليلة واحدة = تاريخان.",
+    pickCheckout: "الآن اختر تاريخ المغادرة (صباح يوم رحيلك).",
+    night: "ليلة",
+    monthFull: "{month} محجوز بالكامل.",
+    tryMonth: "جرب {month}",
     inclVat: "السعر شامل الضريبة",
   },
   whatsapp: {
@@ -1431,6 +1512,12 @@ const ar: Translations = {
     remoteDesc: "واي فاي سريع، مساحة عمل، ماكينة نسبريسو وحي هادئ. إنتاجية مع أسلوب حياة.",
     travelers: "المستكشفون",
     travelersDesc: "يافا القديمة سيراً، قطار خفيف لوسط تل أبيب في 15 دقيقة، حمص أبو حسن على بعد 3 دقائق.",
+  },
+  securityBadges: {
+    ssl: "اتصال مشفّر",
+    payment: "دفع آمن",
+    verified: "احجز مباشرة مع المالك",
+    data: "بياناتك لا تُشارك أبدًا",
   },
 };
 

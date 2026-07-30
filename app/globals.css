@@ -194,15 +194,11 @@ body {
   text-align: left;
 }
 
-/* Flip flex-row layouts for RTL */
-[dir="rtl"] .booking-calendar .rdp-nav {
-  direction: ltr;
-}
-
-/* Keep the calendar in LTR layout for consistency */
-[dir="rtl"] .booking-calendar {
-  direction: ltr;
-}
+/* The calendar owns its own direction via react-day-picker's `dir` prop.
+   Forcing `direction: ltr` here used to flip the layout back while the library
+   still bound its handlers per the RTL model, so the arrow that looked like
+   "next" fired "previous" — and since the past is disabled, month navigation
+   appeared frozen in Hebrew and Arabic. Leave direction to the component. */
 
 /* Ensure form inputs align properly in RTL */
 [dir="rtl"] input,

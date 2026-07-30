@@ -27,7 +27,9 @@ export function BookPageContent() {
         <BookingWidget />
       </section>
 
-      <section className="bg-ivory py-12">
+      {/* Extra bottom padding so the fixed social-proof bar (bottom-24) and the
+          WhatsApp button can't sit on top of the badges at the end of the page. */}
+      <section className="bg-ivory pt-12 pb-40">
         <div className="mx-auto max-w-2xl px-6 text-center">
           <p className="text-sm text-stone">
             {t.book.cancellation}
