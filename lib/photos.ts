@@ -36,7 +36,7 @@ const FALLBACK_HERO: SitePhotoView = {
 const FALLBACK_GALLERY: SitePhotoView[] = [
   { id: "f1", src: "/images/livingroom1.jpg", alt: "Bright living room with panoramic Jaffa view", label: null, labelKey: "livingRoom" },
   { id: "f2", src: "/images/gallery-2.jpg", alt: "Modern kitchen and dining area", label: null, labelKey: "kitchen" },
-  { id: "f3", src: "/images/gallery-1.jpg", alt: "Master bedroom with luxury finishes", label: null, labelKey: "bedroom1" },
+  { id: "f3", src: "/images/gallery-1.jpg", alt: "Master bedroom", label: null, labelKey: "bedroom1" },
   { id: "f4", src: "/images/gallery-4.jpg", alt: "Second bedroom with warm tones", label: null, labelKey: "bedroom2" },
   { id: "f5", src: "/images/gallery-3.jpg", alt: "Elegant apartment entryway", label: null, labelKey: "entryway" },
 ];

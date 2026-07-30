@@ -41,7 +41,7 @@ export const pois: POI[] = [
     lng: 34.7545,
     walkingMinutes: 0,
     name: { en: "YaffoTLV", he: "YaffoTLV" },
-    description: { en: "Your luxury apartment", he: "הדירה שלכם" },
+    description: { en: "The apartment", he: "הדירה" },
     emoji: "🏠",
   },
 

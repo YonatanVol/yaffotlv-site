@@ -7,6 +7,7 @@ import { GoldStars } from "@/components/ui/gold-stars";
 import { ReviewCard } from "./review-card";
 import { useI18n } from "@/lib/i18n/context";
 import { reviews } from "@/lib/reviews-data";
+import { HOST_STATS, hasVerifiedRating } from "@/lib/facts";
 
 export function Reviews() {
   const { t } = useI18n();
@@ -39,10 +40,15 @@ export function Reviews() {
         <h2 className="mt-4 font-serif text-4xl font-light tracking-tight text-charcoal md:text-5xl">
           {t.reviews?.subtitle || "What our guests say"}
         </h2>
-        <div className="mt-4 flex items-center justify-center gap-3">
-          <GoldStars size="lg" showLabel={true} />
-          <span className="text-sm text-stone">· 140+ {t.reviews?.reviewCount || "reviews"}</span>
-        </div>
+        {/* Shown only with a real rating behind it — see lib/facts.ts. */}
+        {hasVerifiedRating() && (
+          <div className="mt-4 flex items-center justify-center gap-3">
+            <GoldStars size="lg" showLabel={true} />
+            <span className="text-sm text-stone">
+              · {HOST_STATS.reviewCount} {t.reviews?.reviewCount || "reviews"}
+            </span>
+          </div>
+        )}
       </Reveal>
 
       {/* Scrollable reviews */}

@@ -5,6 +5,7 @@ import { GoldStars } from "@/components/ui/gold-stars";
 import { ReviewCard } from "./review-card";
 import { useI18n } from "@/lib/i18n/context";
 import { reviews } from "@/lib/reviews-data";
+import { HOST_STATS, hasVerifiedRating } from "@/lib/facts";
 
 const AIRBNB_LISTING = "https://www.airbnb.com/rooms/39292240";
 
@@ -21,10 +22,15 @@ export function ReviewsAll() {
         <h1 className="mt-4 font-serif text-4xl font-light tracking-tight text-charcoal md:text-5xl">
           {t.reviews?.subtitle || "What our guests say"}
         </h1>
-        <div className="mt-4 flex items-center justify-center gap-3">
-          <GoldStars size="lg" showLabel={true} />
-          <span className="text-sm text-stone">· 140+ {t.reviews?.reviewCount || "reviews"}</span>
-        </div>
+        {/* Only with a real rating behind it — see lib/facts.ts. */}
+        {hasVerifiedRating() && (
+          <div className="mt-4 flex items-center justify-center gap-3">
+            <GoldStars size="lg" showLabel={true} />
+            <span className="text-sm text-stone">
+              · {HOST_STATS.reviewCount} {t.reviews?.reviewCount || "reviews"}
+            </span>
+          </div>
+        )}
       </Reveal>
 
       {/* Verified-on-Airbnb card (static — links to the real listing) */}

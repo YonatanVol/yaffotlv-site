@@ -3,7 +3,7 @@ import { ImageResponse } from "next/og";
 export const runtime = "edge";
 
 export const alt =
-  "YaffoTLV — Luxury Residence in Jaffa, Tel Aviv. Superhost, 5-star rated. Book direct and save 10%.";
+  "YaffoTLV — a 3-room apartment in Jaffa, Tel Aviv. Book direct and save 10%.";
 
 export const size = {
   width: 1200,
@@ -146,10 +146,10 @@ export default function Image() {
             fontWeight: 300,
           }}
         >
-          Luxury Residence in Jaffa, Tel Aviv
+          3-Room Apartment in Jaffa, Tel Aviv
         </div>
 
-        {/* Stars and badges */}
+        {/* Facts, not badges: the stars and "Superhost" here were unverified. */}
         <div
           style={{
             display: "flex",
@@ -162,9 +162,9 @@ export default function Image() {
             letterSpacing: "0.08em",
           }}
         >
-          <span style={{ fontSize: 20 }}>{"\u2605\u2605\u2605\u2605\u2605"}</span>
+          <span style={{ color: "rgba(255,255,255,0.7)" }}>80 sqm</span>
           <span style={{ color: "rgba(255,255,255,0.4)" }}>{"\u00B7"}</span>
-          <span style={{ color: "rgba(255,255,255,0.7)" }}>Superhost</span>
+          <span style={{ color: "rgba(255,255,255,0.7)" }}>10 min to the beach</span>
           <span style={{ color: "rgba(255,255,255,0.4)" }}>{"\u00B7"}</span>
           <span style={{ color: "rgba(255,255,255,0.7)" }}>
             Book Direct & Save 10%
