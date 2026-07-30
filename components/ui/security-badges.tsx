@@ -2,11 +2,19 @@
 
 import { useI18n } from "@/lib/i18n/context";
 
+/**
+ * Reassurance strip on the booking page.
+ *
+ * Every claim here has to be true: the old "Verified Host · Superhost since
+ * 2012" was unverifiable and is gone. Labels come from `t.securityBadges`, which
+ * is a required translation block — no English fallbacks, so a missing locale
+ * fails the build instead of silently showing English to a Hebrew visitor.
+ */
 const badges = [
-  { icon: "\u{1F512}", labelKey: "ssl" as const, fallback: "256-bit SSL Encryption" },
-  { icon: "\u{1F6E1}\uFE0F", labelKey: "payment" as const, fallback: "Secure Payment Processing" },
-  { icon: "\u2713", labelKey: "verified" as const, fallback: "Verified Host \u00B7 Superhost since 2012" },
-  { icon: "\u{1F510}", labelKey: "data" as const, fallback: "Your data is encrypted and never shared" },
+  { icon: "\u{1F512}", labelKey: "ssl" as const },
+  { icon: "\u{1F6E1}️", labelKey: "payment" as const },
+  { icon: "✓", labelKey: "verified" as const },
+  { icon: "\u{1F510}", labelKey: "data" as const },
 ];
 
 interface SecurityBadgesProps {
@@ -15,11 +23,6 @@ interface SecurityBadgesProps {
 
 export function SecurityBadges({ className = "" }: SecurityBadgesProps) {
   const { t } = useI18n();
-
-  // Allow i18n overrides via t.securityBadges.*
-  const securityT = (t as unknown as Record<string, unknown>).securityBadges as
-    | Record<string, string>
-    | undefined;
 
   return (
     <div className={`flex flex-col items-center gap-3 py-6 ${className}`}>
@@ -30,7 +33,7 @@ export function SecurityBadges({ className = "" }: SecurityBadgesProps) {
             className="flex items-center gap-1.5 text-[11px] font-medium tracking-wide text-stone/70"
           >
             <span className="text-xs">{badge.icon}</span>
-            <span>{securityT?.[badge.labelKey] ?? badge.fallback}</span>
+            <span>{t.securityBadges[badge.labelKey]}</span>
           </span>
         ))}
       </div>
