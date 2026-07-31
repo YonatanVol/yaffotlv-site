@@ -41,6 +41,40 @@ export function getStripeWebhookSecret(): string {
   return requireEnv("STRIPE_WEBHOOK_SECRET");
 }
 
+export type OAuthClient = { id: string; secret: string };
+
+/** Google OAuth client used by the YouTube → Spotify mover. Throws if unset. */
+export function getGoogleOAuthClient(): OAuthClient {
+  return { id: requireEnv("GOOGLE_CLIENT_ID"), secret: requireEnv("GOOGLE_CLIENT_SECRET") };
+}
+
+/** Spotify OAuth client used by the YouTube → Spotify mover. Throws if unset. */
+export function getSpotifyOAuthClient(): OAuthClient {
+  return { id: requireEnv("SPOTIFY_CLIENT_ID"), secret: requireEnv("SPOTIFY_CLIENT_SECRET") };
+}
+
+let _musicKey: Uint8Array | null = null;
+
+/**
+ * 32-byte key that encrypts the YouTube/Spotify access tokens held in the
+ * owner's browser cookie (A256GCM). Derived from JWT_SECRET by SHA-256 so no
+ * extra secret has to be provisioned; rotating JWT_SECRET simply drops the
+ * stored connections and the owner reconnects. Throws if JWT_SECRET is unset.
+ *
+ * Uses Web Crypto (hence async) rather than `node:crypto`: this module is also
+ * pulled into the middleware's edge bundle, which cannot resolve node built-ins.
+ */
+export async function getMusicSessionKey(): Promise<Uint8Array> {
+  if (!_musicKey) {
+    const digest = await crypto.subtle.digest(
+      "SHA-256",
+      new TextEncoder().encode(requireEnv("JWT_SECRET"))
+    );
+    _musicKey = new Uint8Array(digest);
+  }
+  return _musicKey;
+}
+
 /**
  * Constant-time string comparison, to avoid leaking secret length/content via
  * response-timing. Returns false on length mismatch.

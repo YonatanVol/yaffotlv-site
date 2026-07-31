@@ -185,3 +185,59 @@ other change. WhatsApp number: 972528701670.
 - Dynamic pricing **model** (Phase 5) — will propose options, then wait.
 - Inbound iCal pull **frequency** (Phase 2B.4) — depends on your Vercel plan (Hobby =
   daily only; Pro = more frequent). Will confirm.
+
+---
+
+## Music mover (YouTube → Spotify)
+
+### D-MM.1 — Tokens live in an encrypted cookie, not in Neon
+**Decided:** the connected YouTube/Spotify access + refresh tokens are stored in one
+`httpOnly` AES-256-GCM cookie (`music_connections`), keyed by SHA-256 of the existing
+`JWT_SECRET`. No new table, no migration, no new secret.
+**Why:** the tool is single-user and fully interactive — nothing runs in the background,
+so the server never needs tokens outside a request the owner made. Keeping them out of
+the database means a database dump contains no keys to anyone's Google or Spotify
+account. Cost: signing out or rotating `JWT_SECRET` drops the connections and the owner
+reconnects (a few seconds, twice a year at most). Measured size with real tokens is well
+under the 4 KB cookie limit.
+
+### D-MM.2 — It lives inside /admin, not on the public site
+**Decided:** the page is `/admin/music`, behind the existing admin session; the
+`/api/music/*` routes are covered by the same middleware **and** re-check the session
+themselves.
+**Why:** it is the owner's personal tool with access to two of their accounts — it has no
+place on a guest-facing apartment site, and reusing the admin gate means no second auth
+system to get wrong. `/admin` and `/api` are already disallowed in robots.txt.
+
+### D-MM.3 — "Only music" = YouTube's own category, not a guess
+**Decided:** a video is treated as music when YouTube files it under category `10`, when
+it sits on an auto-generated `Artist - Topic` channel, or when its topic metadata is
+musical. Everything else is reported as skipped, with the reason shown.
+**Why:** YouTube already classifies uploads, and its answer is far better than anything
+inferable from a title. The two fallbacks catch songs filed under the wrong category.
+
+### D-MM.4 — Mixes, DJ sets and full albums are skipped
+**Decided:** music-category uploads that look long-form (title says mix/full album/DJ set,
+or the video runs over 20 minutes) are skipped rather than matched.
+**Why:** they are not a single recording, so any Spotify match would be an invented one.
+Reporting them honestly beats silently adding the wrong track.
+
+### D-MM.5 — Review before write, with confidence bands
+**Decided:** a scan only proposes. Matches score 0–100; ≥ 78 is ticked automatically,
+58–77 is shown as "check this one" with alternatives and starts unticked, below that is
+reported as not found. The transfer route writes exactly the track uris the owner
+confirmed — it never re-runs matching.
+**Why:** a fuzzy title match is right most of the time, not all of the time, and a wrong
+track quietly appearing in a playlist is worse than a row that asks a question. Keeping
+the decision in the UI also means the write path has nothing to get creative about.
+
+### D-MM.6 — Re-running a transfer can't duplicate tracks
+**Decided:** when copying into an existing playlist, the tracks already there are read
+first and filtered out; duplicates within one batch are collapsed too.
+**Why:** scanning a playlist twice, or copying a playlist that shares songs with the
+target, is normal use — it shouldn't leave a mess.
+
+### D-MM.7 — "Liked videos" can't be a source ⏳ FYI
+**Situation:** the YouTube Data API does not expose Liked videos / Liked Music as a
+readable playlist, so they cannot be offered. Workaround: add the songs to a real
+playlist on YouTube first. Documented in MUSIC_MOVER.md.

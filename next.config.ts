@@ -13,8 +13,9 @@ const csp = [
   // Next injects small inline bootstrap scripts; dev/HMR additionally needs eval.
   `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""}`,
   "style-src 'self' 'unsafe-inline' https://unpkg.com",
-  // Vercel Blob hosts the owner-uploaded site photos (admin → Photos).
-  "img-src 'self' data: blob: https://*.basemaps.cartocdn.com https://unpkg.com https://*.public.blob.vercel-storage.com",
+  // Vercel Blob hosts the owner-uploaded site photos (admin → Photos); the
+  // ytimg/scdn hosts are the video and album thumbnails in admin → Music.
+  "img-src 'self' data: blob: https://*.basemaps.cartocdn.com https://unpkg.com https://*.public.blob.vercel-storage.com https://*.ytimg.com https://*.scdn.co",
   "font-src 'self' data:",
   "connect-src 'self' https://*.basemaps.cartocdn.com https://vitals.vercel-insights.com",
   "frame-ancestors 'none'",
@@ -39,8 +40,14 @@ const securityHeaders = [
 
 const nextConfig: NextConfig = {
   images: {
-    // Owner-uploaded photos live in Vercel Blob; everything else is bundled locally.
-    remotePatterns: [{ protocol: "https", hostname: "*.public.blob.vercel-storage.com" }],
+    // Owner-uploaded photos live in Vercel Blob; everything else is bundled
+    // locally. The admin music mover renders YouTube/Spotify thumbnails
+    // unoptimized (they are transient previews, not worth the transform quota).
+    remotePatterns: [
+      { protocol: "https", hostname: "*.public.blob.vercel-storage.com" },
+      { protocol: "https", hostname: "*.ytimg.com" },
+      { protocol: "https", hostname: "*.scdn.co" },
+    ],
   },
   async headers() {
     return [{ source: "/:path*", headers: securityHeaders }];

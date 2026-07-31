@@ -4,6 +4,42 @@ Running log of what changed and why. Newest first.
 
 ---
 
+## Music mover — copy the songs out of a YouTube playlist into Spotify
+
+New owner-only tool at **/admin → Music**. Connect a Google (YouTube) and a Spotify
+account, pick a YouTube playlist, and it copies the *music* across. Setup, limits and the
+code map are in [MUSIC_MOVER.md](MUSIC_MOVER.md); the judgement calls are in DECISIONS
+D-MM.1–7.
+
+- **Only music comes over.** A video is kept when YouTube itself files it under the Music
+  category, when it's an auto-generated `Artist - Topic` upload, or when its topic metadata
+  is musical. Vlogs, tutorials and podcasts are listed as skipped with the reason — as are
+  full albums, DJ sets and anything over 20 minutes, which aren't single tracks.
+  ([youtube.ts](lib/music/youtube.ts), [match.ts](lib/music/match.ts))
+- **Match, then ask.** Titles are parsed into artist + track, promo junk (`(Official
+  Video)`, `[4K]`) is stripped while `(Illenium Remix)` / `(Live at Folsom)` is kept —
+  those are different recordings. Candidates are scored on title, artist and length:
+  confident matches arrive ticked, borderline ones arrive unticked with alternatives, and
+  misses show their near-misses. Nothing is written until **Copy** is pressed.
+  ([scan.ts](lib/music/scan.ts), [music-mover.tsx](components/admin/music-mover.tsx))
+- **Safe by construction.** YouTube is connected read-only (`youtube.readonly`), Spotify
+  can only read and add to the owner's own playlists, and re-copying never duplicates a
+  track. Tokens live in one encrypted `httpOnly` cookie — never in the database — and
+  refresh themselves. ([session.ts](lib/music/session.ts), [transfer](app/api/music/transfer/route.ts))
+- **Locked to the owner.** `/admin/music` and every `/api/music/*` route sit behind the
+  admin session (middleware *and* a per-route check). ([middleware.ts](middleware.ts))
+- **Long playlists work.** The scan runs in batches of 25 videos with live progress, so no
+  request outlives the serverless limit, and Spotify's rate limit is honoured rather than
+  fought. ([spotify.ts](lib/music/spotify.ts))
+- **45 unit tests** cover title parsing, scoring and the full scan pipeline against a
+  stubbed Spotify. ([music-match.test.ts](lib/music-match.test.ts),
+  [music-scan.test.ts](lib/music-scan.test.ts))
+
+Needs four new env vars — `GOOGLE_CLIENT_ID/SECRET`, `SPOTIFY_CLIENT_ID/SECRET` — plus the
+redirect URIs registered in each console. No database migration.
+
+---
+
 ## Phase 6 — Trust, correctness, SEO & legal
 
 Built the independent, non-payment parts of launch-readiness (Phase 4 refunds stay gated on
