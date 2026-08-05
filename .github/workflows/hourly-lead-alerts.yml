@@ -1,16 +1,18 @@
-# Hourly enquiry alerts.
+# Enquiry alerts, on demand.
 #
-# Vercel's Hobby plan rejects any cron that runs more than once a day, so the
-# hourly cadence lives here instead. The daily cron in vercel.json stays as a
-# safety net: the endpoint claims rows via `alertedAt`, so the two schedules
-# overlapping can never alert the same lead twice.
+# The hourly schedule is disabled: it needs a CRON_SECRET repo secret that isn't
+# set, so every run failed and mailed a failure notice. Alerts still go out via
+# the daily cron in vercel.json (`/api/cron/lead-alerts`, 07:00 UTC).
+#
+# To bring the hourly cadence back: add CRON_SECRET under Settings → Secrets and
+# variables → Actions (same value as the Vercel env var), then restore the
+# `schedule:` block below. The endpoint claims rows via `alertedAt`, so the
+# hourly and daily schedules overlapping can never alert the same lead twice.
 name: Hourly lead alerts
 
 on:
-  schedule:
-    # Every hour, on the hour (UTC). GitHub queues these best-effort, so a busy
-    # period may delay a run by a few minutes — harmless, since nothing is lost.
-    - cron: "0 * * * *"
+  # schedule:
+  #   - cron: "0 * * * *"
   # Lets the owner fire a run by hand from the Actions tab.
   workflow_dispatch:
 
