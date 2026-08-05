@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { isRangeAvailable, firstAvailableMonth } from "./dates";
+import { isRangeAvailable, firstAvailableMonth, resolveDateSelection } from "./dates";
 
 /** Every night of a month, for building "sold out" fixtures. */
 function fullMonth(year: number, month: number): string[] {
@@ -56,4 +56,71 @@ test("zero nights is never available", () => {
 
 test("a fully free range is available", () => {
   assert.equal(isRangeAvailable("2026-07-10", "2026-07-13", new Set(["2026-08-01"])), true);
+});
+
+// ── Re-selecting a check-in ────────────────────────────────────────
+// Reported bug: pick 24 Aug, pick a check-out, then tap 31 Aug to start again —
+// and nothing happened. Aug 25–30 are booked in production, so react-day-picker's
+// extended 24→31 span failed validation and the stale check-in was kept, leaving
+// every subsequent tap failing the same way.
+const AUG_BLOCKED = new Set([
+  "2026-08-25", "2026-08-26", "2026-08-27", "2026-08-28", "2026-08-29", "2026-08-30",
+]);
+
+test("tapping a new day after a complete range starts a fresh check-in", () => {
+  const r = resolveDateSelection({
+    current: { from: "2026-08-24", to: "2026-08-25" },
+    next: { from: "2026-08-24", to: "2026-08-31" }, // what react-day-picker proposes
+    clicked: "2026-08-31",
+    blocked: AUG_BLOCKED,
+  });
+  assert.deepEqual(r.selection, { from: "2026-08-31" });
+  assert.equal(r.error, false);
+});
+
+test("an unbookable span restarts from the tapped day instead of freezing", () => {
+  // No complete range yet: check-in 24 Aug, guest taps 31 Aug as check-out.
+  // Nights 25–30 are booked, so the span is invalid — but the guest should end up
+  // with 31 Aug as a new check-in rather than stuck on 24 Aug forever.
+  const r = resolveDateSelection({
+    current: { from: "2026-08-24" },
+    next: { from: "2026-08-24", to: "2026-08-31" },
+    clicked: "2026-08-31",
+    blocked: AUG_BLOCKED,
+  });
+  assert.deepEqual(r.selection, { from: "2026-08-31" });
+  assert.equal(r.error, true); // still tell them why the span failed
+});
+
+test("re-selecting onto a booked day is refused", () => {
+  const r = resolveDateSelection({
+    current: { from: "2026-08-24", to: "2026-08-25" },
+    next: { from: "2026-08-24", to: "2026-08-26" },
+    clicked: "2026-08-26", // booked
+    blocked: AUG_BLOCKED,
+  });
+  assert.equal(r.selection, null);
+  assert.equal(r.error, true);
+});
+
+test("a valid range is still accepted unchanged", () => {
+  const r = resolveDateSelection({
+    current: { from: "2026-09-10" },
+    next: { from: "2026-09-10", to: "2026-09-13" },
+    clicked: "2026-09-13",
+    blocked: AUG_BLOCKED,
+  });
+  assert.deepEqual(r.selection, { from: "2026-09-10", to: "2026-09-13" });
+  assert.equal(r.error, false);
+});
+
+test("same-day turnover still works: 1 night ending on a booked arrival day", () => {
+  const r = resolveDateSelection({
+    current: { from: "2026-08-24" },
+    next: { from: "2026-08-24", to: "2026-08-25" }, // occupies only the 24th
+    clicked: "2026-08-25",
+    blocked: AUG_BLOCKED,
+  });
+  assert.deepEqual(r.selection, { from: "2026-08-24", to: "2026-08-25" });
+  assert.equal(r.error, false);
 });

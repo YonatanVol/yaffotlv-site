@@ -7,7 +7,7 @@ import "react-day-picker/style.css";
 import { useI18n } from "@/lib/i18n/context";
 import {
   todayJerusalem,
-  isRangeAvailable,
+  resolveDateSelection,
   countNights,
   firstAvailableMonth,
 } from "@/lib/dates";
@@ -103,37 +103,32 @@ export function BookingDatePicker({ blockedDates, onRangeSelect }: BookingDatePi
     else onRangeSelect(null);
   };
 
-  const handleSelect = (next: DateRange | undefined) => {
-    setError(null);
-    if (!next?.from) {
-      emit(undefined);
-      return;
-    }
-    const from = toStr(next.from);
+  /**
+   * `clicked` is the day the guest actually tapped, which the proposed range
+   * alone cannot tell us — react-day-picker extends an already-complete range.
+   * The rules live in `resolveDateSelection` so they are unit-tested.
+   */
+  const handleSelect = (next: DateRange | undefined, clicked?: Date) => {
+    const { selection, error: failed } = resolveDateSelection({
+      current: range?.from
+        ? { from: toStr(range.from), to: range.to ? toStr(range.to) : undefined }
+        : null,
+      next: next?.from
+        ? { from: toStr(next.from), to: next.to ? toStr(next.to) : undefined }
+        : null,
+      clicked: clicked ? toStr(clicked) : undefined,
+      blocked: blockedSet,
+    });
 
-    // First pick (check-in only): reject if that first night is already booked.
-    if (!next.to) {
-      if (blockedSet.has(from)) {
-        setError(t.book.datesUnavailable);
-        emit(undefined);
-        return;
-      }
-      emit({ from: next.from, to: undefined });
-      return;
-    }
-
-    // Full range: check-out must be after check-in, and every occupied night must be free.
-    const to = toStr(next.to);
-    if (to <= from) {
-      emit({ from: next.to, to: undefined }); // reversed/same-day → restart from the new day
-      return;
-    }
-    if (!isRangeAvailable(from, to, blockedSet)) {
-      setError(t.book.datesUnavailable);
-      emit({ from: next.from, to: undefined }); // keep the check-in, let them re-pick check-out
-      return;
-    }
-    emit(next);
+    setError(failed ? t.book.datesUnavailable : null);
+    emit(
+      selection
+        ? {
+            from: new Date(selection.from + "T12:00:00"),
+            to: selection.to ? new Date(selection.to + "T12:00:00") : undefined,
+          }
+        : undefined
+    );
   };
 
   const nights = range?.from && range?.to ? countNights(toStr(range.from), toStr(range.to)) : 0;
