@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { useI18n } from "@/lib/i18n/context";
+import { HOST_STATS, hasVerifiedRating } from "@/lib/facts";
 
 const DISMISS_KEY = "yaffotlv_social_proof_dismissed";
 
@@ -13,14 +14,16 @@ export function SocialProofBar() {
   const [dismissed, setDismissed] = useState(true); // start hidden, show after mount
   const [messageIndex, setMessageIndex] = useState(0);
 
-  // Honest social proof only — the old hardcoded "3 guests booked this week" was
-  // invented urgency and has been removed. These remaining items are standing facts
-  // (rating, the direct-booking discount, Superhost status), not fabricated activity.
+  // Only claims we can stand behind. "3 guests booked this week" was invented
+  // urgency; the rating and Superhost lines asserted numbers nobody had verified.
+  // The rating returns automatically once HOST_STATS carries a real one.
   const messages = [
-    t.socialProof?.rating || "★★★★★ Rated by 140+ guests",
+    hasVerifiedRating()
+      ? `★★★★★ ${HOST_STATS.rating} · ${HOST_STATS.reviewCount} ${t.reviews?.reviewCount || "reviews"}`
+      : null,
     t.socialProof?.save || "💰 Save 10% when you book direct",
-    t.socialProof?.superhost || "🏆 Superhost · 12 years hosting",
-  ];
+    t.book.cancellation,
+  ].filter((m): m is string => Boolean(m));
 
   // Check sessionStorage after mount
   useEffect(() => {

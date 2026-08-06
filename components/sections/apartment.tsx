@@ -3,17 +3,13 @@
 import { Reveal } from "@/components/ui/reveal";
 import { useI18n } from "@/lib/i18n/context";
 
-// Placeholder description — shown until the owner pastes the real Airbnb write-up.
-const FALLBACK_PARAGRAPHS = [
-  "Newly renovated in 2024, this bright 3-room apartment sits in a quiet corner of Jaffa — two bedrooms, a comfortable living room, a fully equipped kitchen, and air conditioning in every room.",
-  "Designed to feel like a home rather than a hotel: around 80 sqm of calm, natural light and thoughtful detail. It comfortably sleeps up to 8, with a baby cot available on request.",
-  "You're a 10-minute walk from the beach and steps from the best of Tel Aviv — the Jaffa flea market, Abu Hasan, and countless cafés and restaurants right around the corner.",
-];
-
 export function Apartment() {
   const { t } = useI18n();
   const a = t.apartment;
-  const paragraphs = a?.paragraphs && a.paragraphs.length ? a.paragraphs : FALLBACK_PARAGRAPHS;
+  // These paragraphs used to be a hardcoded English array. Because no locale
+  // defined `apartment.paragraphs`, every visitor — Hebrew, Arabic, Russian —
+  // read the English text. They now live in translations like everything else.
+  const paragraphs = a?.paragraphs ?? [];
 
   return (
     <section id="apartment" className="scroll-mt-24 bg-ivory py-24">
@@ -35,16 +31,17 @@ export function Apartment() {
           ))}
         </Reveal>
 
+        {/* Facts strip — driven by lib/facts.ts and the active locale, rather
+            than the English literals that previously showed in every language. */}
         <Reveal className="mt-10 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-sm font-medium uppercase tracking-[0.15em] text-stone">
-          <span>2 bedrooms</span>
+          <span>{t.amenities.beds}</span>
           <span className="text-sand">·</span>
-          <span>5 beds</span>
+          <span>{t.amenities.bathrooms}</span>
           <span className="text-sand">·</span>
-          <span>1.5 baths</span>
+          {/* Localized ("80 מ״ר" in Hebrew), not a hardcoded "m²". */}
+          <span>{t.amenities.size}</span>
           <span className="text-sand">·</span>
-          <span>~80 sqm</span>
-          <span className="text-sand">·</span>
-          <span>Sleeps 8</span>
+          <span>{t.amenities.guests}</span>
         </Reveal>
       </div>
     </section>

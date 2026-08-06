@@ -1,15 +1,25 @@
+import { PROPERTY, HOST_STATS, hasVerifiedRating } from "@/lib/facts";
+
+/**
+ * Schema.org data for search engines.
+ *
+ * `aggregateRating` and `starRating` used to be hardcoded to 4.71 / 140 reviews.
+ * Google requires review markup to reflect real reviews shown on the page;
+ * inventing it risks a manual action, which costs far more than the star
+ * snippet is worth. The block is now emitted only once `HOST_STATS` holds a
+ * genuine rating and review count.
+ */
 export function StructuredData() {
-  const jsonLd = {
+  const jsonLd: Record<string, unknown> = {
     "@context": "https://schema.org",
     "@type": "LodgingBusiness",
     name: "YaffoTLV",
-    description:
-      "Luxury 3-room apartment in Jaffa, Tel Aviv. 80 sqm, renovated 2024, 10 min walk to beach. Book direct and save 10%.",
+    description: `${PROPERTY.rooms}-room apartment in Jaffa, Tel Aviv. ${PROPERTY.sizeSqm} sqm, renovated ${PROPERTY.renovatedYear}, ${PROPERTY.beachWalkMinutes} minutes' walk to the beach. Book direct and save 10%.`,
     url: "https://yaffotlv.com",
-    image: "https://yaffotlv.com/images/livingroom1.jpg",
+    image: "https://yaffotlv.com/images/livingroom-hero.jpg",
     address: {
       "@type": "PostalAddress",
-      streetAddress: "Baruch Karo 24",
+      streetAddress: PROPERTY.street,
       addressLocality: "Jaffa",
       addressRegion: "Tel Aviv",
       addressCountry: "IL",
@@ -18,12 +28,6 @@ export function StructuredData() {
       "@type": "GeoCoordinates",
       latitude: 32.0485,
       longitude: 34.7545,
-    },
-    aggregateRating: {
-      "@type": "AggregateRating",
-      ratingValue: "4.71",
-      reviewCount: "140",
-      bestRating: "5",
     },
     priceRange: "₪550-₪1000/night",
     amenityFeature: [
@@ -35,20 +39,26 @@ export function StructuredData() {
       { "@type": "LocationFeatureSpecification", name: "Pet Friendly", value: true },
       { "@type": "LocationFeatureSpecification", name: "Washer/Dryer", value: true },
     ],
-    checkinTime: "14:00",
-    checkoutTime: "11:00",
-    numberOfRooms: 3,
+    checkinTime: PROPERTY.checkInFrom,
+    checkoutTime: PROPERTY.checkOutBy,
+    numberOfRooms: PROPERTY.rooms,
     floorSize: {
       "@type": "QuantitativeValue",
-      value: 80,
+      value: PROPERTY.sizeSqm,
       unitCode: "MTK",
     },
     petsAllowed: true,
-    starRating: {
-      "@type": "Rating",
-      ratingValue: "4.71",
-    },
   };
+
+  // Only ever published with real numbers behind it.
+  if (hasVerifiedRating()) {
+    jsonLd.aggregateRating = {
+      "@type": "AggregateRating",
+      ratingValue: String(HOST_STATS.rating),
+      reviewCount: String(HOST_STATS.reviewCount),
+      bestRating: "5",
+    };
+  }
 
   return (
     <script

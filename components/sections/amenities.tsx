@@ -1,8 +1,8 @@
 "use client";
 
 import { useI18n } from "@/lib/i18n/context";
-import { GoldStars } from "@/components/ui/gold-stars";
 import { Reveal, RevealItem } from "@/components/ui/reveal";
+import { PROPERTY } from "@/lib/facts";
 
 const AMENITY_ICONS: Record<string, string> = {
   size: "📐",
@@ -63,16 +63,14 @@ export function Amenities() {
         </div>
       </Reveal>
 
-      {/* Quick facts strip */}
+      {/* Quick facts strip — measurable facts only. The stars, "Superhost" and
+          "140+ reviews" that used to sit here were never verified. */}
       <div className="mx-auto mt-16 max-w-4xl px-6">
         <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-3 border-t border-sand pt-8">
-          <Fact label="Check-in" value="15:00" />
-          <Fact label="Check-out" value="11:00" />
-          <div className="text-center">
-            <GoldStars size="md" showLabel={false} />
-            <p className="text-[10px] font-medium uppercase tracking-[0.2em] text-stone mt-1">Superhost</p>
-          </div>
-          <Fact label="Reviews" value="140+" />
+          <Fact label={t.book.checkIn} value={PROPERTY.checkInFrom} />
+          <Fact label={t.book.checkOut} value={PROPERTY.checkOutBy} />
+          <Fact label={t.amenities.size} value={`${PROPERTY.sizeSqm} m²`} />
+          <Fact label={t.amenities.renovated} value={String(PROPERTY.renovatedYear)} />
         </div>
       </div>
     </section>

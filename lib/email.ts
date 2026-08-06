@@ -28,7 +28,7 @@ export async function sendBookingConfirmation(params: {
       <div style="font-family: Georgia, serif; max-width: 600px; margin: 0 auto; padding: 40px 20px;">
         <h1 style="font-size: 28px; font-weight: 300; color: #2c2926;">Booking Confirmed</h1>
         <p style="color: #4a4640; line-height: 1.7;">Dear ${guestName},</p>
-        <p style="color: #4a4640; line-height: 1.7;">Your reservation at YaffoTLV has been confirmed.</p>
+        <p style="color: #4a4640; line-height: 1.7;">Your stay at YaffoTLV is confirmed.</p>
         <div style="border-top: 1px solid #e8e3dc; border-bottom: 1px solid #e8e3dc; padding: 20px 0; margin: 24px 0;">
           <p style="margin: 8px 0; color: #2c2926;"><strong>Check-in:</strong> ${formatDateDisplay(checkIn)}</p>
           <p style="margin: 8px 0; color: #2c2926;"><strong>Check-out:</strong> ${formatDateDisplay(checkOut)}</p>
@@ -36,7 +36,7 @@ export async function sendBookingConfirmation(params: {
           <p style="margin: 8px 0; color: #2c2926;"><strong>Total:</strong> ${formatPrice(totalAmount)}</p>
           <p style="margin: 8px 0; color: #a69f95; font-size: 14px;">Ref: ${reservationId.slice(0, 8).toUpperCase()}</p>
         </div>
-        <p style="color: #4a4640; line-height: 1.7;">We look forward to hosting you in Jaffa.</p>
+        <p style="color: #4a4640; line-height: 1.7;">We're looking forward to hosting you in Jaffa. If you need anything before you arrive, just reply to this email.</p>
         <p style="color: #b8976a; font-style: italic;">YaffoTLV</p>
       </div>
     `,
