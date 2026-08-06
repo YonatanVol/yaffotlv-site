@@ -65,6 +65,57 @@ export function isRangeAvailable(checkIn: string, checkOut: string, blocked: Set
   return nights.every((d) => !blocked.has(d));
 }
 
+/** A calendar selection: a check-in, optionally with a check-out. */
+export type DateSelection = { from: string; to?: string } | null;
+
+/**
+ * Decide what the calendar selection becomes after a guest taps a day.
+ *
+ * Pure so the rules can be tested without a browser. `clicked` is the day the
+ * guest actually tapped, which the range alone cannot tell us: react-day-picker
+ * *extends* an already-complete range, so tapping a fresh check-in produces a
+ * long span rather than a new start.
+ */
+export function resolveDateSelection(params: {
+  /** What was selected before this tap. */
+  current: DateSelection;
+  /** What react-day-picker proposes. */
+  next: { from?: string; to?: string } | null;
+  /** The day the guest tapped, when known. */
+  clicked?: string;
+  blocked: Set<string>;
+}): { selection: DateSelection; error: boolean } {
+  const { current, next, clicked, blocked } = params;
+
+  // Starting over on top of a finished range: take the tapped day as the new
+  // check-in rather than stretching the old one across booked nights.
+  if (current?.from && current?.to && clicked) {
+    if (blocked.has(clicked)) return { selection: null, error: true };
+    return { selection: { from: clicked }, error: false };
+  }
+
+  if (!next?.from) return { selection: null, error: false };
+
+  // Check-in only.
+  if (!next.to) {
+    if (blocked.has(next.from)) return { selection: null, error: true };
+    return { selection: { from: next.from }, error: false };
+  }
+
+  // Reversed or same-day: restart from the later tap.
+  if (next.to <= next.from) return { selection: { from: next.to }, error: false };
+
+  if (!isRangeAvailable(next.from, next.to, blocked)) {
+    // Fall back to the tapped day when it is bookable. Keeping the old check-in
+    // traps the guest: if the night after it is booked, every check-out they try
+    // fails and the calendar looks frozen.
+    if (clicked && !blocked.has(clicked)) return { selection: { from: clicked }, error: true };
+    return { selection: { from: next.from }, error: true };
+  }
+
+  return { selection: { from: next.from, to: next.to }, error: false };
+}
+
 /**
  * The first month (as "YYYY-MM-01") from `from` onward that still has a bookable
  * night, or `null` if none is found within `monthsAhead`.
