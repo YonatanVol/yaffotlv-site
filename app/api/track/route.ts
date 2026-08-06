@@ -16,7 +16,7 @@ function hashIp(ip: string | undefined): string | undefined {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { sessionId, event, metadata } = body;
+    const { sessionId, event, metadata, attribution } = body;
 
     if (!sessionId || !event) {
       return NextResponse.json({ error: "Missing sessionId or event" }, { status: 400 });
@@ -29,6 +29,9 @@ export async function POST(request: NextRequest) {
     const country = request.headers.get("x-vercel-ip-country") || undefined;
 
     // Promoted out of the JSON blob so the weekly report can aggregate in SQL.
+    const attr = (attribution ?? {}) as Record<string, unknown>;
+    const str = (v: unknown) => (typeof v === "string" && v ? v.slice(0, 200) : undefined);
+
     const meta = (metadata ?? {}) as Record<string, unknown>;
     const path = typeof meta.page === "string" ? meta.page : undefined;
     const referrer = typeof meta.referrer === "string" ? meta.referrer : undefined;
@@ -41,6 +44,10 @@ export async function POST(request: NextRequest) {
       path,
       referrer,
       country,
+      utmSource: str(attr.utmSource),
+      utmMedium: str(attr.utmMedium),
+      utmCampaign: str(attr.utmCampaign),
+      clickId: str(attr.clickId),
       userAgent,
       ip: hashIp(rawIp),
     });

@@ -6,6 +6,7 @@ import { SocialProofBar } from "@/components/ui/social-proof-bar";
 import { Footer } from "@/components/sections/footer";
 import { StructuredData } from "@/components/structured-data";
 import { AnalyticsProvider } from "@/components/analytics-provider";
+import { Pixels } from "@/components/pixels";
 import "./globals.css";
 
 const siteUrl = "https://yaffotlv.com";
@@ -56,6 +57,7 @@ export default function RootLayout({
     <html lang="en" className={`${serif.variable} ${sans.variable}`} suppressHydrationWarning>
       <head>
         <StructuredData />
+        <Pixels />
       </head>
       <body className="antialiased">
         <I18nProvider>

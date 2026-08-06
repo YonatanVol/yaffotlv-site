@@ -148,6 +148,17 @@ export interface Translations {
     /** "Try {month}" — jump to the next month with availability. */
     tryMonth: string;
   };
+  /** Campaign landing page (/go) — the Instagram/TikTok bio link. */
+  landing: {
+    headline: string;
+    sub: string;
+    /** "from ₪X / night" — {price} is substituted at render. */
+    fromPrice: string;
+    points: string[];
+    checkDates: string;
+    whatsapp: string;
+    seeMore: string;
+  };
   /** Reassurance strip on the booking page. */
   securityBadges: {
     ssl: string;
@@ -490,6 +501,20 @@ const en: Translations = {
     travelers: "Explorers",
     travelersDesc: "Walk to Old Jaffa, light rail to Tel Aviv center in 15 min, Abu Hasan hummus 3 minutes away.",
   },
+  landing: {
+    headline: "A 3-room apartment in Jaffa",
+    sub: "80 sqm · 10 minutes' walk from the beach · sleeps 8",
+    fromPrice: "from ₪{price} / night",
+    points: [
+      "Renovated in 2024, on a quiet street",
+      "Two bedrooms, five beds, full kitchen",
+      "Free cancellation until 5 days before",
+      "10% cheaper than the listing sites",
+    ],
+    checkDates: "Check dates",
+    whatsapp: "WhatsApp",
+    seeMore: "See the whole apartment",
+  },
   securityBadges: {
     ssl: "Encrypted connection",
     payment: "Secure payment",
@@ -730,6 +755,20 @@ const he: Translations = {
     travelers: "מטיילים",
     travelersDesc: "יפו העתיקה ברגל, רכבת קלה למרכז ת״א ב-15 דקות, והחומוס של אבו חסן 3 דקות מפה.",
   },
+  landing: {
+    headline: "דירת 3 חדרים ביפו",
+    sub: "80 מ״ר · 10 דקות הליכה מהים · עד 8 אורחים",
+    fromPrice: "החל מ-₪{price} ללילה",
+    points: [
+      "שופצה ב-2024, ברחוב שקט",
+      "שני חדרי שינה, חמש מיטות, מטבח מלא",
+      "ביטול חינם עד 5 ימים לפני",
+      "10% זול יותר מאתרי ההזמנות",
+    ],
+    checkDates: "בדקו תאריכים",
+    whatsapp: "וואטסאפ",
+    seeMore: "לראות את כל הדירה",
+  },
   securityBadges: {
     ssl: "חיבור מאובטח",
     payment: "תשלום מאובטח",
@@ -925,6 +964,20 @@ const ru: Translations = {
       "Здесь ощущается дом, а не отель: около 80 кв. м, много естественного света и место для 8 человек. Детская кроватка — по запросу.",
       "До пляжа 10 минут пешком. Блошиный рынок Яффо, Abu Hasan и много хороших кафе — в нескольких минутах ходьбы.",
     ],
+  },
+  landing: {
+    headline: "Квартира из 3 комнат в Яффо",
+    sub: "80 кв. м · 10 минут пешком до пляжа · до 8 гостей",
+    fromPrice: "от ₪{price} за ночь",
+    points: [
+      "Отремонтирована в 2024, тихая улица",
+      "Две спальни, пять кроватей, кухня",
+      "Бесплатная отмена за 5 дней",
+      "На 10% дешевле, чем на сайтах",
+    ],
+    checkDates: "Выбрать даты",
+    whatsapp: "WhatsApp",
+    seeMore: "Посмотреть всю квартиру",
   },
   securityBadges: {
     ssl: "Защищённое соединение",
@@ -1122,6 +1175,20 @@ const fr: Translations = {
       "La plage est à 10 minutes à pied. Le marché aux puces de Jaffa, Abu Hasan et de nombreux bons cafés sont à quelques minutes.",
     ],
   },
+  landing: {
+    headline: "Un appartement de 3 pièces à Jaffa",
+    sub: "80 m² · 10 minutes à pied de la plage · jusqu'à 8 personnes",
+    fromPrice: "à partir de ₪{price} / nuit",
+    points: [
+      "Rénové en 2024, rue calme",
+      "Deux chambres, cinq lits, cuisine équipée",
+      "Annulation gratuite jusqu'à 5 jours avant",
+      "10% moins cher que les plateformes",
+    ],
+    checkDates: "Voir les dates",
+    whatsapp: "WhatsApp",
+    seeMore: "Voir tout l'appartement",
+  },
   securityBadges: {
     ssl: "Connexion sécurisée",
     payment: "Paiement sécurisé",
@@ -1317,6 +1384,20 @@ const es: Translations = {
       "Está pensado para sentirse como una casa, no como un hotel: unos 80 m², mucha luz natural y sitio para 8 personas. Cuna disponible bajo petición.",
       "La playa está a 10 minutos a pie. El mercadillo de Jaffa, Abu Hasan y muchos buenos cafés quedan a pocos minutos.",
     ],
+  },
+  landing: {
+    headline: "Un apartamento de 3 habitaciones en Jaffa",
+    sub: "80 m² · a 10 minutos a pie de la playa · hasta 8 personas",
+    fromPrice: "desde ₪{price} / noche",
+    points: [
+      "Renovado en 2024, calle tranquila",
+      "Dos dormitorios, cinco camas, cocina completa",
+      "Cancelación gratis hasta 5 días antes",
+      "10% más barato que las plataformas",
+    ],
+    checkDates: "Ver fechas",
+    whatsapp: "WhatsApp",
+    seeMore: "Ver todo el apartamento",
   },
   securityBadges: {
     ssl: "Conexión cifrada",
@@ -1554,6 +1635,20 @@ const ar: Translations = {
     remoteDesc: "واي فاي سريع، مساحة عمل، ماكينة نسبريسو وحي هادئ. إنتاجية مع أسلوب حياة.",
     travelers: "المستكشفون",
     travelersDesc: "يافا القديمة سيراً، قطار خفيف لوسط تل أبيب في 15 دقيقة، حمص أبو حسن على بعد 3 دقائق.",
+  },
+  landing: {
+    headline: "شقة من 3 غرف في يافا",
+    sub: "80 م² · 10 دقائق سيراً عن الشاطئ · تتسع لـ 8 ضيوف",
+    fromPrice: "ابتداءً من ₪{price} لليلة",
+    points: [
+      "مجددة في 2024، شارع هادئ",
+      "غرفتا نوم، خمسة أسرّة، مطبخ مجهز",
+      "إلغاء مجاني حتى 5 أيام قبل الوصول",
+      "أرخص بنسبة 10% من مواقع الحجز",
+    ],
+    checkDates: "اختر التواريخ",
+    whatsapp: "واتساب",
+    seeMore: "شاهد الشقة كاملة",
   },
   securityBadges: {
     ssl: "اتصال مشفّر",

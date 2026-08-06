@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { currentAttribution } from "./attribution";
+import { mirrorToPixels } from "./pixels";
 
 // ---------------------------------------------------------------------------
 // Session ID — persisted per browser tab via sessionStorage
@@ -41,12 +43,18 @@ export function track(event: string, metadata?: Record<string, unknown>) {
   if (!shouldFire(event)) return;
 
   const sessionId = getSessionId();
+  // Captured once per session from the landing URL; IG/TikTok strip the referrer,
+  // so without this every social visit looks like direct traffic.
+  const attribution = currentAttribution();
+  // Mirror to the ad pixels from one place, so every existing track() call site
+  // reports conversions without needing pixel code of its own.
+  mirrorToPixels(event, metadata);
 
   // Fire-and-forget — never block the UI
   fetch("/api/track", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ sessionId, event, metadata }),
+    body: JSON.stringify({ sessionId, event, metadata, attribution }),
     keepalive: true, // ensure the request completes even on page unload
   }).catch(() => {
     // Silently swallow — analytics must never break the app
