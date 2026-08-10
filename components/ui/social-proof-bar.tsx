@@ -45,7 +45,8 @@ export function SocialProofBar() {
   }, [dismissed, messages.length]);
 
   // Hide on admin pages
-  if (pathname?.startsWith("/admin")) return null;
+  // Hidden on /go — the landing page makes its own case; a floating bar covers its CTAs.
+  if (pathname?.startsWith("/admin") || pathname?.startsWith("/go")) return null;
 
   const handleDismiss = () => {
     setDismissed(true);

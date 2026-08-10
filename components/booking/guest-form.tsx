@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useI18n } from "@/lib/i18n/context";
+import { currentAttribution } from "@/lib/attribution";
 
 interface GuestFormProps {
   onSubmit: (data: {
@@ -58,6 +59,8 @@ export function GuestForm({
         stage: name && phone ? "filled_details" : "typed_email",
         locale,
         referrer: typeof document !== "undefined" ? document.referrer || undefined : undefined,
+        // Which post or ad produced this enquiry — see lib/attribution.ts.
+        ...currentAttribution(),
         sessionId:
           typeof window !== "undefined"
             ? sessionStorage.getItem("yaffotlv-session-id") ?? undefined
