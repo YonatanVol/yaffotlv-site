@@ -4,12 +4,12 @@ import { Reveal } from "@/components/ui/reveal";
 import { GoldStars } from "@/components/ui/gold-stars";
 import { ReviewCard } from "./review-card";
 import { useI18n } from "@/lib/i18n/context";
-import { reviews } from "@/lib/reviews-data";
-import { HOST_STATS, hasVerifiedRating } from "@/lib/facts";
+import type { SiteReviews } from "@/lib/google-reviews";
 
 const AIRBNB_LISTING = "https://www.airbnb.com/rooms/39292240";
 
-export function ReviewsAll() {
+export function ReviewsAll({ siteReviews }: { siteReviews: SiteReviews }) {
+  const { reviews, rating, total } = siteReviews;
   const { t } = useI18n();
 
   return (
@@ -22,12 +22,12 @@ export function ReviewsAll() {
         <h1 className="mt-4 font-serif text-4xl font-light tracking-tight text-charcoal md:text-5xl">
           {t.reviews?.subtitle || "What our guests say"}
         </h1>
-        {/* Only with a real rating behind it — see lib/facts.ts. */}
-        {hasVerifiedRating() && (
+        {/* Real Google rating, or nothing at all. */}
+        {rating && total && (
           <div className="mt-4 flex items-center justify-center gap-3">
-            <GoldStars size="lg" showLabel={true} />
+            <GoldStars size="lg" showLabel={false} />
             <span className="text-sm text-stone">
-              · {HOST_STATS.reviewCount} {t.reviews?.reviewCount || "reviews"}
+              {rating} · {total} {t.reviews?.reviewCount || "reviews"}
             </span>
           </div>
         )}

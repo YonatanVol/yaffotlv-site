@@ -18,6 +18,7 @@ import { PerfectFor } from "@/components/sections/perfect-for";
 import { Reveal } from "@/components/ui/reveal";
 import { useI18n } from "@/lib/i18n/context";
 import type { SitePhotoView } from "@/lib/photos";
+import type { SiteReviews } from "@/lib/google-reviews";
 
 /**
  * The homepage body. Split out from `app/page.tsx` so that page can stay a
@@ -26,9 +27,11 @@ import type { SitePhotoView } from "@/lib/photos";
 export function HomeContent({
   heroPhoto,
   galleryPhotos,
+  siteReviews,
 }: {
   heroPhoto: SitePhotoView;
   galleryPhotos: SitePhotoView[];
+  siteReviews: SiteReviews;
 }) {
   const [contactOpen, setContactOpen] = useState(false);
   const { t } = useI18n();
@@ -67,7 +70,7 @@ export function HomeContent({
 
       <Apartment />
 
-      <Reviews />
+      <Reviews siteReviews={siteReviews} />
 
       <Amenities />
 

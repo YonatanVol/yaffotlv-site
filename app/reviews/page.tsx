@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { ReviewsAll } from "@/components/sections/reviews-all";
+import { getSiteReviews } from "@/lib/google-reviews";
 
 export const metadata: Metadata = {
   title: "Guest Reviews",
@@ -9,6 +10,6 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true },
 };
 
-export default function ReviewsPage() {
-  return <ReviewsAll />;
+export default async function ReviewsPage() {
+  return <ReviewsAll siteReviews={await getSiteReviews()} />;
 }
