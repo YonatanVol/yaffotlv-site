@@ -1,4 +1,5 @@
-import { PROPERTY, HOST_STATS, hasVerifiedRating } from "@/lib/facts";
+import { PROPERTY } from "@/lib/facts";
+import { getSiteReviews } from "@/lib/google-reviews";
 
 /**
  * Schema.org data for search engines.
@@ -9,7 +10,8 @@ import { PROPERTY, HOST_STATS, hasVerifiedRating } from "@/lib/facts";
  * snippet is worth. The block is now emitted only once `HOST_STATS` holds a
  * genuine rating and review count.
  */
-export function StructuredData() {
+export async function StructuredData() {
+  const { rating, total } = await getSiteReviews();
   const jsonLd: Record<string, unknown> = {
     "@context": "https://schema.org",
     "@type": "LodgingBusiness",
@@ -50,12 +52,13 @@ export function StructuredData() {
     petsAllowed: true,
   };
 
-  // Only ever published with real numbers behind it.
-  if (hasVerifiedRating()) {
+  // Published only with real, externally verifiable numbers behind it — the
+  // rating and review count come straight from the Google Business Profile.
+  if (rating && total) {
     jsonLd.aggregateRating = {
       "@type": "AggregateRating",
-      ratingValue: String(HOST_STATS.rating),
-      reviewCount: String(HOST_STATS.reviewCount),
+      ratingValue: String(rating),
+      reviewCount: String(total),
       bestRating: "5",
     };
   }
