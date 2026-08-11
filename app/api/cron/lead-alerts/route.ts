@@ -25,6 +25,15 @@ export async function GET(request: NextRequest) {
   }
 
   try {
+    // A scheduled job that only ever says "Alert failed" is impossible to
+    // operate. Name the cause instead — this one is a config problem, not a bug.
+    if (!process.env.RESEND_API_KEY) {
+      return NextResponse.json(
+        { error: "RESEND_API_KEY is not set, so no alert can be sent." },
+        { status: 503 }
+      );
+    }
+
     const { db } = await import("@/lib/db");
 
     const pending = await db
@@ -69,6 +78,9 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ ok: true, alerted: pending.length });
   } catch (error) {
     console.error("Lead alert error:", error);
-    return NextResponse.json({ error: "Alert failed" }, { status: 500 });
+    // Surface the reason: this endpoint is only ever called by our own cron
+    // with a shared secret, and provider errors carry no credentials.
+    const reason = error instanceof Error ? error.message : String(error);
+    return NextResponse.json({ error: "Alert failed", reason }, { status: 500 });
   }
 }
