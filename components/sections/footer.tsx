@@ -25,7 +25,7 @@ export function Footer() {
               Yaffo<span className="text-accent">TLV</span>
             </p>
             <p className="mt-2 text-sm leading-relaxed text-stone">
-              {t.footer?.tagline || "Luxury direct-booking apartment in Jaffa, Tel Aviv."}
+              {t.footer?.tagline || "A 3-room apartment in Jaffa, Tel Aviv. Book direct."}
             </p>
           </div>
 

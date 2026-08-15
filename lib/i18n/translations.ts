@@ -148,6 +148,17 @@ export interface Translations {
     /** "Try {month}" — jump to the next month with availability. */
     tryMonth: string;
   };
+  /** Campaign landing page (/go) — the Instagram/TikTok bio link. */
+  landing: {
+    headline: string;
+    sub: string;
+    /** "from ₪X / night" — {price} is substituted at render. */
+    fromPrice: string;
+    points: string[];
+    checkDates: string;
+    whatsapp: string;
+    seeMore: string;
+  };
   /** Reassurance strip on the booking page. */
   securityBadges: {
     ssl: string;
@@ -270,13 +281,13 @@ const en: Translations = {
   hero: {
     overline: "Jaffa, Tel Aviv",
     title: "YaffoTLV",
-    tagline: "Where heritage meets horizon",
+    tagline: "Your home in Jaffa",
   },
   signature: {
     headline: "80 sqm of light, comfort and everything you need",
     subtitle: "Newly renovated 3-room apartment in a quiet Jaffa neighborhood. Two bedrooms, a fully equipped kitchen, AC in every room, and a 10-minute walk to the beach. Designed for guests who want to feel at home.",
   },
-  quote: "In the oldest port city on the Mediterranean, where every stone holds a story — a private stay, designed for you.",
+  quote: "A quiet street in Jaffa, ten minutes' walk from the sea — and the whole apartment is yours.",
   details: {
     bedrooms: "3 Rooms · 80 sqm",
     location: "Jaffa, Tel Aviv",
@@ -289,7 +300,7 @@ const en: Translations = {
     size: "80 sqm",
     beds: "3 rooms · 5 beds",
     bathrooms: "1.5 bathrooms",
-    guests: "Up to 6 guests",
+    guests: "Up to 8 guests",
     renovated: "Renovated 2024",
     checkin: "Self check-in",
     checkout: "Check-out 11:00",
@@ -401,13 +412,13 @@ const en: Translations = {
     verified: "Verified on Airbnb",
   },
   socialProof: {
-    booked: "🔥 3 guests booked this week",
-    rating: "★★★★★ Rated by 140+ guests",
+    booked: "",
+    rating: "",
     save: "💰 Save 10% when you book direct",
-    superhost: "🏆 Superhost · 12 years hosting",
+    superhost: "",
   },
   footer: {
-    tagline: "Luxury 2-bedroom apartment · short-term rental in Jaffa, Tel Aviv.",
+    tagline: "A 2-bedroom apartment in Jaffa, Tel Aviv · short-term rental.",
     terms: "Terms of Service",
     privacy: "Privacy Policy",
     cancellation: "Cancellation Policy",
@@ -416,6 +427,11 @@ const en: Translations = {
   apartment: {
     overline: "The Apartment",
     title: "A home in the heart of Jaffa",
+    paragraphs: [
+      "Renovated in 2024, this bright 3-room apartment sits on a quiet street in Jaffa — two bedrooms, a comfortable living room, a fully equipped kitchen, and air conditioning in every room.",
+      "It's meant to feel like a home rather than a hotel: about 80 sqm, plenty of natural light, and room for up to 8 people. A baby cot is available on request.",
+      "The beach is a 10-minute walk. The Jaffa flea market, Abu Hasan and a lot of good cafés are all within a few minutes on foot.",
+    ],
   },
   sleeping: {
     overline: "The Space",
@@ -461,7 +477,7 @@ const en: Translations = {
     contact: "Direct Communication",
     contactDesc: "Chat directly with your host on WhatsApp. Faster answers, personal recommendations.",
     flexible: "Flexible & Easy",
-    flexibleDesc: "Free cancellation up to 3 days before check-in. No hidden charges, no surprises.",
+    flexibleDesc: "Free cancellation up to 5 days before check-in, 50% refund after that. No hidden charges.",
     local: "Local Expertise",
     localDesc: "Get insider tips, restaurant picks, and a digital guide from someone who knows Jaffa best.",
   },
@@ -469,9 +485,9 @@ const en: Translations = {
     overline: "Your Host",
     title: "Meet Eitan",
     superhost: "Superhost",
-    bio: "Born and raised in Jaffa, I've been hosting guests for over 12 years. I renovated this apartment in 2024 with one goal: to make you feel at home, not in a hotel. I'm always a WhatsApp message away if you need anything — restaurant tips, directions, or just a friendly recommendation.",
-    yearsHosting: "12 years hosting",
-    responseTime: "Responds in 1 hour",
+    bio: "I grew up in Jaffa and I look after this apartment myself. I renovated it in 2024 with one aim: that it feels like a home rather than a hotel. If you need anything during your stay — a restaurant worth walking to, directions, or just a tip — I'm a WhatsApp message away.",
+    yearsHosting: "years hosting",
+    responseTime: "Usually replies within an hour",
   },
   perfectFor: {
     overline: "Perfect For",
@@ -481,9 +497,23 @@ const en: Translations = {
     families: "Families",
     familiesDesc: "Spacious 3 rooms, crib available, pet-friendly, elevator, and the Flea Market is a 4-minute walk.",
     remote: "Remote Workers",
-    remoteDesc: "Fast WiFi, dedicated workspace, Nespresso machine, and quiet neighborhood. Stay productive, live beautifully.",
+    remoteDesc: "Fast WiFi, a proper desk, a coffee machine, and a quiet street to work from.",
     travelers: "Explorers",
     travelersDesc: "Walk to Old Jaffa, light rail to Tel Aviv center in 15 min, Abu Hasan hummus 3 minutes away.",
+  },
+  landing: {
+    headline: "A 3-room apartment in Jaffa",
+    sub: "80 sqm · 10 minutes' walk from the beach · sleeps 8",
+    fromPrice: "from ₪{price} / night",
+    points: [
+      "Renovated in 2024, on a quiet street",
+      "Two bedrooms, five beds, full kitchen",
+      "Free cancellation until 5 days before",
+      "10% cheaper than the listing sites",
+    ],
+    checkDates: "Check dates",
+    whatsapp: "WhatsApp",
+    seeMore: "See the whole apartment",
   },
   securityBadges: {
     ssl: "Encrypted connection",
@@ -511,7 +541,7 @@ const he: Translations = {
     headline: "80 מ״ר של אור, נוחות, ושקט — ממש ביפו",
     subtitle: "דירת 3 חדרים שעברה שיפוץ מלא, בשכונה שקטה עם אופי. שני חדרי שינה נוחים, מטבח מאובזר לגמרי, מיזוג בכל חדר, ו-10 דקות ברגל מהים. המקום הזה נבנה בשביל אנשים שרוצים לחוות את יפו — ולהרגיש בבית.",
   },
-  quote: "בעיר הנמל הכי עתיקה בים התיכון, בין סמטאות אבן ושקיעות על המים — דירה פרטית שמחכה רק לכם.",
+  quote: "רחוב שקט ביפו, עשר דקות הליכה מהים — והדירה כולה שלכם.",
   details: {
     bedrooms: "3 חדרים · 80 מ״ר",
     location: "יפו, תל אביב",
@@ -524,7 +554,7 @@ const he: Translations = {
     size: "80 מ״ר",
     beds: "3 חדרים · 5 מיטות",
     bathrooms: "חדר רחצה וחצי",
-    guests: "עד 6 אורחים",
+    guests: "עד 8 אורחים",
     renovated: "שיפוץ 2024",
     checkin: "כניסה עצמאית",
     checkout: "עזיבה עד 11:00",
@@ -629,20 +659,20 @@ const he: Translations = {
   },
   reviews: {
     title: "מה אורחים כותבים",
-    subtitle: "מתוך 140+ ביקורות",
+    subtitle: "מה שאורחים כתבו",
     reviewCount: "ביקורות",
     viewAll: "כל הביקורות ב-Airbnb →",
     seeAll: "לכל הביקורות",
     verified: "מאומת ב-Airbnb",
   },
   socialProof: {
-    booked: "🔥 3 אורחים הזמינו השבוע",
-    rating: "★★★★★ מדורג ע״י 140+ אורחים",
+    booked: "",
+    rating: "",
     save: "💰 חוסכים 10% בהזמנה ישירה",
-    superhost: "🏆 סופרהוסט · 12 שנים של אירוח",
+    superhost: "",
   },
   footer: {
-    tagline: "דירת יוקרה בת 2 חדרי שינה · השכרה לטווח קצר ביפו, תל אביב.",
+    tagline: "דירת 2 חדרי שינה ביפו, תל אביב · השכרה לטווח קצר.",
     terms: "תנאי שימוש",
     privacy: "מדיניות פרטיות",
     cancellation: "מדיניות ביטולים",
@@ -651,6 +681,11 @@ const he: Translations = {
   apartment: {
     overline: "הדירה",
     title: "בית בלב יפו",
+    paragraphs: [
+      "הדירה שופצה ב-2024 ויושבת ברחוב שקט ביפו — שלושה חדרים, שני חדרי שינה, סלון נוח, מטבח מאובזר לגמרי ומיזוג בכל חדר.",
+      "היא נועדה להרגיש כמו בית ולא כמו מלון: כ-80 מ״ר, הרבה אור טבעי, ומקום לעד 8 אנשים. אפשר לבקש מיטת תינוק.",
+      "הים במרחק 10 דקות הליכה. שוק הפשפשים, אבו חסן והמון בתי קפה טובים — הכול כמה דקות ברגל.",
+    ],
   },
   sleeping: {
     overline: "החלל",
@@ -696,7 +731,7 @@ const he: Translations = {
     contact: "קשר ישיר עם המארח",
     contactDesc: "כתבו לנו בוואטסאפ. תשובה מהירה, המלצות אישיות, ואיתן תמיד זמין.",
     flexible: "גמיש ופשוט",
-    flexibleDesc: "ביטול חינם עד 24 שעות לפני. בלי אותיות קטנות, בלי הפתעות.",
+    flexibleDesc: "ביטול חינם עד 5 ימים לפני הצ׳ק-אין, 50% החזר אחר כך. בלי אותיות קטנות.",
     local: "טיפים של מקומי",
     localDesc: "מסעדות, חופים, מקומות שרק יפואי אמיתי מכיר — הכל בשבילכם.",
   },
@@ -704,9 +739,9 @@ const he: Translations = {
     overline: "המארח שלכם",
     title: "הכירו את איתן",
     superhost: "סופרהוסט",
-    bio: "נולדתי וגדלתי ביפו, ומארח אורחים כבר יותר מ-12 שנה. שיפצתי את הדירה ב-2024 עם מטרה אחת: שתרגישו בבית, לא במלון. אני תמיד זמין בוואטסאפ — בשביל המלצה על מסעדה, עזרה עם ניווט, או סתם טיפ טוב.",
-    yearsHosting: "12 שנים של אירוח",
-    responseTime: "עונה תוך שעה",
+    bio: "גדלתי ביפו ואני מטפל בדירה הזאת בעצמי. שיפצתי אותה ב-2024 עם מטרה אחת: שתרגישו בבית, לא במלון. אם תצטרכו משהו במהלך השהות — המלצה על מסעדה, עזרה עם ניווט או סתם טיפ טוב — אני זמין בוואטסאפ.",
+    yearsHosting: "שנים של אירוח",
+    responseTime: "בדרך כלל עונה תוך שעה",
   },
   perfectFor: {
     overline: "למי זה מתאים",
@@ -719,6 +754,20 @@ const he: Translations = {
     remoteDesc: "WiFi מהיר, פינת עבודה שקטה, נספרסו, ושכונה רגועה. תעבדו טוב, תחיו יפה.",
     travelers: "מטיילים",
     travelersDesc: "יפו העתיקה ברגל, רכבת קלה למרכז ת״א ב-15 דקות, והחומוס של אבו חסן 3 דקות מפה.",
+  },
+  landing: {
+    headline: "דירת 3 חדרים ביפו",
+    sub: "80 מ״ר · 10 דקות הליכה מהים · עד 8 אורחים",
+    fromPrice: "החל מ-₪{price} ללילה",
+    points: [
+      "שופצה ב-2024, ברחוב שקט",
+      "שני חדרי שינה, חמש מיטות, מטבח מלא",
+      "ביטול חינם עד 5 ימים לפני",
+      "10% זול יותר מאתרי ההזמנות",
+    ],
+    checkDates: "בדקו תאריכים",
+    whatsapp: "וואטסאפ",
+    seeMore: "לראות את כל הדירה",
   },
   securityBadges: {
     ssl: "חיבור מאובטח",
@@ -744,7 +793,7 @@ const ru: Translations = {
     headline: "80 кв.м света, комфорта и всего необходимого",
     subtitle: "Отремонтированная 3-комнатная квартира в тихом районе Яффы. Две спальни, полностью оборудованная кухня, кондиционер в каждой комнате и 10 минут пешком до пляжа.",
   },
-  quote: "В древнейшем портовом городе Средиземноморья, где каждый камень хранит историю — частная квартира, подготовленная для вас.",
+  quote: "Тихая улица в Яффо, десять минут пешком до моря — и вся квартира ваша.",
   details: {
     bedrooms: "3 комнаты · 80 м²",
     location: "Яффа, Тель-Авив",
@@ -757,7 +806,7 @@ const ru: Translations = {
     size: "80 м²",
     beds: "3 комнаты · 5 кроватей",
     bathrooms: "1.5 ванных",
-    guests: "До 6 гостей",
+    guests: "До 8 гостей",
     renovated: "Ремонт 2024",
     checkin: "Самостоятельный заезд",
     checkout: "Выезд 11:00",
@@ -857,10 +906,10 @@ const ru: Translations = {
     viewAll: "Все отзывы на Airbnb",
   },
   socialProof: {
-    booked: "🔥 3 гостя забронировали на этой неделе",
-    rating: "★★★★★ Оценка 140+ гостей",
+    booked: "",
+    rating: "",
     save: "💰 Экономьте 10% при прямом бронировании",
-    superhost: "🏆 Суперхозяин · 12 лет опыта",
+    superhost: "",
   },
   trustBadges: {
     superhost: "Суперхозяин",
@@ -883,7 +932,7 @@ const ru: Translations = {
     contact: "Прямая связь",
     contactDesc: "Пишите хозяину в WhatsApp. Быстрые ответы, личные рекомендации.",
     flexible: "Гибко и просто",
-    flexibleDesc: "Бесплатная отмена за 3 дня до заезда. Без скрытых платежей, без сюрпризов.",
+    flexibleDesc: "Бесплатная отмена за 5 дней до заезда, далее возврат 50%. Без скрытых платежей.",
     local: "Местная экспертиза",
     localDesc: "Советы инсайдера, лучшие рестораны и цифровой гид от того, кто знает Яффу лучше всех.",
   },
@@ -906,6 +955,29 @@ const ru: Translations = {
     remoteDesc: "Быстрый WiFi, рабочее место, кофемашина Nespresso и тихий район. Работайте продуктивно, живите красиво.",
     travelers: "Путешественники",
     travelersDesc: "Старая Яффа пешком, трамвай до центра Тель-Авива за 15 мин, хумус Абу-Хасана в 3 минутах.",
+  },
+  apartment: {
+    overline: "Квартира",
+    title: "Дом в сердце Яффо",
+    paragraphs: [
+      "Квартира отремонтирована в 2024 году и находится на тихой улице в Яффо: три комнаты, две спальни, гостиная, полностью оборудованная кухня и кондиционер в каждой комнате.",
+      "Здесь ощущается дом, а не отель: около 80 кв. м, много естественного света и место для 8 человек. Детская кроватка — по запросу.",
+      "До пляжа 10 минут пешком. Блошиный рынок Яффо, Abu Hasan и много хороших кафе — в нескольких минутах ходьбы.",
+    ],
+  },
+  landing: {
+    headline: "Квартира из 3 комнат в Яффо",
+    sub: "80 кв. м · 10 минут пешком до пляжа · до 8 гостей",
+    fromPrice: "от ₪{price} за ночь",
+    points: [
+      "Отремонтирована в 2024, тихая улица",
+      "Две спальни, пять кроватей, кухня",
+      "Бесплатная отмена за 5 дней",
+      "На 10% дешевле, чем на сайтах",
+    ],
+    checkDates: "Выбрать даты",
+    whatsapp: "WhatsApp",
+    seeMore: "Посмотреть всю квартиру",
   },
   securityBadges: {
     ssl: "Защищённое соединение",
@@ -931,7 +1003,7 @@ const fr: Translations = {
     headline: "80 m² de lumière, de confort et de tout le nécessaire",
     subtitle: "Appartement de 3 pièces rénové dans un quartier calme de Jaffa. Deux chambres, cuisine entièrement équipée, climatisation dans chaque pièce et 10 minutes à pied de la plage.",
   },
-  quote: "Dans le plus ancien port de la Méditerranée, où chaque pierre raconte une histoire — un appartement privé, préparé pour vous.",
+  quote: "Une rue calme à Jaffa, dix minutes à pied de la mer — et tout l'appartement est à vous.",
   details: {
     bedrooms: "3 pièces · 80 m²",
     location: "Jaffa, Tel-Aviv",
@@ -944,7 +1016,7 @@ const fr: Translations = {
     size: "80 m²",
     beds: "3 pièces · 5 lits",
     bathrooms: "1.5 salles de bain",
-    guests: "Jusqu'à 6 personnes",
+    guests: "Jusqu'à 8 personnes",
     renovated: "Rénové en 2024",
     checkin: "Arrivée autonome",
     checkout: "Départ 11h00",
@@ -1044,10 +1116,10 @@ const fr: Translations = {
     viewAll: "Voir tous les avis sur Airbnb",
   },
   socialProof: {
-    booked: "🔥 3 voyageurs ont réservé cette semaine",
-    rating: "★★★★★ Noté par 140+ voyageurs",
+    booked: "",
+    rating: "",
     save: "💰 Économisez 10% en réservant directement",
-    superhost: "🏆 Superhôte · 12 ans d'expérience",
+    superhost: "",
   },
   trustBadges: {
     superhost: "Superhôte",
@@ -1070,7 +1142,7 @@ const fr: Translations = {
     contact: "Communication directe",
     contactDesc: "Échangez directement avec votre hôte sur WhatsApp. Réponses rapides, recommandations personnalisées.",
     flexible: "Flexible et simple",
-    flexibleDesc: "Annulation gratuite jusqu'à 3 jours avant l'arrivée. Sans surprises, sans frais cachés.",
+    flexibleDesc: "Annulation gratuite jusqu'à 5 jours avant l'arrivée, puis remboursement de 50%. Sans frais cachés.",
     local: "Expertise locale",
     localDesc: "Conseils d'initié, restaurants préférés et guide numérique par quelqu'un qui connaît Jaffa par cœur.",
   },
@@ -1093,6 +1165,29 @@ const fr: Translations = {
     remoteDesc: "WiFi rapide, espace de travail dédié, machine Nespresso et quartier calme. Productif et inspirant.",
     travelers: "Explorateurs",
     travelersDesc: "La vieille Jaffa à pied, tramway vers le centre de Tel-Aviv en 15 min, le houmous d'Abu Hassan à 3 minutes.",
+  },
+  apartment: {
+    overline: "L'appartement",
+    title: "Un chez-soi au cœur de Jaffa",
+    paragraphs: [
+      "Rénové en 2024, cet appartement lumineux de 3 pièces se trouve dans une rue calme de Jaffa : deux chambres, un salon confortable, une cuisine entièrement équipée et la climatisation dans chaque pièce.",
+      "Il est pensé comme une maison, pas comme un hôtel : environ 80 m², beaucoup de lumière naturelle et de la place pour 8 personnes. Lit bébé sur demande.",
+      "La plage est à 10 minutes à pied. Le marché aux puces de Jaffa, Abu Hasan et de nombreux bons cafés sont à quelques minutes.",
+    ],
+  },
+  landing: {
+    headline: "Un appartement de 3 pièces à Jaffa",
+    sub: "80 m² · 10 minutes à pied de la plage · jusqu'à 8 personnes",
+    fromPrice: "à partir de ₪{price} / nuit",
+    points: [
+      "Rénové en 2024, rue calme",
+      "Deux chambres, cinq lits, cuisine équipée",
+      "Annulation gratuite jusqu'à 5 jours avant",
+      "10% moins cher que les plateformes",
+    ],
+    checkDates: "Voir les dates",
+    whatsapp: "WhatsApp",
+    seeMore: "Voir tout l'appartement",
   },
   securityBadges: {
     ssl: "Connexion sécurisée",
@@ -1118,7 +1213,7 @@ const es: Translations = {
     headline: "80 m² de luz, confort y todo lo que necesitas",
     subtitle: "Apartamento de 3 habitaciones renovado en un barrio tranquilo de Jaffa. Dos dormitorios, cocina totalmente equipada, aire acondicionado en cada habitación y 10 minutos a pie de la playa.",
   },
-  quote: "En la ciudad portuaria más antigua del Mediterráneo, donde cada piedra guarda una historia — un apartamento privado, preparado para ti.",
+  quote: "Una calle tranquila en Jaffa, a diez minutos a pie del mar — y todo el apartamento es tuyo.",
   details: {
     bedrooms: "3 hab. · 80 m²",
     location: "Jaffa, Tel Aviv",
@@ -1131,7 +1226,7 @@ const es: Translations = {
     size: "80 m²",
     beds: "3 habitaciones · 5 camas",
     bathrooms: "1.5 baños",
-    guests: "Hasta 6 huéspedes",
+    guests: "Hasta 8 huéspedes",
     renovated: "Renovado 2024",
     checkin: "Auto check-in",
     checkout: "Check-out 11:00",
@@ -1231,10 +1326,10 @@ const es: Translations = {
     viewAll: "Ver todas las opiniones en Airbnb",
   },
   socialProof: {
-    booked: "🔥 3 huéspedes reservaron esta semana",
-    rating: "★★★★★ Valorado por 140+ huéspedes",
+    booked: "",
+    rating: "",
     save: "💰 Ahorra 10% reservando directo",
-    superhost: "🏆 Superhost · 12 años de experiencia",
+    superhost: "",
   },
   trustBadges: {
     superhost: "Superhost",
@@ -1257,7 +1352,7 @@ const es: Translations = {
     contact: "Comunicación directa",
     contactDesc: "Habla directamente con tu anfitrión por WhatsApp. Respuestas rápidas, recomendaciones personales.",
     flexible: "Flexible y fácil",
-    flexibleDesc: "Cancelación gratuita hasta 3 días antes del check-in. Sin cargos ocultos, sin sorpresas.",
+    flexibleDesc: "Cancelación gratuita hasta 5 días antes del check-in, después 50%. Sin cargos ocultos.",
     local: "Experiencia local",
     localDesc: "Consejos de experto, mejores restaurantes y una guía digital de alguien que conoce Jaffa de verdad.",
   },
@@ -1280,6 +1375,29 @@ const es: Translations = {
     remoteDesc: "WiFi rápido, espacio de trabajo, cafetera Nespresso y barrio tranquilo. Productividad con estilo de vida.",
     travelers: "Exploradores",
     travelersDesc: "Jaffa antigua a pie, tranvía al centro de Tel Aviv en 15 min, el hummus de Abu Hassan a 3 minutos.",
+  },
+  apartment: {
+    overline: "El apartamento",
+    title: "Un hogar en el corazón de Jaffa",
+    paragraphs: [
+      "Renovado en 2024, este luminoso apartamento de 3 habitaciones está en una calle tranquila de Jaffa: dos dormitorios, un salón cómodo, una cocina totalmente equipada y aire acondicionado en cada habitación.",
+      "Está pensado para sentirse como una casa, no como un hotel: unos 80 m², mucha luz natural y sitio para 8 personas. Cuna disponible bajo petición.",
+      "La playa está a 10 minutos a pie. El mercadillo de Jaffa, Abu Hasan y muchos buenos cafés quedan a pocos minutos.",
+    ],
+  },
+  landing: {
+    headline: "Un apartamento de 3 habitaciones en Jaffa",
+    sub: "80 m² · a 10 minutos a pie de la playa · hasta 8 personas",
+    fromPrice: "desde ₪{price} / noche",
+    points: [
+      "Renovado en 2024, calle tranquila",
+      "Dos dormitorios, cinco camas, cocina completa",
+      "Cancelación gratis hasta 5 días antes",
+      "10% más barato que las plataformas",
+    ],
+    checkDates: "Ver fechas",
+    whatsapp: "WhatsApp",
+    seeMore: "Ver todo el apartamento",
   },
   securityBadges: {
     ssl: "Conexión cifrada",
@@ -1306,7 +1424,7 @@ const ar: Translations = {
     headline: "80 متر مربع من الضوء والراحة وكل ما تحتاجون",
     subtitle: "شقة من 3 غرف مجددة في حي هادئ في يافا. غرفتا نوم، مطبخ مجهز بالكامل، تكييف في كل غرفة، و10 دقائق سيراً من الشاطئ.",
   },
-  quote: "في أقدم مدينة ميناء على البحر المتوسط، حيث كل حجر يحكي قصة — شقة خاصة، جاهزة من أجلكم.",
+  quote: "شارع هادئ في يافا، عشر دقائق سيراً عن البحر — والشقة كلها لكم.",
   details: {
     bedrooms: "3 غرف · 80 م²",
     location: "يافا، تل أبيب",
@@ -1319,7 +1437,7 @@ const ar: Translations = {
     size: "80 م²",
     beds: "3 غرف · 5 أسرّة",
     bathrooms: "حمام ونصف",
-    guests: "حتى 6 ضيوف",
+    guests: "حتى 8 ضيوف",
     renovated: "تم التجديد 2024",
     checkin: "تسجيل وصول ذاتي",
     checkout: "المغادرة 11:00",
@@ -1429,13 +1547,13 @@ const ar: Translations = {
     verified: "موثّق على Airbnb",
   },
   socialProof: {
-    booked: "🔥 3 ضيوف حجزوا هذا الأسبوع",
-    rating: "★★★★★ تقييم من 140+ ضيف",
+    booked: "",
+    rating: "",
     save: "💰 وفر 10% عند الحجز المباشر",
-    superhost: "🏆 مضيف متميز · 12 سنة خبرة",
+    superhost: "",
   },
   footer: {
-    tagline: "شقة فاخرة بغرفتي نوم · إيجار قصير الأمد في يافا، تل أبيب.",
+    tagline: "شقة بغرفتي نوم في يافا، تل أبيب · إيجار قصير الأمد.",
     terms: "شروط الخدمة",
     privacy: "سياسة الخصوصية",
     cancellation: "سياسة الإلغاء",
@@ -1444,6 +1562,11 @@ const ar: Translations = {
   apartment: {
     overline: "الشقة",
     title: "بيت في قلب يافا",
+    paragraphs: [
+      "تم تجديد الشقة في 2024 وتقع في شارع هادئ في يافا: ثلاث غرف، غرفتا نوم، صالة مريحة، مطبخ مجهز بالكامل وتكييف في كل غرفة.",
+      "صُممت لتشعر وكأنها بيت لا فندق: نحو 80 م²، إضاءة طبيعية وفيرة، وتتسع لثمانية أشخاص. يتوفر سرير أطفال عند الطلب.",
+      "الشاطئ على بعد 10 دقائق سيراً. سوق البراغيث وأبو حسن والكثير من المقاهي الجيدة على بعد دقائق.",
+    ],
   },
   sleeping: {
     overline: "المكان",
@@ -1489,7 +1612,7 @@ const ar: Translations = {
     contact: "تواصل مباشر",
     contactDesc: "تحدث مباشرة مع المضيف عبر واتساب. إجابات سريعة وتوصيات شخصية.",
     flexible: "مرن وسهل",
-    flexibleDesc: "إلغاء مجاني حتى 3 أيام قبل الوصول. بدون رسوم خفية، بدون مفاجآت.",
+    flexibleDesc: "إلغاء مجاني حتى 5 أيام قبل الوصول، وبعدها استرداد 50%. بدون رسوم خفية.",
     local: "خبرة محلية",
     localDesc: "نصائح من الداخل، أفضل المطاعم، ودليل رقمي من شخص يعرف يافا أفضل من الجميع.",
   },
@@ -1512,6 +1635,20 @@ const ar: Translations = {
     remoteDesc: "واي فاي سريع، مساحة عمل، ماكينة نسبريسو وحي هادئ. إنتاجية مع أسلوب حياة.",
     travelers: "المستكشفون",
     travelersDesc: "يافا القديمة سيراً، قطار خفيف لوسط تل أبيب في 15 دقيقة، حمص أبو حسن على بعد 3 دقائق.",
+  },
+  landing: {
+    headline: "شقة من 3 غرف في يافا",
+    sub: "80 م² · 10 دقائق سيراً عن الشاطئ · تتسع لـ 8 ضيوف",
+    fromPrice: "ابتداءً من ₪{price} لليلة",
+    points: [
+      "مجددة في 2024، شارع هادئ",
+      "غرفتا نوم، خمسة أسرّة، مطبخ مجهز",
+      "إلغاء مجاني حتى 5 أيام قبل الوصول",
+      "أرخص بنسبة 10% من مواقع الحجز",
+    ],
+    checkDates: "اختر التواريخ",
+    whatsapp: "واتساب",
+    seeMore: "شاهد الشقة كاملة",
   },
   securityBadges: {
     ssl: "اتصال مشفّر",

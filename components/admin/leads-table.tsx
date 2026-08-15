@@ -17,6 +17,8 @@ interface Lead {
   status: "new" | "contacted" | "converted" | "unsubscribed";
   locale: string | null;
   referrer: string | null;
+  utmSource: string | null;
+  utmCampaign: string | null;
   followUpSentAt: Date | null;
   createdAt: Date;
 }
@@ -70,6 +72,7 @@ export function LeadsTable({ leads }: { leads: Lead[] }) {
               <th className="py-2 pr-4 font-medium">Guest</th>
               <th className="py-2 pr-4 font-medium">Dates</th>
               <th className="py-2 pr-4 font-medium">Got to</th>
+              <th className="py-2 pr-4 font-medium">Source</th>
               <th className="py-2 pr-4 font-medium">Status</th>
               <th className="py-2 pr-4 font-medium">When</th>
               <th className="py-2 font-medium">Actions</th>
@@ -105,6 +108,16 @@ export function LeadsTable({ leads }: { leads: Lead[] }) {
                     {lead.guests ? <div className="text-xs text-stone">{lead.guests} guests</div> : null}
                   </td>
                   <td className="py-3 pr-4 text-stone">{STAGE_LABEL[lead.stage] ?? lead.stage}</td>
+                  <td className="py-3 pr-4">
+                    {lead.utmSource ? (
+                      <span className="inline-block rounded-full bg-ivory px-2 py-0.5 text-[11px] text-graphite">
+                        {lead.utmSource}
+                        {lead.utmCampaign ? ` · ${lead.utmCampaign}` : ""}
+                      </span>
+                    ) : (
+                      <span className="text-xs text-stone">direct</span>
+                    )}
+                  </td>
                   <td className="py-3 pr-4">
                     <span className={`inline-block rounded-full border px-2 py-0.5 text-[11px] ${STATUS_TONE[lead.status]}`}>
                       {lead.status}

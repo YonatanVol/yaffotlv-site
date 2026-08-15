@@ -6,9 +6,10 @@ import { Reveal } from "@/components/ui/reveal";
 import { GoldStars } from "@/components/ui/gold-stars";
 import { ReviewCard } from "./review-card";
 import { useI18n } from "@/lib/i18n/context";
-import { reviews } from "@/lib/reviews-data";
+import type { SiteReviews } from "@/lib/google-reviews";
 
-export function Reviews() {
+export function Reviews({ siteReviews }: { siteReviews: SiteReviews }) {
+  const { reviews, rating, total } = siteReviews;
   const { t } = useI18n();
   const scrollRef = useRef<HTMLDivElement>(null);
   const [isPaused, setIsPaused] = useState(false);
@@ -39,10 +40,15 @@ export function Reviews() {
         <h2 className="mt-4 font-serif text-4xl font-light tracking-tight text-charcoal md:text-5xl">
           {t.reviews?.subtitle || "What our guests say"}
         </h2>
-        <div className="mt-4 flex items-center justify-center gap-3">
-          <GoldStars size="lg" showLabel={true} />
-          <span className="text-sm text-stone">· 140+ {t.reviews?.reviewCount || "reviews"}</span>
-        </div>
+        {/* Real Google rating, or nothing at all — never an invented number. */}
+        {rating && total && (
+          <div className="mt-4 flex items-center justify-center gap-3">
+            <GoldStars size="lg" showLabel={false} />
+            <span className="text-sm text-stone">
+              {rating} · {total} {t.reviews?.reviewCount || "reviews"}
+            </span>
+          </div>
+        )}
       </Reveal>
 
       {/* Scrollable reviews */}

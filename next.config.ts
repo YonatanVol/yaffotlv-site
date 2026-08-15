@@ -2,6 +2,25 @@ import type { NextConfig } from "next";
 
 const isDev = process.env.NODE_ENV !== "production";
 
+// Ad pixels are opt-in. Their origins are added to the CSP only when the
+// corresponding ID is configured at build time, so the allowlist stays tight
+// while the funnel ships dark.
+const metaPixel = Boolean(process.env.NEXT_PUBLIC_META_PIXEL_ID);
+const tiktokPixel = Boolean(process.env.NEXT_PUBLIC_TIKTOK_PIXEL_ID);
+const pixelScript = [
+  metaPixel ? "https://connect.facebook.net" : "",
+  tiktokPixel ? "https://analytics.tiktok.com" : "",
+].filter(Boolean).join(" ");
+const pixelImg = [
+  metaPixel ? "https://www.facebook.com" : "",
+  tiktokPixel ? "https://analytics.tiktok.com" : "",
+].filter(Boolean).join(" ");
+const pixelConnect = [
+  metaPixel ? "https://www.facebook.com https://connect.facebook.net" : "",
+  tiktokPixel ? "https://analytics.tiktok.com" : "",
+].filter(Boolean).join(" ");
+const withPixels = (base: string, extra: string) => (extra ? `${base} ${extra}` : base);
+
 // Content-Security-Policy scoped to the origins this site actually uses:
 //  - CARTO basemap tiles (Leaflet)         → img/connect
 //  - Leaflet CSS from unpkg                  → style (+ img for its referenced assets)
@@ -11,13 +30,16 @@ const isDev = process.env.NODE_ENV !== "production";
 const csp = [
   "default-src 'self'",
   // Next injects small inline bootstrap scripts; dev/HMR additionally needs eval.
-  `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""}`,
+  withPixels(`script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""}`, pixelScript),
   "style-src 'self' 'unsafe-inline' https://unpkg.com",
   // Vercel Blob hosts the owner-uploaded site photos (admin → Photos); the
   // ytimg/scdn hosts are the video and album thumbnails in admin → Music.
-  "img-src 'self' data: blob: https://*.basemaps.cartocdn.com https://unpkg.com https://*.public.blob.vercel-storage.com https://*.ytimg.com https://*.scdn.co",
+  withPixels(
+    "img-src 'self' data: blob: https://*.basemaps.cartocdn.com https://unpkg.com https://*.public.blob.vercel-storage.com https://*.ytimg.com https://*.scdn.co",
+    pixelImg
+  ),
   "font-src 'self' data:",
-  "connect-src 'self' https://*.basemaps.cartocdn.com https://vitals.vercel-insights.com",
+  withPixels("connect-src 'self' https://*.basemaps.cartocdn.com https://vitals.vercel-insights.com", pixelConnect),
   "frame-ancestors 'none'",
   "base-uri 'self'",
   "form-action 'self'",

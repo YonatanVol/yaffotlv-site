@@ -10,7 +10,8 @@ export function WhatsAppButton() {
   const { t } = useI18n();
 
   // Hide on admin pages
-  if (pathname?.startsWith("/admin")) return null;
+  // Hidden on /go — the landing page has its own WhatsApp button in the sticky bar.
+  if (pathname?.startsWith("/admin") || pathname?.startsWith("/go")) return null;
 
   const message = encodeURIComponent(t.whatsapp?.message || "Hi, I'm interested in booking YaffoTLV");
   const href = `https://wa.me/${WHATSAPP_NUMBER}?text=${message}`;

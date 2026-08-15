@@ -22,6 +22,10 @@ const schema = z.object({
   sessionId: z.string().max(100).optional(),
   locale: z.string().max(10).optional(),
   referrer: z.string().max(500).optional(),
+  utmSource: z.string().max(200).optional(),
+  utmMedium: z.string().max(200).optional(),
+  utmCampaign: z.string().max(200).optional(),
+  clickId: z.string().max(200).optional(),
 });
 
 const STAGE_RANK = { typed_email: 0, filled_details: 1, submitted: 2 } as const;
@@ -78,6 +82,11 @@ export async function POST(request: NextRequest) {
         sessionId: input.sessionId ?? existing.sessionId,
         locale: input.locale ?? existing.locale,
         referrer: input.referrer ?? existing.referrer,
+        // Never let a later, attribution-less update erase how they arrived.
+        utmSource: input.utmSource ?? existing.utmSource,
+        utmMedium: input.utmMedium ?? existing.utmMedium,
+        utmCampaign: input.utmCampaign ?? existing.utmCampaign,
+        clickId: input.clickId ?? existing.clickId,
         updatedAt: new Date(),
       })
       .where(eq(leads.id, existing.id));

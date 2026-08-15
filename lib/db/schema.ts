@@ -130,6 +130,14 @@ export const activityLog = pgTable(
     path: text("path"),
     referrer: text("referrer"),
     country: text("country"),
+    /* Campaign attribution. IG/TikTok in-app browsers strip the referrer, so
+       these URL parameters are the only reliable signal for paid and organic
+       social traffic. */
+    utmSource: text("utm_source"),
+    utmMedium: text("utm_medium"),
+    utmCampaign: text("utm_campaign"),
+    /** Ad click id, prefixed with its platform ("fbclid:…" / "ttclid:…"). */
+    clickId: text("click_id"),
     userAgent: text("user_agent"),
     /**
      * Salted hash of the caller IP, never the address itself. Still unique per
@@ -172,6 +180,11 @@ export const leads = pgTable(
     sessionId: text("session_id"),
     locale: text("locale"),
     referrer: text("referrer"),
+    /** Which campaign produced this enquiry — see activity_log above. */
+    utmSource: text("utm_source"),
+    utmMedium: text("utm_medium"),
+    utmCampaign: text("utm_campaign"),
+    clickId: text("click_id"),
     status: leadStatusEnum("status").notNull().default("new"),
     /** Lets a follow-up email carry a working one-click unsubscribe. */
     unsubscribeToken: uuid("unsubscribe_token").defaultRandom().notNull(),

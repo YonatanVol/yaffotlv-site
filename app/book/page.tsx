@@ -3,11 +3,11 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Book Your Stay",
-  description: "Reserve your luxury stay at YaffoTLV in historic Jaffa, Tel Aviv.",
+  description: "Check availability and book directly — a 3-room apartment in Jaffa, Tel Aviv.",
   alternates: { canonical: "/book" },
   openGraph: {
     title: "Book Your Stay | YaffoTLV",
-    description: "Reserve your luxury stay at YaffoTLV in historic Jaffa, Tel Aviv.",
+    description: "Check availability and book directly — a 3-room apartment in Jaffa, Tel Aviv.",
     url: "/book",
     images: [{ url: "/opengraph-image", width: 1200, height: 630 }],
     type: "website",

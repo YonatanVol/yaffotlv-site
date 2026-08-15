@@ -3,9 +3,11 @@
 import { Reveal } from "@/components/ui/reveal";
 import { GoldStars } from "@/components/ui/gold-stars";
 import { useI18n } from "@/lib/i18n/context";
+import { HOST_STATS, hasVerifiedRating, yearsHosting } from "@/lib/facts";
 
 export function Host() {
   const { t } = useI18n();
+  const years = yearsHosting();
 
   return (
     <section className="bg-ivory py-24">
@@ -33,26 +35,36 @@ export function Host() {
             </div>
             <div className="text-center">
               <p className="text-sm font-medium text-charcoal">Eitan</p>
-              <p className="text-xs text-stone">{t.host?.superhost || "Superhost"}</p>
+              {/* Superhost is only claimed once HOST_STATS confirms it. */}
+              {HOST_STATS.isSuperhost && (
+                <p className="text-xs text-stone">{t.host?.superhost || "Superhost"}</p>
+              )}
             </div>
           </div>
 
           {/* Host info */}
           <div className="text-center md:text-left">
             <p className="text-base leading-relaxed text-graphite">
-              {t.host?.bio || "Born and raised in Jaffa, I've been hosting guests for over 12 years. I renovated this apartment in 2024 with one goal: to make you feel at home, not in a hotel. I'm always a WhatsApp message away if you need anything — restaurant tips, directions, or just a friendly recommendation."}
+              {t.host?.bio}
             </p>
 
+            {/* Rating and years-hosting appear only when backed by real data. */}
             <div className="mt-6 flex flex-wrap items-center justify-center gap-4 md:justify-start">
-              <div className="flex items-center gap-2 text-sm text-stone">
-                <GoldStars size="sm" showLabel={false} />
-                <span>· 140+ {t.reviews?.reviewCount || "reviews"}</span>
-              </div>
+              {hasVerifiedRating() && (
+                <div className="flex items-center gap-2 text-sm text-stone">
+                  <GoldStars size="sm" showLabel={false} />
+                  <span>
+                    · {HOST_STATS.reviewCount} {t.reviews?.reviewCount || "reviews"}
+                  </span>
+                </div>
+              )}
+              {years !== undefined && (
+                <div className="flex items-center gap-1 text-sm text-stone">
+                  🏆 {years} {t.host?.yearsHosting || "years hosting"}
+                </div>
+              )}
               <div className="flex items-center gap-1 text-sm text-stone">
-                🏆 {t.host?.yearsHosting || "12 years hosting"}
-              </div>
-              <div className="flex items-center gap-1 text-sm text-stone">
-                ⚡ {t.host?.responseTime || "Responds in 1 hour"}
+                ⚡ {t.host?.responseTime || "Usually replies within an hour"}
               </div>
             </div>
           </div>
