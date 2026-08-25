@@ -231,13 +231,44 @@ confirmed — it never re-runs matching.
 track quietly appearing in a playlist is worse than a row that asks a question. Keeping
 the decision in the UI also means the write path has nothing to get creative about.
 
-### D-MM.6 — Re-running a transfer can't duplicate tracks
+### D-MM.6 — Re-running a transfer can't duplicate tracks (sequentially)
 **Decided:** when copying into an existing playlist, the tracks already there are read
 first and filtered out; duplicates within one batch are collapsed too.
 **Why:** scanning a playlist twice, or copying a playlist that shares songs with the
 target, is normal use — it shouldn't leave a mess.
+**Limit (owner-accepted, 2026-08-15):** the read is a point-in-time snapshot, so this
+holds for *sequential* transfers, not concurrent ones. Two transfers fired at the same
+playlist at the same moment — a double submit, or a second tab — can both see a uri as
+absent and both append it. Raised by CodeRabbit on PR #29.
+**Why not fixed:** closing it properly needs a durable per-playlist lock (a Postgres
+advisory lock or an idempotency table plus a migration), which is disproportionate for a
+single-user interactive tool where the failure needs a deliberate double submit. The
+button disables while a transfer is in flight. Recorded here rather than papered over.
 
-### D-MM.7 — "Liked videos" can't be a source ⏳ FYI
-**Situation:** the YouTube Data API does not expose Liked videos / Liked Music as a
-readable playlist, so they cannot be offered. Workaround: add the songs to a real
-playlist on YouTube first. Documented in MUSIC_MOVER.md.
+### D-MM.7 — "Liked videos" IS a source ✅ CORRECTED 2026-08-15
+**Originally recorded:** that the API exposed neither Liked videos nor Liked Music, so
+neither could be offered. **That was wrong**, and CodeRabbit caught it on PR #29.
+**Decided:** `channels.list?part=contentDetails&mine=true` returns
+`contentDetails.relatedPlaylists.likes`, which reads like any other playlist. Liked videos
+now appear at the top of the picker.
+**Why the top:** it is the list most people actually want moved, and the one that never
+shows up in `playlists.list`.
+**Still true:** YouTube *Music*'s separate "Liked Music" list has no API equivalent. The
+likes playlist also publishes no item count, so the picker omits the count rather than
+printing a misleading `(0)`, and a very long one can hit the 2000-entry read cap — which
+the page now reports instead of silently truncating.
+
+---
+
+## Working process
+
+### D-ADD.1 — The development process is written down, going forward only
+**Decided:** added `AI_DRIVEN_DEVELOPMENT.md` (12 steps) and `CLAUDE.md`. They describe how
+work is done from now on; earlier phases were **not** retrofitted to them.
+**Why:** the conventions already existed — phase-gated delivery, a read-only recon pass,
+`CHANGES.md` + `DECISIONS.md` on every change, a fixed verification gate, `⏳ NEEDS YOU`
+rather than guessing — but only as a shape you could infer from the artifacts. Nothing
+stated them, so each new session had to rediscover them or invent something else. Writing
+them down costs nothing and makes the next session start where this one ended.
+**Why no retrofit (owner's call, 2026-08-15):** rewriting history to look compliant would
+be documentation theatre. The steps earn their place by being followed next time.

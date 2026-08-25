@@ -22,7 +22,8 @@ export type OAuthTokens = {
 export type YouTubePlaylist = {
   id: string;
   title: string;
-  itemCount: number;
+  /** Absent when YouTube does not publish a count (the Liked videos playlist). */
+  itemCount?: number;
   thumbnail?: string;
 };
 
@@ -150,14 +151,22 @@ async function youtubeGet<T>(
 
 type Page<T> = { items?: T[]; nextPageToken?: string };
 
+/**
+ * Walks every page, up to a page cap.
+ *
+ * Reports `truncated` rather than silently returning a partial list: a playlist
+ * longer than the cap would otherwise be copied incomplete with nothing to show
+ * for it.
+ */
 async function paginate<T>(
   accessToken: string,
   path: string,
   params: Record<string, string>,
   maxPages = 40
-): Promise<T[]> {
+): Promise<{ items: T[]; truncated: boolean }> {
   const items: T[] = [];
   let pageToken: string | undefined;
+  let truncated = false;
   for (let page = 0; page < maxPages; page++) {
     const data: Page<T> = await youtubeGet(accessToken, path, {
       ...params,
@@ -166,8 +175,12 @@ async function paginate<T>(
     items.push(...(data.items ?? []));
     if (!data.nextPageToken) break;
     pageToken = data.nextPageToken;
+    if (page === maxPages - 1) {
+      truncated = true;
+      console.warn(`[music] ${path} truncated at ${items.length} items`);
+    }
   }
-  return items;
+  return { items, truncated };
 }
 
 /** Display name for the connected account (the channel's own title). */
@@ -180,23 +193,49 @@ export async function getChannelLabel(accessToken: string): Promise<string> {
   return data.items?.[0]?.snippet?.title ?? "YouTube account";
 }
 
+/**
+ * The id of the channel's Liked videos playlist, or null.
+ *
+ * It is not returned by `playlists.list`, so it has to be read off the channel
+ * itself. (YouTube Music's separate "Liked Music" list has no API equivalent.)
+ */
+export async function getLikedPlaylistId(accessToken: string): Promise<string | null> {
+  const data = await youtubeGet<{
+    items?: { contentDetails?: { relatedPlaylists?: { likes?: string } } }[];
+  }>(accessToken, "channels", { part: "contentDetails", mine: "true" });
+  return data.items?.[0]?.contentDetails?.relatedPlaylists?.likes || null;
+}
+
 export async function listPlaylists(accessToken: string): Promise<YouTubePlaylist[]> {
   type Item = {
     id: string;
     snippet?: { title?: string; thumbnails?: Record<string, { url?: string }> };
     contentDetails?: { itemCount?: number };
   };
-  const items = await paginate<Item>(accessToken, "playlists", {
+  const { items } = await paginate<Item>(accessToken, "playlists", {
     part: "snippet,contentDetails",
     mine: "true",
     maxResults: "50",
   });
-  return items.map((item) => ({
+  const playlists: YouTubePlaylist[] = items.map((item) => ({
     id: item.id,
     title: item.snippet?.title ?? "Untitled playlist",
     itemCount: item.contentDetails?.itemCount ?? 0,
     thumbnail: item.snippet?.thumbnails?.medium?.url ?? item.snippet?.thumbnails?.default?.url,
   }));
+
+  // Liked videos first — it is the list most worth moving, and it never appears
+  // in playlists.list. A failure here must not cost the owner the real ones.
+  try {
+    const likedId = await getLikedPlaylistId(accessToken);
+    if (likedId && !playlists.some((playlist) => playlist.id === likedId)) {
+      playlists.unshift({ id: likedId, title: "Liked videos" });
+    }
+  } catch (error) {
+    console.warn("[music] could not read the Liked videos playlist", error);
+  }
+
+  return playlists;
 }
 
 /**
@@ -206,24 +245,28 @@ export async function listPlaylists(accessToken: string): Promise<YouTubePlaylis
 export async function listPlaylistVideoIds(
   accessToken: string,
   playlistId: string
-): Promise<string[]> {
+): Promise<{ videoIds: string[]; truncated: boolean }> {
   type Item = {
     snippet?: { title?: string };
     contentDetails?: { videoId?: string };
     status?: { privacyStatus?: string };
   };
-  const items = await paginate<Item>(accessToken, "playlistItems", {
+  const { items, truncated } = await paginate<Item>(accessToken, "playlistItems", {
     part: "snippet,contentDetails,status",
     playlistId,
     maxResults: "50",
   });
-  return items
+  const videoIds = items
     .filter((item) => {
+      // privacyStatus is the structured signal; the placeholder titles are
+      // localized, so a non-English account never matches them.
+      if (item.status?.privacyStatus === "private") return false;
       const title = item.snippet?.title ?? "";
       return title !== "Private video" && title !== "Deleted video";
     })
     .map((item) => item.contentDetails?.videoId)
     .filter((id): id is string => Boolean(id));
+  return { videoIds, truncated };
 }
 
 /** Full details for up to 50 ids per request (the API's hard limit). */

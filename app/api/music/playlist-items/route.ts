@@ -22,8 +22,14 @@ export async function GET(request: NextRequest) {
 
   try {
     const token = await getGoogleAccessToken();
-    const videoIds = await listPlaylistVideoIds(token, playlistId);
-    return NextResponse.json({ videoIds, total: videoIds.length });
+    const { videoIds, truncated } = await listPlaylistVideoIds(token, playlistId);
+    return NextResponse.json({
+      videoIds,
+      total: videoIds.length,
+      // The page shows this: a very long playlist is read up to a page cap, and
+      // the owner needs to know the tail was not included.
+      truncated,
+    });
   } catch (error) {
     return musicErrorResponse(error);
   }

@@ -4,14 +4,18 @@ An owner-only tool at **/admin → Music**. It reads one of your YouTube playlis
 keeps only the entries that are actually music, finds each song on Spotify, shows
 you what it found, and copies the ones you confirm into a Spotify playlist.
 
-It is read-only on the YouTube side and only ever *adds* tracks on the Spotify
-side. Nothing is written until you press **Copy**.
+It is read-only on the YouTube side, and on the Spotify side it only ever *adds*
+tracks — it never removes or reorders anything. **No Spotify playlist changes are
+made until you press Copy.** Two things do happen before that: connecting an
+account stores its tokens in an encrypted cookie in your browser, and pressing
+Copy may create a new playlist if that is the destination you chose.
 
 ---
 
 ## What it does, step by step
 
-1. **Lists your YouTube playlists** (`youtube.readonly`).
+1. **Lists your YouTube playlists** (`youtube.readonly`), with **Liked videos**
+   first.
 2. **Reads the playlist**, skipping private and deleted entries.
 3. **Keeps only music.** A video counts as music if YouTube files it under the
    Music category (id `10`), if it sits on an auto-generated `Artist - Topic`
@@ -33,7 +37,8 @@ side. Nothing is written until you press **Copy**.
    - **Skipped** — not music, or a mix/album.
 7. **Copies** the ticked tracks into a new private playlist or an existing one.
    Tracks already in the target playlist are not added twice, so re-running a
-   transfer is safe.
+   transfer is safe. (Running two transfers into the same playlist *at the same
+   moment* is the one case that can still double up — see DECISIONS D-MM.6.)
 
 ---
 
@@ -99,8 +104,13 @@ when they expire.
 
 ## Known limits
 
-- **"Liked videos" / "Liked Music" can't be copied.** The YouTube Data API does
-  not expose them as playlists. Add the songs to a real playlist first.
+- **"Liked videos" works; YouTube Music's "Liked Music" does not.** Liked videos
+  are offered at the top of the picker (the API exposes them through the channel's
+  `relatedPlaylists.likes`). YouTube Music keeps a *separate* Liked Music list that
+  has no API equivalent — for those, add the songs to a real playlist first.
+- **Very long playlists are read up to a cap** (2000 entries). If a playlist is
+  longer, the page says so and scans the part it could read. This mostly matters
+  for a long-running Liked videos list.
 - **YouTube API quota** is 10,000 units/day by default. A scan costs roughly
   1 unit per 50 playlist entries plus 1 per 50 videos, so this is not a practical
   limit for personal playlists.

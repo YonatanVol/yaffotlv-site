@@ -4,6 +4,91 @@ Running log of what changed and why. Newest first.
 
 ---
 
+## Music mover — review fixes, Liked videos, and a written-down process
+
+Response to the CodeRabbit review on PR #29 (12 findings + 4 nitpicks), plus the two
+things that review turned up: a feature I'd wrongly documented as impossible, and the fact
+that this repo had no written process at all.
+
+### Matching bugs the review caught
+- **`(with lyrics)` was surviving into the Spotify query.** `isNoiseFragment` returned
+  early on the MEANINGFUL allowlist, which contains `with`, so the anchored `^with lyrics$`
+  noise rule never ran. Anchored noise is now tested first.
+  ([match.ts](lib/music/match.ts))
+- **Pipe-splitting cut the wrong text.** `stripTrailingNoise` tested each `|` segment but
+  then called `value.replace(part, " ")` on the accumulating string — which removes the
+  *first* substring match and shifts every later segment out of alignment. Now it filters
+  the segments and rejoins. Both bugs have regression tests.
+  ([music-match.test.ts](lib/music-match.test.ts))
+- **Private videos are detected by `privacyStatus`,** not by comparing the title to the
+  English strings "Private video"/"Deleted video" — those are localized, so the filter
+  silently failed on a non-English account. ([youtube.ts](lib/music/youtube.ts))
+
+### Failures that used to be silent
+- **One bad video no longer sinks a whole batch.** `scanVideos` ran under `Promise.all`, so
+  a single Spotify error 502'd the request and the page abandoned every remaining batch.
+  Each video is now isolated and reported as a row — except a dropped connection, which
+  still propagates because it needs a reconnect. ([scan.ts](lib/music/scan.ts))
+- **A truncated playlist read says so.** Pagination stops at 2000 entries; it returned the
+  partial list with nothing to indicate it. It now reports `truncated`, and the page tells
+  you it only scanned the first N. ([youtube.ts](lib/music/youtube.ts))
+- **A part-written transfer reports what landed.** A failed batch threw away the count of
+  the batches Spotify had already accepted. ([spotify.ts](lib/music/spotify.ts))
+- **A non-numeric `Retry-After`** (an HTTP date) parsed to `NaN`, and `wait(NaN)` resolves
+  on the next tick — three instant retries into an endpoint that was already throttling.
+  ([spotify.ts](lib/music/spotify.ts))
+
+### Hardening
+- **`/api/music/disconnect` validates its body.** Malformed JSON became `{}` and cleared
+  **both** connections; a JSON `null` threw. Now `zod`, and only a well-formed object with
+  no provider means "both". Verified: `not json`, `null`, `[]`, `"x"`, `123` and an unknown
+  provider all return 400 with connections intact.
+  ([route.ts](app/api/music/disconnect/route.ts))
+- **The 502 path stops echoing internal error text** to the browser (URLs, quota strings,
+  account ids); the full error goes to the server log. The 409 "reconnect" path keeps its
+  specific message because the UI acts on it. ([api.ts](lib/music/api.ts))
+- **UI:** a failed Spotify playlist load now reports instead of failing silently;
+  disconnect only shows as disconnected once the request succeeded; Copy is disabled when
+  the "existing playlist" destination is empty; the row checkbox and match dropdown carry
+  `aria-label`s (every row announced identically before).
+  ([music-mover.tsx](components/admin/music-mover.tsx))
+
+### Liked videos — I was wrong, the review was right
+The API *does* expose them, via `channels.list` → `contentDetails.relatedPlaylists.likes`.
+**Liked videos now appear at the top of the picker.** YouTube Music's separate "Liked
+Music" list genuinely has no API equivalent — that part stands. The likes playlist
+publishes no item count, so the picker omits the count rather than showing `(0)`.
+(DECISIONS D-MM.7, corrected.)
+
+### Honest about the one thing not fixed
+Two transfers into the same playlist *at the same instant* can still both add a track —
+the dedupe read is a point-in-time snapshot. Closing it needs a durable lock and a
+migration, which is disproportionate for a single-user tool that requires a deliberate
+double-submit to trip. The claim in D-MM.6 was narrowed to what is actually true instead of
+being left overstated, and the "nothing is written until Copy" wording in the docs was
+tightened — connecting stores tokens, and Copy can create a playlist.
+
+One review finding was **rebutted, not fixed**: a reported ESLint error at
+`music-mover.tsx:99` does not reproduce (`npx eslint` on that file exits 0; the rule is
+active at error level; the `setState` calls happen after an `await`, not synchronously).
+
+### New: the process is written down
+- **[AI_DRIVEN_DEVELOPMENT.md](AI_DRIVEN_DEVELOPMENT.md)** — the 12 steps this repo works
+  by, each with what it produces and how you know it's done, ending in the rule underneath
+  all of them: never report something as working that you haven't seen work.
+- **[CLAUDE.md](CLAUDE.md)** — the orientation a new session needs: commands, the
+  load-bearing conventions (secrets only via `lib/env.ts`, admin gated twice, agorot,
+  Jerusalem dates, two logs per change), and the 8 pre-existing lint problems so future
+  work reports its own lint delta honestly.
+
+### Verification performed
+`npm test` 66/66 pass (2 new regression tests) · `npx tsc --noEmit` clean · `npm run lint`
+unchanged at the same 8 pre-existing problems, none in `music/*` · `npm run build` succeeds
+· dev-server run of the disconnect validation matrix, the selective and both-provider
+disconnects, and the admin page render.
+
+---
+
 ## Music mover — copy the songs out of a YouTube playlist into Spotify
 
 New owner-only tool at **/admin → Music**. Connect a Google (YouTube) and a Spotify
@@ -20,7 +105,8 @@ D-MM.1–7.
   Video)`, `[4K]`) is stripped while `(Illenium Remix)` / `(Live at Folsom)` is kept —
   those are different recordings. Candidates are scored on title, artist and length:
   confident matches arrive ticked, borderline ones arrive unticked with alternatives, and
-  misses show their near-misses. Nothing is written until **Copy** is pressed.
+  misses show their near-misses. No Spotify playlist changes are made until **Copy** is
+  pressed.
   ([scan.ts](lib/music/scan.ts), [music-mover.tsx](components/admin/music-mover.tsx))
 - **Safe by construction.** YouTube is connected read-only (`youtube.readonly`), Spotify
   can only read and add to the owner's own playlists, and re-copying never duplicates a

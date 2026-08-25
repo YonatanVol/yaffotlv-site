@@ -137,12 +137,19 @@ const NOISE = [
   /^shot by\s/,
 ];
 
+/** The subset of NOISE that matches a whole fragment, checked before MEANINGFUL. */
+const ANCHORED_NOISE = NOISE.filter((pattern) => pattern.source.startsWith("^"));
+
 /** Bracketed fragments that DO identify a specific recording and must survive. */
 const MEANINGFUL = /\b(remix|rmx|bootleg|edit|mix|version|ver|live|acoustic|unplugged|instrumental|cover|remaster(ed)?|demo|reprise|radio|extended|club|dub|vip|slowed|sped up|orchestral|piano|karaoke|feat|ft|featuring|with)\b/;
 
 function isNoiseFragment(fragment: string): boolean {
   const value = normalize(fragment);
   if (!value) return true;
+  // Anchored noise wins over the keyword allowlist. "with lyrics" contains
+  // "with", which MEANINGFUL would otherwise protect, leaving the promo text
+  // in the title and in the Spotify query.
+  if (ANCHORED_NOISE.some((pattern) => pattern.test(value))) return true;
   if (MEANINGFUL.test(value)) return false;
   return NOISE.some((pattern) => pattern.test(value));
 }
@@ -157,14 +164,13 @@ export function stripNoiseFragments(title: string): string {
 
 /** Trailing `| Some Channel`, `｜`, and stray separators left behind by stripping. */
 function stripTrailingNoise(title: string): string {
-  let value = title;
-  for (const part of value.split(/[|｜]/)) {
-    if (isNoiseFragment(part)) {
-      value = value.replace(part, " ");
-    }
-  }
-  return value
-    .replace(/[|｜]/g, " ")
+  // Filter the segments and rejoin. Replacing each noisy part inside the
+  // accumulating string would drop the *first* substring match rather than the
+  // segment that was tested, and shift every later segment out of alignment.
+  return title
+    .split(/[|｜]/)
+    .filter((part) => !isNoiseFragment(part))
+    .join(" ")
     .replace(/\s*[-–—]\s*$/, "")
     .replace(/^\s*[-–—]\s*/, "")
     .replace(/\s{2,}/g, " ")

@@ -16,7 +16,7 @@ import {
   type SpotifyCandidate,
 } from "./match";
 import { searchTracks } from "./spotify";
-import { classifyMusic, type YouTubeVideo } from "./youtube";
+import { classifyMusic, ProviderAuthError, type YouTubeVideo } from "./youtube";
 
 export type ScanStatus = "matched" | "review" | "unmatched" | "skipped";
 
@@ -143,5 +143,27 @@ export async function scanVideos(
   spotifyToken: string,
   videos: YouTubeVideo[]
 ): Promise<ScannedTrack[]> {
-  return mapWithConcurrency(videos, CONCURRENCY, (video) => scanVideo(spotifyToken, video));
+  return mapWithConcurrency(videos, CONCURRENCY, async (video) => {
+    try {
+      return await scanVideo(spotifyToken, video);
+    } catch (error) {
+      // A dropped connection has to reach the page so it can prompt a
+      // reconnect. Anything else is one video's problem: report it as a row
+      // rather than failing the batch and losing the rest of the playlist.
+      if (error instanceof ProviderAuthError) throw error;
+      console.error("[music] scan failed", video.id, error);
+      return {
+        videoId: video.id,
+        videoTitle: video.title,
+        channelTitle: video.channelTitle,
+        thumbnail: video.thumbnail,
+        durationSec: video.durationSec,
+        status: "unmatched" as const,
+        note: "Spotify lookup failed for this video",
+        parsedArtist: null,
+        parsedTrack: video.title,
+        alternatives: [],
+      };
+    }
+  });
 }

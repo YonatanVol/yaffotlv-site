@@ -130,7 +130,11 @@ async function spotifyFetch<T>(
   });
 
   if (response.status === 429 && attempt < 3) {
-    const retryAfter = Number(response.headers.get("Retry-After") ?? "1");
+    // Retry-After may be an HTTP date or absent, both of which parse to NaN.
+    // Math.min(NaN, 20) is NaN and wait(NaN) resolves on the next tick, which
+    // would fire three instant retries at an endpoint that is already throttling.
+    const parsed = Number(response.headers.get("Retry-After"));
+    const retryAfter = Number.isFinite(parsed) && parsed > 0 ? parsed : 1;
     await wait(Math.min(retryAfter, 20) * 1000 + 250);
     return spotifyFetch<T>(accessToken, path, init, attempt + 1);
   }
@@ -275,10 +279,17 @@ export async function addTracksToPlaylist(
   let added = 0;
   for (let index = 0; index < uris.length; index += 100) {
     const batch = uris.slice(index, index + 100);
-    await spotifyFetch(accessToken, `/playlists/${playlistId}/tracks`, {
-      method: "POST",
-      body: JSON.stringify({ uris: batch }),
-    });
+    try {
+      await spotifyFetch(accessToken, `/playlists/${playlistId}/tracks`, {
+        method: "POST",
+        body: JSON.stringify({ uris: batch }),
+      });
+    } catch (error) {
+      // Earlier batches are already committed on Spotify's side. Carry that
+      // count into the error so the owner is told what actually landed.
+      const reason = error instanceof Error ? error.message : "unknown error";
+      throw new Error(`Added ${added} of ${uris.length} tracks before failing: ${reason}`);
+    }
     added += batch.length;
   }
   return added;

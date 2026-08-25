@@ -16,7 +16,7 @@ import type { SpotifyCandidate } from "@/lib/music/match";
 type Connection = { label: string } | null;
 type Connections = { google: Connection; spotify: Connection };
 
-type YouTubePlaylistOption = { id: string; title: string; itemCount: number };
+type YouTubePlaylistOption = { id: string; title: string; itemCount?: number };
 type SpotifyPlaylistOption = { id: string; name: string; trackCount: number };
 
 type Row = ScannedTrack & { include: boolean; chosenId: string | null };
@@ -90,6 +90,7 @@ export default function MusicMover({ initial }: { initial: Connections }) {
       if (youtube.ok) setPlaylists((await youtube.json()).playlists ?? []);
       else await handleFailure(youtube);
       if (spotify.ok) setSpotifyPlaylists((await spotify.json()).playlists ?? []);
+      else await handleFailure(spotify);
     } catch {
       setError("Couldn't reach the server");
     }
@@ -100,11 +101,16 @@ export default function MusicMover({ initial }: { initial: Connections }) {
   }, [loadPlaylists]);
 
   async function disconnect(provider: "google" | "spotify") {
-    await fetch("/api/music/disconnect", {
+    const response = await fetch("/api/music/disconnect", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ provider }),
     });
+    // Only show it as disconnected once the tokens are actually gone.
+    if (!response.ok) {
+      await handleFailure(response);
+      return;
+    }
     setConnections((current) => ({ ...current, [provider]: null }));
     setRows([]);
   }
@@ -123,7 +129,15 @@ export default function MusicMover({ initial }: { initial: Connections }) {
         await handleFailure(listed);
         return;
       }
-      const { videoIds } = (await listed.json()) as { videoIds: string[] };
+      const { videoIds, truncated } = (await listed.json()) as {
+        videoIds: string[];
+        truncated?: boolean;
+      };
+      if (truncated) {
+        setError(
+          `This playlist is longer than one read can cover — scanning the first ${videoIds.length} videos.`
+        );
+      }
       setProgress({ done: 0, total: videoIds.length });
 
       // Batched on purpose: each request stays short, and rows appear as they
@@ -252,7 +266,8 @@ export default function MusicMover({ initial }: { initial: Connections }) {
                 <option value="">Choose a playlist…</option>
                 {playlists.map((playlist) => (
                   <option key={playlist.id} value={playlist.id}>
-                    {playlist.title} ({playlist.itemCount})
+                    {playlist.title}
+                    {typeof playlist.itemCount === "number" ? ` (${playlist.itemCount})` : ""}
                   </option>
                 ))}
               </select>
@@ -370,7 +385,12 @@ export default function MusicMover({ initial }: { initial: Connections }) {
                 <button
                   type="button"
                   onClick={transfer}
-                  disabled={busy || selectedUris.length === 0}
+                  disabled={
+                    busy ||
+                    selectedUris.length === 0 ||
+                    // An account with no writable playlist leaves this empty.
+                    (destination.mode === "existing" && !destination.playlistId)
+                  }
                   className="mt-5 bg-brass px-6 py-2.5 text-xs font-medium uppercase tracking-[0.15em] text-white transition-colors hover:bg-accent-dark disabled:opacity-40"
                 >
                   {busy ? "Copying…" : `Copy ${selectedUris.length} tracks`}
@@ -459,6 +479,7 @@ function TrackRow({
     <li className="flex gap-4 py-3">
       <input
         type="checkbox"
+        aria-label={`Copy ${row.videoTitle}`}
         checked={row.include}
         disabled={!row.chosenId}
         onChange={(event) => onChange(row.videoId, { include: event.target.checked })}
@@ -495,6 +516,7 @@ function TrackRow({
           <div className="mt-2 flex flex-wrap items-center gap-2">
             <span className="text-xs text-stone">→</span>
             <select
+              aria-label={`Spotify match for ${row.videoTitle}`}
               value={row.chosenId ?? ""}
               onChange={(event) =>
                 onChange(row.videoId, {

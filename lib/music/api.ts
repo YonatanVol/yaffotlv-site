@@ -53,7 +53,12 @@ export function musicErrorResponse(error: unknown): NextResponse {
       { status: 409 }
     );
   }
-  const message = error instanceof Error ? error.message : "Something went wrong";
-  console.error("[music]", message);
-  return NextResponse.json({ error: message }, { status: 502 });
+  // Provider and runtime errors can carry internal detail (URLs, quota text,
+  // account ids). Keep the whole thing in the server log; hand the browser a
+  // message that says what to do instead.
+  console.error("[music]", error);
+  return NextResponse.json(
+    { error: "The music service failed. Try again in a moment." },
+    { status: 502 }
+  );
 }

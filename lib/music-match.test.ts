@@ -58,6 +58,28 @@ test("stripNoiseFragments drops promo brackets but keeps recording info", () => 
   assert.equal(stripNoiseFragments("Hurt (Live at Folsom)"), "Hurt (Live at Folsom)");
 });
 
+test("stripNoiseFragments drops promo text that contains a meaningful keyword", () => {
+  // Regression: "with lyrics" contains "with", which the MEANINGFUL allowlist
+  // used to protect, so the promo text survived into the Spotify query.
+  assert.equal(stripNoiseFragments("Hello (with lyrics)"), "Hello");
+  assert.equal(stripNoiseFragments("Hello [With Lyrics]"), "Hello");
+  // The allowlist still wins for fragments that name a specific recording.
+  assert.equal(stripNoiseFragments("Hello (with Adele)"), "Hello (with Adele)");
+});
+
+test("parseVideoTitle drops only the noisy pipe segments", () => {
+  // Regression: the old loop called value.replace(part, " ") on the accumulating
+  // string, which removed the first substring match rather than the tested
+  // segment and shifted the remaining segments out of alignment.
+  const parsed = parseVideoTitle("Adele - Hello | Official Video | 4K", "AdeleVEVO");
+  assert.equal(parsed.artist, "Adele");
+  assert.equal(parsed.track, "Hello");
+
+  // A repeated word across segments must not cause the wrong one to be cut.
+  const repeated = parseVideoTitle("Hello - Hello | Official Video", "Someone");
+  assert.equal(repeated.track, "Hello");
+});
+
 test("cleanChannelName reduces a channel to the artist", () => {
   assert.equal(cleanChannelName("Daft Punk - Topic"), "Daft Punk");
   assert.equal(cleanChannelName("RihannaVEVO"), "Rihanna");
